@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Discord_Bot_Tutorial
 {
@@ -7,7 +9,9 @@ namespace Discord_Bot_Tutorial
         static void Main(string[] args)
         {
             Bot bot = new Bot();
-            bot.RunAsync().GetAwaiter().GetResult();
-        }
+            
+            Console.WriteLine("Got here");
+            bot.RunAsync().GetAwaiter().GetResult();            
+        }        
     }
 }

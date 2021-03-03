@@ -10,6 +10,7 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using Newtonsoft.Json;
+using Tutorial.FimonManager;
 
 namespace Discord_Bot_Tutorial
 {
@@ -63,6 +64,8 @@ namespace Discord_Bot_Tutorial
             Commands.RegisterCommands<FunCommands>(); // Register new Commands
             Commands.RegisterCommands<TeamCommands>();
 
+            FimonManager.LoadFimons();
+
             await Client.ConnectAsync();
 
             await Task.Delay(-1);
@@ -72,5 +75,6 @@ namespace Discord_Bot_Tutorial
         {
             return Task.CompletedTask;
         }
+
     }
 }

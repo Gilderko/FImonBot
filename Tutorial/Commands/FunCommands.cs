@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tutorial.FimonManager;
 
 namespace Discord_Bot_Tutorial.Commands
 {
@@ -171,5 +172,12 @@ namespace Discord_Bot_Tutorial.Commands
             if (!succeeded) { return; }
         }
 
+        [Command("addFimon")]
+        public async Task AddFimon(CommandContext ctx, string message)
+        {
+            FimonManager.AddFimon(ctx.User.Id, message);
+
+            await ctx.Channel.SendMessageAsync("Fimon has been added");
+        }
     }
 }
