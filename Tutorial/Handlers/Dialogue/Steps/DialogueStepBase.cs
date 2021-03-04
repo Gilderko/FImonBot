@@ -11,6 +11,8 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
     {
         protected readonly string _content;
 
+        public DiscordEmbedBuilder optionalEmbed;
+
         public DialogueStepBase(string content)
         {
             _content = content;
