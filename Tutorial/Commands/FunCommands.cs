@@ -7,6 +7,7 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.EventHandling;
 using DSharpPlus.Interactivity.Extensions;
+using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -172,12 +173,38 @@ namespace Discord_Bot_Tutorial.Commands
             if (!succeeded) { return; }
         }
 
-        [Command("addFimon")]
-        public async Task AddFimon(CommandContext ctx, string message)
+        [Command("addfimon")]
+        public async Task AddFimonCommand(CommandContext ctx, string name, string desc)
         {
-            FimonManager.AddFimon(ctx.User.Id, message);
+            await ctx.Channel.SendMessageAsync("Adding new FIMON");
 
-            await ctx.Channel.SendMessageAsync("Fimon has been added");
+            Console.WriteLine("here 1");
+            FImon fimonik = new FImon();
+            Console.WriteLine("here 2");
+            fimonik.DiscordUserID = ctx.User.Id;
+            Console.WriteLine("here 3");
+            fimonik.Name = name;
+            fimonik.Description = desc;
+            fimonik.PrimaryType = Tutorial.FimonManager.Type.Fire;
+            fimonik.SecondaryType = Tutorial.FimonManager.Type.Rock;
+            Console.WriteLine("Set up a FIMON");
+
+            FimonManager.AddFimon(fimonik);
+            await ctx.Channel.SendMessageAsync("FIMON added");
+        }
+
+        [Command("getfimon")]
+        public async Task GetFimon(CommandContext ctx)
+        {
+            var myFimon = FimonManager.GetFimon(ctx.User.Id);
+            if (myFimon == null)
+            {
+                await ctx.Channel.SendMessageAsync("Sadly you dont have a FImon");
+            }
+            else
+            {
+                await ctx.Channel.SendMessageAsync($"{myFimon.PrimaryType}");
+            }
         }
     }
 }

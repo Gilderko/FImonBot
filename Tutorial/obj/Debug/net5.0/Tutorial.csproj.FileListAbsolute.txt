@@ -24,3 +24,15 @@ D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\obj\Debug\net5.0\Tutorial.dll
 D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\obj\Debug\net5.0\ref\Tutorial.dll
 D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\obj\Debug\net5.0\Tutorial.pdb
 D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\obj\Debug\net5.0\Tutorial.genruntimeconfig.cache
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\DnsClient.dll
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\MongoDB.Bson.dll
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\MongoDB.Driver.dll
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\MongoDB.Driver.Core.dll
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\MongoDB.LibMongocrypt.dll
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\SharpCompress.dll
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\runtimes\win\native\libzstd.dll
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\runtimes\win\native\snappy32.dll
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\runtimes\win\native\snappy64.dll
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\runtimes\linux\native\libmongocrypt.so
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\runtimes\osx\native\libmongocrypt.dylib
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\runtimes\win\native\mongocrypt.dll

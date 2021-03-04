@@ -67,9 +67,10 @@ namespace Discord_Bot_Tutorial
             Commands.RegisterCommands<TeamCommands>();
 
             var client = new MongoClient("mongodb+srv://live2020:live2020pass@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
-            var database = client.GetDatabase("FImonDB"); 
+            Console.WriteLine(client);
 
-            FimonManager.LoadFimons(database);
+            FimonManager.SetDatabase(client);
+            FimonManager.LoadFimons();
 
             await Client.ConnectAsync();
 
