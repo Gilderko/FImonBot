@@ -8,6 +8,6 @@ namespace Tutorial.FimonManager
 {
     public enum Type
     {
-        Fire, Water, Ground, Rock, Steel
+        Fire, Water, Ground, Air, Steel
     }
 }

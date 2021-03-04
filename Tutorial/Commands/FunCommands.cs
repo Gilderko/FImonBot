@@ -174,23 +174,91 @@ namespace Discord_Bot_Tutorial.Commands
         }
 
         [Command("addfimon")]
-        public async Task AddFimonCommand(CommandContext ctx, string name, string desc)
+        public async Task AddFimonCommand(CommandContext ctx)
         {
-            await ctx.Channel.SendMessageAsync("Adding new FIMON");
+            var nameStep = new TextStep("Welcome \nPlease choose the name for your FImon", null, 1, 30);
+            string FImonName = "";
+            nameStep.OnValidResult += (result) => FImonName = result;
 
-            Console.WriteLine("here 1");
-            FImon fimonik = new FImon();
-            Console.WriteLine("here 2");
-            fimonik.DiscordUserID = ctx.User.Id;
-            Console.WriteLine("here 3");
-            fimonik.Name = name;
-            fimonik.Description = desc;
-            fimonik.PrimaryType = Tutorial.FimonManager.Type.Fire;
-            fimonik.SecondaryType = Tutorial.FimonManager.Type.Rock;
-            Console.WriteLine("Set up a FIMON");
+            var descriptionStep = new TextStep("Great... Now write a short description for your FImon", null, 10, 200);
+            string description = "";
+            descriptionStep.OnValidResult += (result) => description = result;
 
-            FimonManager.AddFimon(fimonik);
-            await ctx.Channel.SendMessageAsync("FIMON added");
+            var primaryTypeStep = new ReactionStep("Now what is your primary type?", new Dictionary<DiscordEmoji, ReactionStepData>
+            {
+                { DiscordEmoji.FromName(ctx.Client,":fire:"), new ReactionStepData{ Content = "Fire Type", NextStep = null }},
+                { DiscordEmoji.FromName(ctx.Client,":potable_water:"), new ReactionStepData{ Content = "Water Type", NextStep = null}},
+                { DiscordEmoji.FromName(ctx.Client,":earth_africa:"), new ReactionStepData{ Content = "Ground Type", NextStep = null}},
+                { DiscordEmoji.FromName(ctx.Client,":cloud_tornado:"), new ReactionStepData{ Content = "Air Type", NextStep = null}},
+                { DiscordEmoji.FromName(ctx.Client,":steam_locomotive:"), new ReactionStepData{ Content = "Steel Type", NextStep = null}}
+
+            });
+            DiscordEmoji primaryType;
+            primaryTypeStep.OnValidResult += (result) => primaryType = result;
+
+            var secondaryTypeStep = new ReactionStep("Now what is your primary type?", new Dictionary<DiscordEmoji, ReactionStepData>
+            {
+                { DiscordEmoji.FromName(ctx.Client,":fire:"), new ReactionStepData{ Content = "Fire Type", NextStep = null }},
+                { DiscordEmoji.FromName(ctx.Client,":potable_water:"), new ReactionStepData{ Content = "Water Type", NextStep = null}},
+                { DiscordEmoji.FromName(ctx.Client,":earth_africa:"), new ReactionStepData{ Content = "Ground Type", NextStep = null}},
+                { DiscordEmoji.FromName(ctx.Client,":cloud_tornado:"), new ReactionStepData{ Content = "Air Type", NextStep = null}},
+                { DiscordEmoji.FromName(ctx.Client,":steam_locomotive:"), new ReactionStepData{ Content = "Steel Type", NextStep = null}}
+            });
+            DiscordEmoji secondaryType;
+            primaryTypeStep.OnValidResult += (result) => secondaryType = result;
+            
+            DiscordEmbedBuilder attributesIntroEmbed = AttributesEmbedInfo();
+
+            var introToAttributes = new ReactionStep("", new Dictionary<DiscordEmoji, ReactionStepData>
+            {
+                { DiscordEmoji.FromName(ctx.Client,":thumbsup:"), new ReactionStepData{ Content = "Continue" } }
+            });
+            introToAttributes.optionalEmbed = attributesIntroEmbed;
+
+
+
+
+            
+
+            nameStep.SetNextStep(descriptionStep);
+            descriptionStep.SetNextStep(primaryTypeStep);
+            primaryTypeStep.SetNextStep(secondaryTypeStep);
+            secondaryTypeStep.SetNextStep(introToAttributes);
+            introToAttributes.SetNextStep(null);
+
+            var userChannel = ctx.Channel;
+            var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, ctx.User, nameStep);
+
+            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
+
+            if (!succeeded) { return; }
+
+            //FimonManager.AddFimon(fimonik);
+            await ctx.Channel.SendMessageAsync("FIMON added successfully");
+            await ctx.Channel.SendMessageAsync(FImonName + " " + description);
+        }
+
+        private static DiscordEmbedBuilder AttributesEmbedInfo()
+        {
+            var attributesIntroEmbed = new DiscordEmbedBuilder()
+            {
+                Title = "Attributes Selection Intro",
+                Color = DiscordColor.DarkButNotBlack,
+                Description = "You get to choose from 6 different attributes where each attribute improves certain properties of your FImon, but decreases others. Maximum amount " +
+                            "of point you can insert into an attribute is 10 a minimum is 1"
+            };
+
+            attributesIntroEmbed.AddField("Strength", "each point increases your health by 4% and basic attack by 3%, but descreases " +
+                "your chance to dodge by 2%");
+            attributesIntroEmbed.AddField("Stamina", "each point increases your energy pool by 3%");
+            attributesIntroEmbed.AddField("Inteligence", "each point increases experience gained by 4%, but descreases " +
+                "your chance to critically hit by 0.5%");
+            attributesIntroEmbed.AddField("Luck", "each point increases your chance to critically hit by 1%, but descreases " +
+                "your experience gained by 2%");
+            attributesIntroEmbed.AddField("Agility", "each point increases your chane to dodge by 2%, but descreases " +
+                "your health by 3%");
+            attributesIntroEmbed.AddField("Perception", "each point increases your chance to hit by 3%");
+            return attributesIntroEmbed;
         }
 
         [Command("getfimon")]

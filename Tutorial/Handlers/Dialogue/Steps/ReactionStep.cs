@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 
 namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 {
+    
     public class ReactionStep : DialogueStepBase
     {
+        private IDialogueStep _nextStep;
+
         private readonly Dictionary<DiscordEmoji, ReactionStepData> _options;
 
         private DiscordEmoji _selectedEmoji;
@@ -19,20 +22,32 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
             _options = options;
         }
 
-        public override IDialogueStep NextStep => _options[_selectedEmoji].NextStep;
+        public override IDialogueStep NextStep => _nextStep ?? _options[_selectedEmoji].NextStep;
 
         public Action<DiscordEmoji> OnValidResult { get; set; } = delegate { };
+                public void SetNextStep(IDialogueStep nextstep)
+        {
+            _nextStep = nextstep;
+        }
 
         public async override Task<bool> ProcessStep(DiscordClient client, DiscordChannel channel, DiscordUser user)
         {
             var cancelEmoji = DiscordEmoji.FromName(client, ":x:");
 
-            var embedBuidler = new DiscordEmbedBuilder()
+            DiscordEmbedBuilder embedBuidler;
+            if (optionalEmbed == null)
             {
-                Title = _content,
-                Color = DiscordColor.Blue,
-                Description = $"{user.Mention}, please respond down below :)"                
-            };
+                embedBuidler = new DiscordEmbedBuilder()
+                {
+                    Title = _content,
+                    Color = DiscordColor.Blue,
+                    Description = $"{user.Mention}, please respond down below :)"
+                };
+            }            
+            else
+            {
+                embedBuidler = optionalEmbed;
+            }
 
             embedBuidler.AddField("To stop the dialogue", "React with the :x: emoji");
 
@@ -75,7 +90,9 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 
                 return false;
             }
+
         }
+
     }
 
     public class ReactionStepData
