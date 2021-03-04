@@ -9,6 +9,8 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using Tutorial.FimonManager;
 
@@ -64,7 +66,10 @@ namespace Discord_Bot_Tutorial
             Commands.RegisterCommands<FunCommands>(); // Register new Commands
             Commands.RegisterCommands<TeamCommands>();
 
-            FimonManager.LoadFimons();
+            var client = new MongoClient("mongodb+srv://live2020:live2020pass@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+            var database = client.GetDatabase("FImonDB"); 
+
+            FimonManager.LoadFimons(database);
 
             await Client.ConnectAsync();
 
