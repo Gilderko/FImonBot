@@ -54,5 +54,31 @@ namespace Tutorial.FimonManager
             }
             return mapping[discordUserID];
         }
+
+        public static void AddFimonAbility(ulong discordUserID, Ability attack)
+        {
+            AbilityType whatAbility = attack.AbilityType;
+            FImon FImon = GetFimon(discordUserID);
+            switch (whatAbility)
+            {
+                case AbilityType.BasicAttack:
+                    FImon.BasicAttack = attack;
+                    break;
+                case AbilityType.SpecialAbility1:
+                    FImon.SpecialAttack1 = attack;
+                    break;
+                case AbilityType.SpecialAbility2:
+                    FImon.SpecialAttack2 = attack;
+                    break;
+                case AbilityType.SpecialAbility3:
+                    FImon.SpecialAttack3 = attack;
+                    break;
+                case AbilityType.DefensiveAbility:
+                    FImon.DefensiveAbility = (DefensiveAbility) attack;
+                    break;
+            }
+            var collection = mongoDatabase.GetCollection<FImon>("FImons");
+            collection.FindOneAndReplace((s => s.DiscordUserID == discordUserID), FImon);
+        }
     }
 }

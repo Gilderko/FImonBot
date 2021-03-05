@@ -37,7 +37,7 @@ namespace Discord_Bot_Tutorial
                 Token = configJson.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                MinimumLogLevel = Microsoft.Extensions.Logging.LogLevel.Debug,                
+                MinimumLogLevel = Microsoft.Extensions.Logging.LogLevel.Trace,                
             };
             
             Client = new DiscordClient(config);
@@ -46,7 +46,7 @@ namespace Discord_Bot_Tutorial
 
             InteractivityConfiguration interactivityConfig = new InteractivityConfiguration()
             {
-                Timeout = TimeSpan.FromMinutes(3)
+                Timeout = TimeSpan.FromMinutes(2)
             };
 
             Client.UseInteractivity(interactivityConfig);
@@ -68,10 +68,10 @@ namespace Discord_Bot_Tutorial
 
             var client = new MongoClient("mongodb+srv://live2020:live2020pass@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
             Console.WriteLine(client);
-            /*
+            
             FimonManager.SetDatabase(client);
             FimonManager.LoadFimons();
-            */
+            
             await Client.ConnectAsync();
 
             await Task.Delay(-1);

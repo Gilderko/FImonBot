@@ -120,7 +120,9 @@ namespace Discord_Bot_Tutorial.Commands
         public async Task Dialogue(CommandContext ctx)
         {
             var inputStep = new TextStep("Enter something interesting!", null, 10);
-            var funnyStep = new IntStep("Haha funny... add some fun number", null);
+            int low = 1;
+            int high = 10;
+            var funnyStep = new IntStep("Haha funny... add some fun number", null, low, high);
 
             string input = string.Empty;
             int value = 0;
@@ -176,6 +178,13 @@ namespace Discord_Bot_Tutorial.Commands
         [Command("addfimon")]
         public async Task AddFimonCommand(CommandContext ctx)
         {
+            var userID = ctx.User.Id;
+            if (FimonManager.mapping.ContainsKey(userID))
+            {
+                await ctx.Channel.SendMessageAsync("Mate... you already have a FImon").ConfigureAwait(false);
+                return;
+            }
+
             var nameStep = new TextStep("Welcome \nPlease choose the name for your FImon", null, 1, 30);
             string FImonName = "";
             nameStep.OnValidResult += (result) => FImonName = result;
@@ -183,30 +192,24 @@ namespace Discord_Bot_Tutorial.Commands
             var descriptionStep = new TextStep("Great... Now write a short description for your FImon", null, 10, 200);
             string description = "";
             descriptionStep.OnValidResult += (result) => description = result;
+            Dictionary<DiscordEmoji, ReactionStepData> reactionTypeOptions = GetFImonTypesReactionOptions(ctx);
 
-            var primaryTypeStep = new ReactionStep("Now what is your primary type?", new Dictionary<DiscordEmoji, ReactionStepData>
+            var primaryTypeStep = new ReactionStep("Now what is your primary type?", reactionTypeOptions);
+            FImonType primaryType = FImonType.Air;
+            primaryTypeStep.OnValidResult += (result) =>
             {
-                { DiscordEmoji.FromName(ctx.Client,":fire:"), new ReactionStepData{ Content = "Fire Type", NextStep = null }},
-                { DiscordEmoji.FromName(ctx.Client,":potable_water:"), new ReactionStepData{ Content = "Water Type", NextStep = null}},
-                { DiscordEmoji.FromName(ctx.Client,":earth_africa:"), new ReactionStepData{ Content = "Ground Type", NextStep = null}},
-                { DiscordEmoji.FromName(ctx.Client,":cloud_tornado:"), new ReactionStepData{ Content = "Air Type", NextStep = null}},
-                { DiscordEmoji.FromName(ctx.Client,":steam_locomotive:"), new ReactionStepData{ Content = "Steel Type", NextStep = null}}
+                primaryType = (FImonType)primaryTypeStep.GetOptions()[result].optionalData;
+                reactionTypeOptions.Remove(result);
+            };
 
-            });
-            DiscordEmoji primaryType;
-            primaryTypeStep.OnValidResult += (result) => primaryType = result;
-
-            var secondaryTypeStep = new ReactionStep("Now what is your primary type?", new Dictionary<DiscordEmoji, ReactionStepData>
+            var secondaryTypeStep = new ReactionStep("Now what is your secondary type?", reactionTypeOptions);
+            FImonType secondaryType = FImonType.Air;
+            secondaryTypeStep.OnValidResult += (result) =>
             {
-                { DiscordEmoji.FromName(ctx.Client,":fire:"), new ReactionStepData{ Content = "Fire Type", NextStep = null }},
-                { DiscordEmoji.FromName(ctx.Client,":potable_water:"), new ReactionStepData{ Content = "Water Type", NextStep = null}},
-                { DiscordEmoji.FromName(ctx.Client,":earth_africa:"), new ReactionStepData{ Content = "Ground Type", NextStep = null}},
-                { DiscordEmoji.FromName(ctx.Client,":cloud_tornado:"), new ReactionStepData{ Content = "Air Type", NextStep = null}},
-                { DiscordEmoji.FromName(ctx.Client,":steam_locomotive:"), new ReactionStepData{ Content = "Steel Type", NextStep = null}}
-            });
-            DiscordEmoji secondaryType;
-            primaryTypeStep.OnValidResult += (result) => secondaryType = result;
-            
+                secondaryType = (FImonType)secondaryTypeStep.GetOptions()[result].optionalData;
+                reactionTypeOptions.Remove(result);
+            };
+
             DiscordEmbedBuilder attributesIntroEmbed = AttributesEmbedInfo();
 
             var introToAttributes = new ReactionStep("", new Dictionary<DiscordEmoji, ReactionStepData>
@@ -215,16 +218,86 @@ namespace Discord_Bot_Tutorial.Commands
             });
             introToAttributes.optionalEmbed = attributesIntroEmbed;
 
+            int pointsToUse = 30;
+            int lowBound = 1;
+            int highBound = 10;
 
+            var strengthStep = new IntStep("Please state a value of you strength", null, lowBound, highBound);
+            int strengthValue = 1;
+            strengthStep.OnValidResult += (result) =>
+            {
+                strengthValue = result;
+                pointsToUse -= result;
+                ((IntStep)strengthStep.GetNextStep())._maxValue = highBound;
+                ((IntStep)strengthStep.GetNextStep()).dynamicOptionalCommentary = pointsToUse.ToString();
+                Console.WriteLine(pointsToUse);
+            };
 
+            var staminaStep = new IntStep("Please state a value of you stamina", null, lowBound, highBound);
+            int staminaValue = 1;
+            staminaStep.OnValidResult += (result) =>
+            {
+                staminaValue = result;
+                pointsToUse -= result;
+                highBound = pointsToUse - 3 > 10 ? highBound : pointsToUse - 3;
+                ((IntStep)staminaStep.GetNextStep())._maxValue = highBound;
+                ((IntStep)staminaStep.GetNextStep()).dynamicOptionalCommentary = pointsToUse.ToString();
+                Console.WriteLine(pointsToUse);
+            };
 
-            
+            var inteligenceStep = new IntStep("Please state a value of you inteligence", null, lowBound, highBound);
+            int inteligenceValue = 1;
+            inteligenceStep.OnValidResult += (result) =>
+            {
+                inteligenceValue = result;
+                pointsToUse -= result;
+                highBound = pointsToUse - 2 > 10 ? highBound : pointsToUse - 2;
+                ((IntStep)inteligenceStep.GetNextStep())._maxValue = highBound;
+                ((IntStep)inteligenceStep.GetNextStep()).dynamicOptionalCommentary = pointsToUse.ToString();
+                Console.WriteLine(pointsToUse);
+            };
+
+            var luckStep = new IntStep("Please state a value of you luck", null, lowBound, highBound);
+            int luckValue = 1;
+            luckStep.OnValidResult += (result) =>
+            {
+                luckValue = result;
+                pointsToUse -= result;
+                highBound = pointsToUse - 1 > 10 ? highBound : pointsToUse - 1;
+                ((IntStep)luckStep.GetNextStep())._maxValue = highBound;
+                ((IntStep)luckStep.GetNextStep()).dynamicOptionalCommentary = pointsToUse.ToString();
+                Console.WriteLine(pointsToUse);
+            };
+
+            var agilityStep = new IntStep("Please state a value of you agility", null, lowBound, highBound);
+            int agilityValue = 1;
+            agilityStep.OnValidResult += (result) =>
+            {
+                agilityValue = result;
+                pointsToUse -= result;
+                highBound = pointsToUse > 10 ? highBound : pointsToUse;
+                ((IntStep)staminaStep.GetNextStep()).dynamicOptionalCommentary = pointsToUse.ToString();
+                ((IntStep)agilityStep.GetNextStep())._maxValue = highBound;
+            };
+
+            var perceptionStep = new IntStep("Please state a value of you perception", null, lowBound, highBound);
+            int perceptionValue = 1;
+            perceptionStep.OnValidResult += (result) =>
+            {
+                perceptionValue = result;
+            };
 
             nameStep.SetNextStep(descriptionStep);
             descriptionStep.SetNextStep(primaryTypeStep);
             primaryTypeStep.SetNextStep(secondaryTypeStep);
             secondaryTypeStep.SetNextStep(introToAttributes);
-            introToAttributes.SetNextStep(null);
+            introToAttributes.SetNextStep(strengthStep);
+            strengthStep.SetNextStep(staminaStep);
+            staminaStep.SetNextStep(inteligenceStep);
+            inteligenceStep.SetNextStep(luckStep);
+            luckStep.SetNextStep(agilityStep);
+            agilityStep.SetNextStep(perceptionStep);
+            perceptionStep.SetNextStep(null);
 
             var userChannel = ctx.Channel;
             var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, ctx.User, nameStep);
@@ -233,9 +306,24 @@ namespace Discord_Bot_Tutorial.Commands
 
             if (!succeeded) { return; }
 
-            //FimonManager.AddFimon(fimonik);
+            FImon newFimon = new FImon(userID, FImonName, description, primaryType, secondaryType, strengthValue, staminaValue, inteligenceValue, luckValue,
+                agilityValue, perceptionValue);
+
+            FimonManager.AddFimon(newFimon);
             await ctx.Channel.SendMessageAsync("FIMON added successfully");
-            await ctx.Channel.SendMessageAsync(FImonName + " " + description);
+            await ctx.Channel.SendMessageAsync($"{FImonName} {description} {primaryType.ToString()} {secondaryType.ToString()}");
+        }
+
+        private static Dictionary<DiscordEmoji, ReactionStepData> GetFImonTypesReactionOptions(CommandContext ctx)
+        {
+            return new Dictionary<DiscordEmoji, ReactionStepData>
+            {
+                { DiscordEmoji.FromName(ctx.Client,":fire:"), new ReactionStepData{ Content = "Fire Type", NextStep = null, optionalData = FImonType.Fire }},
+                { DiscordEmoji.FromName(ctx.Client,":potable_water:"), new ReactionStepData{ Content = "Water Type", NextStep = null, optionalData = FImonType.Water}},
+                { DiscordEmoji.FromName(ctx.Client,":earth_africa:"), new ReactionStepData{ Content = "Ground Type", NextStep = null, optionalData = FImonType.Ground}},
+                { DiscordEmoji.FromName(ctx.Client,":cloud_tornado:"), new ReactionStepData{ Content = "Air Type", NextStep = null, optionalData = FImonType.Air}},
+                { DiscordEmoji.FromName(ctx.Client,":steam_locomotive:"), new ReactionStepData{ Content = "Steel Type", NextStep = null, optionalData = FImonType.Steel}}
+            };
         }
 
         private static DiscordEmbedBuilder AttributesEmbedInfo()
@@ -261,18 +349,96 @@ namespace Discord_Bot_Tutorial.Commands
             return attributesIntroEmbed;
         }
 
-        [Command("getfimon")]
-        public async Task GetFimon(CommandContext ctx)
+        [Command("createAbility")]
+        public async Task CreateAbility(CommandContext ctx)
         {
             var myFimon = FimonManager.GetFimon(ctx.User.Id);
             if (myFimon == null)
             {
                 await ctx.Channel.SendMessageAsync("Sadly you dont have a FImon");
+                return;
+            }
+
+            var reactionTypeOptions = new Dictionary<DiscordEmoji, ReactionStepData>
+            {
+                { DiscordEmoji.FromName(ctx.Client,":crossed_swords:"), new ReactionStepData{ Content = "Basic Attack", NextStep = null, optionalData = AbilityType.BasicAttack }},
+                { DiscordEmoji.FromName(ctx.Client,":one:"), new ReactionStepData{ Content = "Special Ability 1", NextStep = null, optionalData = AbilityType.SpecialAbility1}},
+                { DiscordEmoji.FromName(ctx.Client,":two:"), new ReactionStepData{ Content = "Special Ability 2", NextStep = null, optionalData = AbilityType.SpecialAbility2}},
+                { DiscordEmoji.FromName(ctx.Client,":three:"), new ReactionStepData{ Content = "Special Ability 3", NextStep = null, optionalData = AbilityType.SpecialAbility3}},
+                { DiscordEmoji.FromName(ctx.Client,":shield:"), new ReactionStepData{ Content = "Defensive Ability", NextStep = null, optionalData = AbilityType.DefensiveAbility}}
+            };            
+
+            var firstStep = new ReactionStep("Which Ability would you like to create", reactionTypeOptions);
+            AbilityType whatAbility = AbilityType.BasicAttack;
+            firstStep.OnValidResult += (result) =>
+            {
+                whatAbility = (AbilityType) firstStep.GetOptions()[result].optionalData;
+                
+            };
+            
+            var nameStep = new TextStep("Choose the name for your Ability", null, 1, 30);
+            string abilityName = "";
+            nameStep.OnValidResult += (result) => abilityName = result;
+
+            var descriptionStep = new TextStep("Now write a short description for your ability", null, 10, 200);
+            string description = "";
+            descriptionStep.OnValidResult += (result) => description = result;
+            
+            var defensiveAbilityTypesOptions = new Dictionary<DiscordEmoji, ReactionStepData>
+                {
+                    { DiscordEmoji.FromName(ctx.Client,":heart:"), new ReactionStepData{ Content = "Healing type", NextStep = null, optionalData = DefensiveAbilityType.DefensiveHealAbility }},
+                    { DiscordEmoji.FromName(ctx.Client,":wind_blowing_face:"), new ReactionStepData{ Content = "Dodge chance increase", NextStep = null, optionalData = DefensiveAbilityType.DefensiveDodgeAbility}}
+                };
+
+            ReactionStep defensiveAbilityOptionStep = new ReactionStep("Now choose your defensive skill type", defensiveAbilityTypesOptions);
+            DefensiveAbilityType defensiveAbilityType = DefensiveAbilityType.DefensiveDodgeAbility;
+            defensiveAbilityOptionStep.OnValidResult += (result) =>
+            {
+                defensiveAbilityType = (DefensiveAbilityType)defensiveAbilityOptionStep.GetOptions()[result].optionalData;
+            };
+
+            Dictionary<DiscordEmoji, ReactionStepData> attackTypesOptions = GetFImonTypesReactionOptions(ctx);
+            var abilityTypeStep = new ReactionStep("Now choose type for you ability", attackTypesOptions);
+            FImonType abilityType = FImonType.Air;
+            abilityTypeStep.OnValidResult += (result) =>
+            {
+                abilityType = (FImonType)abilityTypeStep.GetOptions()[result].optionalData;
+                if (whatAbility == AbilityType.DefensiveAbility)
+                {
+                    abilityTypeStep.SetNextStep(defensiveAbilityOptionStep);
+                }
+                else
+                {
+                    abilityTypeStep.SetNextStep(null);
+                }
+            };
+
+            firstStep.SetNextStep(nameStep);
+            nameStep.SetNextStep(descriptionStep);
+            descriptionStep.SetNextStep(abilityTypeStep);
+            
+
+            var userChannel = ctx.Channel;
+            var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, ctx.User, firstStep);
+
+            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
+
+            if (!succeeded) { return; }
+
+            Ability createdAbility;
+            if (whatAbility == AbilityType.DefensiveAbility)
+            {
+                Console.WriteLine("New defensive");
+                createdAbility = new DefensiveAbility(whatAbility, abilityType, description, abilityName, defensiveAbilityType);
             }
             else
             {
-                await ctx.Channel.SendMessageAsync($"{myFimon.PrimaryType}");
+                Console.WriteLine("New offensive");
+                createdAbility = new Ability(whatAbility, abilityType, description, abilityName);
             }
+            FimonManager.AddFimonAbility(ctx.User.Id, createdAbility);
+
+            await ctx.Channel.SendMessageAsync("Added new ability");
         }
     }
 }

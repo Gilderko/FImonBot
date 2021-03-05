@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tutorial.FimonManager
 {
-    public enum Type
+    public enum FImonType
     {
         Fire, Water, Ground, Air, Steel
     }

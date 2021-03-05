@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Tutorial.FimonManager;
 
 namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 {
@@ -25,9 +26,15 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
         public override IDialogueStep NextStep => _nextStep ?? _options[_selectedEmoji].NextStep;
 
         public Action<DiscordEmoji> OnValidResult { get; set; } = delegate { };
-                public void SetNextStep(IDialogueStep nextstep)
+        
+        public void SetNextStep(IDialogueStep nextstep)
         {
             _nextStep = nextstep;
+        }
+
+        public Dictionary<DiscordEmoji, ReactionStepData> GetOptions()
+        {
+            return _options;
         }
 
         public async override Task<bool> ProcessStep(DiscordClient client, DiscordChannel channel, DiscordUser user)
@@ -85,6 +92,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                 }
 
                 _selectedEmoji = reactionResult.Result.Emoji;
+                
 
                 OnValidResult(_selectedEmoji);
 
@@ -99,5 +107,6 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
     {
         public string Content { get; set; }
         public IDialogueStep NextStep { get; set; }
+        public object optionalData { get; set; }
     }
 }

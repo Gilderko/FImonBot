@@ -48,7 +48,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue
                 }
                 _currentStep = _currentStep.NextStep;
             }
-            await DeleteMessages().ConfigureAwait(false);
+            DeleteMessages().ConfigureAwait(false);
             return true;
         }
 
@@ -58,7 +58,8 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue
 
             foreach (var message in messages)
             {
-                await message.DeleteAsync().ConfigureAwait(false);
+                await Task.Delay(250);
+                await message.DeleteAsync().ConfigureAwait(true);
             }
         }
     }

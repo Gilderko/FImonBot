@@ -11,10 +11,12 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
     public class IntStep : DialogueStepBase
     {
         private IDialogueStep _nextStep;
-        private readonly int? _minValue;
-        private readonly int? _maxValue;
+        public int _minValue;
+        public int _maxValue;
 
-        public IntStep(string content,IDialogueStep nextStep,int? minLength = null, int? maxLength = null) : base(content)
+        public string? dynamicOptionalCommentary = null;
+
+        public IntStep(string content,IDialogueStep nextStep, int minLength, int maxLength) : base(content)
         {
             _nextStep = nextStep;
             _minValue = minLength;
@@ -30,6 +32,11 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
             _nextStep = nextstep;
         }
 
+        public IDialogueStep GetNextStep()
+        {
+            return _nextStep;
+        }
+
         public override async Task<bool> ProcessStep(DiscordClient client, DiscordChannel channel, DiscordUser user)
         {
             var embedBuidler = new DiscordEmbedBuilder()
@@ -39,16 +46,14 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                 Description = $"{user.Mention}, please respond down below :)"
             };
 
+            if (dynamicOptionalCommentary != null)
+            {
+                embedBuidler.AddField("You still have atribute points to spend:",dynamicOptionalCommentary);
+            }
             embedBuidler.AddField("To Stop the Dialogue", "User the ?cancel command");
 
-            if (_minValue.HasValue)
-            {
-                embedBuidler.AddField("Min value: ", $"{_minValue.Value}");
-            }
-            if (_maxValue.HasValue)
-            {
-                embedBuidler.AddField("Max value: ", $"{_maxValue.Value}");
-            }
+            embedBuidler.AddField("Min value: ", $"{_minValue}");
+            embedBuidler.AddField("Max value: ", $"{_maxValue}");
 
             var interactivity = client.GetInteractivity();
 
@@ -78,21 +83,15 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                     continue;
                 }
 
-                if (_minValue.HasValue)
+                if (inputValue < _minValue)
                 {
-                    if (messageResult.Result.Content.Length < _minValue.Value)
-                    {
-                        await TryAgain(channel, $"Your input value {inputValue} is too small").ConfigureAwait(false);
-                        continue;
-                    }
+                    await TryAgain(channel, $"Your input value {inputValue} is too small").ConfigureAwait(false);
+                    continue;
                 }
-                if (_maxValue.HasValue)
+                if (inputValue > _maxValue)
                 {
-                    if (messageResult.Result.Content.Length > _maxValue.Value)
-                    {
-                        await TryAgain(channel, $"Your input value {inputValue} is too big").ConfigureAwait(false);
-                        continue;
-                    }
+                    await TryAgain(channel, $"Your input value {inputValue} is too big").ConfigureAwait(false);
+                    continue;
                 }
 
                 OnValidResult(inputValue);
