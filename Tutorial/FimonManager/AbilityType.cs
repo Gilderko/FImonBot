@@ -8,10 +8,10 @@ namespace Tutorial.FimonManager
 {
     public enum AbilityType
     {
+        AutoAttack,
         BasicAttack,
-        SpecialAbility1,
-        SpecialAbility2,
-        SpecialAbility3,
+        SpecialAttack,
+        UltimateAttack,
         DefensiveAbility,
     }
 }

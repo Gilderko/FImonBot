@@ -9,12 +9,16 @@ namespace Tutorial.FimonManager
 {
     public class DefensiveAbility : Ability
     {
-        public DefensiveAbility(AbilityType abilityType, FImonType attackType, string description, string name, DefensiveAbilityType defensiveAbilityType) : base(abilityType,attackType,description,name)
+        public DefensiveAbility(ulong id, AbilityType abilityType, FImonType abilityForm, string name, string description, int? healVal = null, int? dodgeVal = null) : base(id,abilityType,abilityForm,name,description)
         {
-            DefensiveAbilityType = defensiveAbilityType;
+            HealValue = healVal;
+            DodgeValue = dodgeVal;
         }
 
-        [BsonElement("defensive_ability_type")]
-        public DefensiveAbilityType DefensiveAbilityType { get; set; }
+        [BsonElement("heal_value")]
+        public int? HealValue { get; set; }
+
+        [BsonElement("dodge_value")]
+        public int? DodgeValue { get; set; }
     }
 }

@@ -25,10 +25,10 @@ namespace Tutorial.FimonManager
             Luck = luck;
             Agility = agility;
             Perception = perception;
-            BasicAttack = null;
-            SpecialAttack1 = null;
-            SpecialAttack2 = null;
-            SpecialAttack3 = null;
+            AutoAttackID = null;
+            BasicAttackID = null;
+            SpecialAttackID = null;
+            FinalAttackID = null;
         }
 
         [BsonId]
@@ -64,20 +64,20 @@ namespace Tutorial.FimonManager
         [BsonElement("perception")]
         public int Perception { get; set; }
         
+        [BsonElement("auto_attack")]
+        public ulong? AutoAttackID { get; set; }
+
         [BsonElement("basic_attack")]
-        public Ability BasicAttack { get; set; }
+        public ulong? BasicAttackID { get; set; }
 
-        [BsonElement("special_attack_1")]
-        public Ability SpecialAttack1 { get; set; }
+        [BsonElement("special_attack")]
+        public ulong? SpecialAttackID { get; set; }
 
-        [BsonElement("special_attack_2")]
-        public Ability SpecialAttack2 { get; set; }
-
-        [BsonElement("special_attack_3")]
-        public Ability SpecialAttack3 { get; set; }
+        [BsonElement("final_attack")]
+        public ulong? FinalAttackID { get; set; }
 
         [BsonElement("defensive_ability")]
-        public DefensiveAbility DefensiveAbility { get; set; }
+        public ulong? DefensiveAbilityID { get;set; }
 
     }
 }

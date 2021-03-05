@@ -98,9 +98,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 
                 return false;
             }
-
         }
-
     }
 
     public class ReactionStepData

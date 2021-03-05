@@ -359,86 +359,26 @@ namespace Discord_Bot_Tutorial.Commands
                 return;
             }
 
-            var reactionTypeOptions = new Dictionary<DiscordEmoji, ReactionStepData>
-            {
-                { DiscordEmoji.FromName(ctx.Client,":crossed_swords:"), new ReactionStepData{ Content = "Basic Attack", NextStep = null, optionalData = AbilityType.BasicAttack }},
-                { DiscordEmoji.FromName(ctx.Client,":one:"), new ReactionStepData{ Content = "Special Ability 1", NextStep = null, optionalData = AbilityType.SpecialAbility1}},
-                { DiscordEmoji.FromName(ctx.Client,":two:"), new ReactionStepData{ Content = "Special Ability 2", NextStep = null, optionalData = AbilityType.SpecialAbility2}},
-                { DiscordEmoji.FromName(ctx.Client,":three:"), new ReactionStepData{ Content = "Special Ability 3", NextStep = null, optionalData = AbilityType.SpecialAbility3}},
-                { DiscordEmoji.FromName(ctx.Client,":shield:"), new ReactionStepData{ Content = "Defensive Ability", NextStep = null, optionalData = AbilityType.DefensiveAbility}}
-            };            
+            DefensiveAbility def = new DefensiveAbility(5, AbilityType.DefensiveAbility, FImonType.Air,
+                "Harden", "Go even harder", 50);
 
-            var firstStep = new ReactionStep("Which Ability would you like to create", reactionTypeOptions);
-            AbilityType whatAbility = AbilityType.BasicAttack;
-            firstStep.OnValidResult += (result) =>
-            {
-                whatAbility = (AbilityType) firstStep.GetOptions()[result].optionalData;
-                
-            };
-            
-            var nameStep = new TextStep("Choose the name for your Ability", null, 1, 30);
-            string abilityName = "";
-            nameStep.OnValidResult += (result) => abilityName = result;
+            AttackAbility att = new AttackAbility(10, AbilityType.AutoAttack, FImonType.Air,
+                "Punch", "Go even harder",50,20,5,10);
 
-            var descriptionStep = new TextStep("Now write a short description for your ability", null, 10, 200);
-            string description = "";
-            descriptionStep.OnValidResult += (result) => description = result;
-            
-            var defensiveAbilityTypesOptions = new Dictionary<DiscordEmoji, ReactionStepData>
-                {
-                    { DiscordEmoji.FromName(ctx.Client,":heart:"), new ReactionStepData{ Content = "Healing type", NextStep = null, optionalData = DefensiveAbilityType.DefensiveHealAbility }},
-                    { DiscordEmoji.FromName(ctx.Client,":wind_blowing_face:"), new ReactionStepData{ Content = "Dodge chance increase", NextStep = null, optionalData = DefensiveAbilityType.DefensiveDodgeAbility}}
-                };
-
-            ReactionStep defensiveAbilityOptionStep = new ReactionStep("Now choose your defensive skill type", defensiveAbilityTypesOptions);
-            DefensiveAbilityType defensiveAbilityType = DefensiveAbilityType.DefensiveDodgeAbility;
-            defensiveAbilityOptionStep.OnValidResult += (result) =>
-            {
-                defensiveAbilityType = (DefensiveAbilityType)defensiveAbilityOptionStep.GetOptions()[result].optionalData;
-            };
-
-            Dictionary<DiscordEmoji, ReactionStepData> attackTypesOptions = GetFImonTypesReactionOptions(ctx);
-            var abilityTypeStep = new ReactionStep("Now choose type for you ability", attackTypesOptions);
-            FImonType abilityType = FImonType.Air;
-            abilityTypeStep.OnValidResult += (result) =>
-            {
-                abilityType = (FImonType)abilityTypeStep.GetOptions()[result].optionalData;
-                if (whatAbility == AbilityType.DefensiveAbility)
-                {
-                    abilityTypeStep.SetNextStep(defensiveAbilityOptionStep);
-                }
-                else
-                {
-                    abilityTypeStep.SetNextStep(null);
-                }
-            };
-
-            firstStep.SetNextStep(nameStep);
-            nameStep.SetNextStep(descriptionStep);
-            descriptionStep.SetNextStep(abilityTypeStep);
-            
-
-            var userChannel = ctx.Channel;
-            var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, ctx.User, firstStep);
-
-            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
-
-            if (!succeeded) { return; }
-
-            Ability createdAbility;
-            if (whatAbility == AbilityType.DefensiveAbility)
-            {
-                Console.WriteLine("New defensive");
-                createdAbility = new DefensiveAbility(whatAbility, abilityType, description, abilityName, defensiveAbilityType);
-            }
-            else
-            {
-                Console.WriteLine("New offensive");
-                createdAbility = new Ability(whatAbility, abilityType, description, abilityName);
-            }
-            FimonManager.AddFimonAbility(ctx.User.Id, createdAbility);
+            AbilityManager.AddAbility(def);
+            AbilityManager.AddAbility(att);
 
             await ctx.Channel.SendMessageAsync("Added new ability");
         }
+
+        [Command("getabilities")]
+        public async Task GetAbilities(CommandContext ctx)
+        { 
+            
+            
+
+
+        }
+
     }
 }

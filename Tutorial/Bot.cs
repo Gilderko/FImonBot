@@ -22,6 +22,8 @@ namespace Discord_Bot_Tutorial
         public InteractivityExtension Interactivity { get; private set; }
         public CommandsNextExtension Commands { get; private set; }
 
+        public const string databaseName = "FImonDB";
+        
         public async Task RunAsync()
         {
             string json = "";
@@ -68,8 +70,11 @@ namespace Discord_Bot_Tutorial
 
             var client = new MongoClient("mongodb+srv://live2020:live2020pass@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
             Console.WriteLine(client);
-            
-            FimonManager.SetDatabase(client);
+
+            AbilityManager.SetCollection(client.GetDatabase(databaseName));
+            AbilityManager.LoadAbilities();
+
+            FimonManager.SetCollection(client.GetDatabase(databaseName));
             FimonManager.LoadFimons();
             
             await Client.ConnectAsync();

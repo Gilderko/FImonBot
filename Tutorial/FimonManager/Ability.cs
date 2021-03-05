@@ -7,27 +7,30 @@ using System.Threading.Tasks;
 
 namespace Tutorial.FimonManager
 {
-    [BsonIgnoreExtraElements]
-    public class Ability
+    public abstract class Ability
     {
-        public Ability(AbilityType abilityType, FImonType attackType, string description, string name)
+        public Ability(ulong id,AbilityType abilityType, FImonType abilityForm, string name, string description)
         {
+            Id = id;
             AbilityType = abilityType;
-            AttackType = attackType;
+            AbilityForm = abilityForm;
             Description = description;
-            Name = name;
+            Name = name;           
         }
 
         [BsonId]
+        public ulong Id { get; set; }
+
+        [BsonElement("ability_type")]
         public AbilityType AbilityType { get; set; }
 
-        [BsonElement("attack_type")]
-        public FImonType AttackType { get; set; }
+        [BsonElement("ability_form")]
+        public FImonType AbilityForm { get; set; }
 
         [BsonElement("name")]
         public string Name { get; set; }
 
         [BsonElement("description")]
-        public string Description { get; set; }        
+        public string Description { get; set; }
     }
 }

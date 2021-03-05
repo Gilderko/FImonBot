@@ -10,13 +10,13 @@ namespace Tutorial.FimonManager
     public static class FimonManager
     {
         public static Dictionary<ulong, FImon> mapping = new Dictionary<ulong, FImon>();
-        private static IMongoDatabase mongoDatabase = null;
+        private static IMongoCollection<FImon> collection = null;
+        private const string collectionName = "FImons";
 
         public static void LoadFimons()
         {
-            if (mongoDatabase == null) { return; }
-            Console.WriteLine("Loading Fimons");
-            var collection = mongoDatabase.GetCollection<FImon>("FImons");
+            if (collection == null) { return; }
+            Console.WriteLine("Loading Fimons");           
 
             var allFImon = collection.Find(s => true).ToList();
             foreach (var FImon in allFImon)
@@ -27,13 +27,12 @@ namespace Tutorial.FimonManager
 
         public static void AddFimon(FImon newFImon)
         {
-            if (mongoDatabase == null) 
+            if (collection == null) 
             {
                 Console.WriteLine("no database");
                 return; 
             }
-            Console.WriteLine("Adding FImon");
-            var collection = mongoDatabase.GetCollection<FImon>("FImons");
+            Console.WriteLine("Adding FImon");            
 
             mapping.Add(newFImon.DiscordUserID, newFImon);            
             
@@ -41,9 +40,9 @@ namespace Tutorial.FimonManager
             Console.WriteLine("FImon added");
         }
 
-        internal static void SetDatabase(MongoClient client)
+        internal static void SetCollection(IMongoDatabase database)
         {
-            mongoDatabase = client.GetDatabase("FImonDB");
+            collection = database.GetCollection<FImon>(collectionName);
         }
 
         public static FImon GetFimon(ulong discordUserID)
@@ -55,30 +54,6 @@ namespace Tutorial.FimonManager
             return mapping[discordUserID];
         }
 
-        public static void AddFimonAbility(ulong discordUserID, Ability attack)
-        {
-            AbilityType whatAbility = attack.AbilityType;
-            FImon FImon = GetFimon(discordUserID);
-            switch (whatAbility)
-            {
-                case AbilityType.BasicAttack:
-                    FImon.BasicAttack = attack;
-                    break;
-                case AbilityType.SpecialAbility1:
-                    FImon.SpecialAttack1 = attack;
-                    break;
-                case AbilityType.SpecialAbility2:
-                    FImon.SpecialAttack2 = attack;
-                    break;
-                case AbilityType.SpecialAbility3:
-                    FImon.SpecialAttack3 = attack;
-                    break;
-                case AbilityType.DefensiveAbility:
-                    FImon.DefensiveAbility = (DefensiveAbility) attack;
-                    break;
-            }
-            var collection = mongoDatabase.GetCollection<FImon>("FImons");
-            collection.FindOneAndReplace((s => s.DiscordUserID == discordUserID), FImon);
-        }
+        
     }
 }
