@@ -32,6 +32,13 @@ namespace Tutorial.FimonManager
                 Console.WriteLine("no database");
                 return; 
             }
+
+            if (mapping.ContainsKey(newFImon.DiscordUserID))
+            {
+                Console.WriteLine("already have this ID");
+                return;
+            }
+
             Console.WriteLine("Adding FImon");            
 
             mapping.Add(newFImon.DiscordUserID, newFImon);            
@@ -54,6 +61,30 @@ namespace Tutorial.FimonManager
             return mapping[discordUserID];
         }
 
-        
+        public static void SetAbility(ulong userID, ulong abilityID)
+        {
+            Ability ability = AbilityManager.GetAbility(abilityID);
+            if (ability.AbilityType == AbilityType.AutoAttack)
+            {
+                mapping[userID].AutoAttackID = abilityID;
+            }
+            else if (ability.AbilityType == AbilityType.BasicAttack)
+            {
+                mapping[userID].BasicAttackID = abilityID;
+            }
+            else if (ability.AbilityType == AbilityType.SpecialAttack)
+            {
+                mapping[userID].SpecialAttackID = abilityID;
+            }
+            else if (ability.AbilityType == AbilityType.UltimateAttack)
+            {
+                mapping[userID].FinalAttack = abilityID;
+            }
+            else if (ability.AbilityType == AbilityType.DefensiveAbility)
+            {
+                mapping[userID].DefensiveAbilityID = abilityID;
+            }
+            collection.ReplaceOne(s => s.DiscordUserID == userID, mapping[userID]);
+        }        
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Tutorial.FimonManager
-{    
+{   
     public class AttackAbility : Ability
     {
         public AttackAbility(ulong id,AbilityType abilityType, FImonType abilityForm, string name, string description, int upperDamage, int lowerDamage
@@ -29,5 +29,12 @@ namespace Tutorial.FimonManager
 
         [BsonElement("crit_chance")]
         public int CritChance { get; set; }
+
+        public string GetDescriptionForMessage()
+        {
+            string data = $"{Description}\nThe ability is of {AbilityForm.ToString()} specialization \nDamage range: {DamageValueLower} - {DamageValueUpper}" +
+                $"\nHit chance: {HitChance}\nCritical hit chance is: {CritChance}";
+            return data;
+        }
     }
 }

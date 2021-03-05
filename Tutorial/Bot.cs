@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +8,6 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Tutorial.FimonManager;
@@ -39,7 +37,7 @@ namespace Discord_Bot_Tutorial
                 Token = configJson.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                MinimumLogLevel = Microsoft.Extensions.Logging.LogLevel.Trace,                
+                MinimumLogLevel = Microsoft.Extensions.Logging.LogLevel.Debug,                
             };
             
             Client = new DiscordClient(config);
@@ -48,7 +46,7 @@ namespace Discord_Bot_Tutorial
 
             InteractivityConfiguration interactivityConfig = new InteractivityConfiguration()
             {
-                Timeout = TimeSpan.FromMinutes(2)
+                Timeout = TimeSpan.FromMinutes(3)
             };
 
             Client.UseInteractivity(interactivityConfig);

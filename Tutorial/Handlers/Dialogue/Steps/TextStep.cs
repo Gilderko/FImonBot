@@ -59,7 +59,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                 OnMessageAdded(embded);
 
                 var messageResult = await interactivity.WaitForMessageAsync(x => x.ChannelId == channel.Id && x.Author.Id == user.Id).ConfigureAwait(false);
-
+                               
                 if (messageResult.TimedOut)
                 {
                     return true;

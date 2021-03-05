@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Tutorial.FimonManager
-{
+{   
     public class DefensiveAbility : Ability
     {
         public DefensiveAbility(ulong id, AbilityType abilityType, FImonType abilityForm, string name, string description, int? healVal = null, int? dodgeVal = null) : base(id,abilityType,abilityForm,name,description)
@@ -20,5 +20,12 @@ namespace Tutorial.FimonManager
 
         [BsonElement("dodge_value")]
         public int? DodgeValue { get; set; }
+
+        public string GetDescriptionForMessage()
+        {
+            string data = $"{Description}\nThe ability is of {AbilityForm.ToString()} specialization";
+            data += HealValue == null ? $"Increases dodge chance by {DodgeValue} for next round" : $"Heals for: {HealValue}";
+            return data;
+        }
     }
 }

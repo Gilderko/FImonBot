@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Tutorial.FimonManager
-{
+{   
     public abstract class Ability
     {
         public Ability(ulong id,AbilityType abilityType, FImonType abilityForm, string name, string description)
@@ -15,7 +15,7 @@ namespace Tutorial.FimonManager
             AbilityType = abilityType;
             AbilityForm = abilityForm;
             Description = description;
-            Name = name;           
+            Name = name.Trim();           
         }
 
         [BsonId]
@@ -31,6 +31,6 @@ namespace Tutorial.FimonManager
         public string Name { get; set; }
 
         [BsonElement("description")]
-        public string Description { get; set; }
+        public string Description { get; set; }        
     }
 }

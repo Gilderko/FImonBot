@@ -28,7 +28,7 @@ namespace Tutorial.FimonManager
             AutoAttackID = null;
             BasicAttackID = null;
             SpecialAttackID = null;
-            FinalAttackID = null;
+            FinalAttack = null;
         }
 
         [BsonId]
@@ -74,10 +74,9 @@ namespace Tutorial.FimonManager
         public ulong? SpecialAttackID { get; set; }
 
         [BsonElement("final_attack")]
-        public ulong? FinalAttackID { get; set; }
+        public ulong? FinalAttack { get; set; }
 
         [BsonElement("defensive_ability")]
         public ulong? DefensiveAbilityID { get;set; }
-
     }
 }

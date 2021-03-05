@@ -349,8 +349,8 @@ namespace Discord_Bot_Tutorial.Commands
             return attributesIntroEmbed;
         }
 
-        [Command("createAbility")]
-        public async Task CreateAbility(CommandContext ctx)
+        [Command("initialiseAbilities")]
+        public async Task InitialiseAbilities(CommandContext ctx)
         {
             var myFimon = FimonManager.GetFimon(ctx.User.Id);
             if (myFimon == null)
@@ -359,14 +359,56 @@ namespace Discord_Bot_Tutorial.Commands
                 return;
             }
 
-            DefensiveAbility def = new DefensiveAbility(5, AbilityType.DefensiveAbility, FImonType.Air,
-                "Harden", "Go even harder", 50);
+            AttackAbility att1 = new AttackAbility(1, AbilityType.AutoAttack, FImonType.Ground,
+                "Punch", "Average punch of FI student", 50, 20, 5, 10);
+            AttackAbility att2 = new AttackAbility(2, AbilityType.AutoAttack, FImonType.Fire,
+                "Kick", "Jan Claud van Damn Kick", 50, 20, 5, 10);
+            AttackAbility att3 = new AttackAbility(3, AbilityType.AutoAttack, FImonType.Air,
+                "Scratch", "Scratches you like your girlfriend... so not at all", 50, 20, 5, 10);
+            //-----------------------
+            AttackAbility att4 = new AttackAbility(4, AbilityType.BasicAttack, FImonType.Water,
+                "Water gun", "Almighty stream of sodastream water", 50, 20, 5, 10);
+            AttackAbility att5 = new AttackAbility(5, AbilityType.BasicAttack, FImonType.Fire,
+                "FI Roast", "Average roast you get from a FI student", 50, 20, 5, 10);
+            AttackAbility att6 = new AttackAbility(6, AbilityType.BasicAttack, FImonType.Ground,
+                "Matematika Drsně a svižně", "Swift attack with a previously mentioned book", 50, 20, 5, 10);
+            //-----------------------
+            AttackAbility att7 = new AttackAbility(7, AbilityType.SpecialAttack, FImonType.Fire,
+                "Odpovednik", "Yet another odpovedník", 50, 20, 5, 10);
+            AttackAbility att8 = new AttackAbility(8, AbilityType.SpecialAttack, FImonType.Air,
+                "Sleeping powder", "The powder of thats made from tears of PB152 students", 50, 20, 5, 10);
+            AttackAbility att9 = new AttackAbility(9, AbilityType.SpecialAttack, FImonType.Steel,
+                "Naprosto ez xd", "The greatest line to ever exist", 50, 20, 5, 10);
+            //-----------------------
+            AttackAbility att10 = new AttackAbility(10, AbilityType.UltimateAttack, FImonType.Fire,
+                "Really ni**a?", "The almighty question of FI", 50, 20, 5, 10);
+            AttackAbility att11 = new AttackAbility(11, AbilityType.UltimateAttack, FImonType.Air,
+                "Kontr strike", "Sadly test neprošel", 50, 20, 5, 10);
+            AttackAbility att12 = new AttackAbility(12, AbilityType.UltimateAttack, FImonType.Steel,
+                "Bretuna?", "Tunabre...", 50, 20, 5, 10);
+            //-----------------------
+            DefensiveAbility def1 = new DefensiveAbility(13, AbilityType.DefensiveAbility, FImonType.Steel,
+                "Harden", "Gets your... thing... even harder", 50);
+            DefensiveAbility def2 = new DefensiveAbility(14, AbilityType.DefensiveAbility, FImonType.Air,
+                "Speed", "Impossible to be h for next turn", null, 20);
+            DefensiveAbility def3 = new DefensiveAbility(15, AbilityType.DefensiveAbility, FImonType.Air,
+                "Basic Heal", "Heal for moderate amount", 50);
 
-            AttackAbility att = new AttackAbility(10, AbilityType.AutoAttack, FImonType.Air,
-                "Punch", "Go even harder",50,20,5,10);
-
-            AbilityManager.AddAbility(def);
-            AbilityManager.AddAbility(att);
+            AbilityManager.AddAbility(att1);
+            AbilityManager.AddAbility(att2);
+            AbilityManager.AddAbility(att3);
+            AbilityManager.AddAbility(att4);
+            AbilityManager.AddAbility(att5);
+            AbilityManager.AddAbility(att6);
+            AbilityManager.AddAbility(att7);
+            AbilityManager.AddAbility(att8);
+            AbilityManager.AddAbility(att9);
+            AbilityManager.AddAbility(att10);
+            AbilityManager.AddAbility(att11);
+            AbilityManager.AddAbility(att12);
+            AbilityManager.AddAbility(def1);
+            AbilityManager.AddAbility(def2);
+            AbilityManager.AddAbility(def3);
 
             await ctx.Channel.SendMessageAsync("Added new ability");
         }
@@ -374,11 +416,102 @@ namespace Discord_Bot_Tutorial.Commands
         [Command("getabilities")]
         public async Task GetAbilities(CommandContext ctx)
         { 
-            
-            
+            foreach (var ab in AbilityManager.attackAbilities.Values)
+            {
+                Console.WriteLine(ab.Name);
+                Console.WriteLine(ab.Id);
+            }
+            foreach (var ab in AbilityManager.defensiveAbilities.Values)
+            {
+                Console.WriteLine(ab.Name);
+                Console.WriteLine(ab.Id);
+            }
+        }
+                
+        public async Task SetAttack(CommandContext ctx, AbilityType abilityType)
+        {
+            var options = new Dictionary<string, TextChoiceData>();
+            if (abilityType == AbilityType.DefensiveAbility)
+            {
+                GenerateDefenseChoiceOption(options, abilityType);
+            }
+            else
+            {
+                GenerateAttacksChoiceOptions(options, abilityType);
+            }           
+
+            var attackSetStep = new TextChoiceStep($"Select your {abilityType.ToString()}", null, options);
+            ulong abilityID = 0;
+            attackSetStep.OnValidResult = (result) =>
+            {
+                abilityID = (ulong) result;
+            };
+
+            attackSetStep.SetNextStep(null);
 
 
+            var userChannel = ctx.Channel;
+            var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, ctx.User, attackSetStep);
+
+            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
+            Console.WriteLine(abilityID);
+
+            if (!succeeded) { return; }
+
+            FimonManager.SetAbility(ctx.User.Id, abilityID);
+            await ctx.Channel.SendMessageAsync("Ability was set to your FImon successfully");
         }
 
+        private static void GenerateAttacksChoiceOptions(Dictionary<string, TextChoiceData> options, AbilityType abilityType)
+        {
+            foreach (var ability in AbilityManager.GetAttackAbilities())
+            {
+                if (ability.AbilityType == abilityType)
+                {
+                    options.Add(ability.Name, new TextChoiceData(ability.GetDescriptionForMessage(), ability.Id));
+                }
+            }            
+        }
+
+        private static void GenerateDefenseChoiceOption(Dictionary<string, TextChoiceData> options, AbilityType abilityType)
+        {
+            foreach (var ability in AbilityManager.GetDefensiveAbilities())
+            {
+                if (ability.AbilityType == abilityType)
+                {
+                    options.Add(ability.Name, new TextChoiceData(ability.GetDescriptionForMessage(), ability.Id));
+                }
+            }
+        }
+
+        [Command("setautoattack")]
+        public async Task SetAutoAttack(CommandContext ctx)
+        {
+            await SetAttack(ctx, AbilityType.AutoAttack);
+        }
+
+        [Command("setbasicattack")]
+        public async Task SetBasicAttack(CommandContext ctx)
+        {
+            await SetAttack(ctx, AbilityType.BasicAttack);
+        }
+
+        [Command("setspecialattack")]
+        public async Task SetSpecialAttack(CommandContext ctx)
+        {
+            await SetAttack(ctx, AbilityType.SpecialAttack);
+        }
+
+        [Command("setfinalattack")]
+        public async Task SetUltimateAttack(CommandContext ctx)
+        {
+            await SetAttack(ctx, AbilityType.UltimateAttack);
+        }
+
+        [Command("setdefensive")]
+        public async Task SetDefensiveAbility(CommandContext ctx)
+        {
+            await SetAttack(ctx, AbilityType.DefensiveAbility);
+        }
     }
 }
