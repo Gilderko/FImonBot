@@ -53,10 +53,13 @@ namespace Tutorial.FImons
 
         private int AttackFImon(Ability abilityToUse, InCombatFImon enemyFImon, out string commentary)
         {
-            AttackAbility attackAbility = (AttackAbility)abilityToUse;
-            
-            energy -= attackAbility.GetCostWithFImon(FImonBase);
+            commentary = "";
+
+            AttackAbility attackAbility = (AttackAbility)abilityToUse;       
             Random random = new Random();
+
+            energy -= attackAbility.GetCostWithFImon(FImonBase);
+
             int hitChance = attackAbility.GetHitChanceWithFImon(FImonBase);
             int dodgeChance = enemyFImon.GetDodgeChance();
             int didHit = random.Next(1, 101);
@@ -67,40 +70,44 @@ namespace Tutorial.FImons
             }
 
             int damageValue = random.Next(attackAbility.GetLowerDamageWithFImon(FImonBase), attackAbility.GetUpperDamageWithFImon(FImonBase) + 1);
-            
+            string elementAffection = "";
+
             if (BaseStats.IsStrongAgainst(attackAbility.ElementalType, enemyFImon.FImonBase.PrimaryType))
             {
+                elementAffection = "Used ELEMENT is SUPER effective";
                 damageValue = (int)(damageValue * (1 + BaseStats.primaryTypeModifier / 100f));
             }
             else if (BaseStats.IsStrongAgainst(attackAbility.ElementalType, enemyFImon.FImonBase.SecondaryType))
             {
+                elementAffection = "Used ELEMENT is SUPER effective";
                 damageValue = (int)(damageValue * (1 + BaseStats.secondaryTypeModifier / 100f));
             }
 
             if (BaseStats.IsStrongAgainst(enemyFImon.FImonBase.PrimaryType, attackAbility.ElementalType))
             {
+                elementAffection = "Used ELEMENT NOT effective";
                 damageValue = (int)(damageValue * (1 - BaseStats.primaryTypeModifier / 100f));
             }
             else if (BaseStats.IsStrongAgainst(enemyFImon.FImonBase.SecondaryType, attackAbility.ElementalType))
             {
+                elementAffection = "Used ELEMENT is NOT effective";
                 damageValue = (int)(damageValue * (1 - BaseStats.secondaryTypeModifier / 100f));
             }
 
             int critChance = FImonBase.Luck * BaseStats.luckCritChanceIncrease;
             critChance = (int)(critChance - (FImonBase.Inteligence * BaseStats.inteligenceCritChanceDecrease / 100f));
             int isCriticalhit = random.Next(1, 101);
-            bool didHitCrit = false;
+            string critHitCommentary = "";
             if (isCriticalhit <= critChance)
             {
-                didHitCrit = true;
+                critHitCommentary = "Critical HIT\n";
                 damageValue = (int)(damageValue * 1.5);
             }
-
-            commentary = $"'{FImonBase.Name}' strikes '{enemyFImon.FImonBase.Name}' for '{damageValue}' with '{attackAbility.Name}' of type '{attackAbility.ElementalType}'";
-            if (didHitCrit)
-            {
-                commentary += " as a CRITICAL STRIKE!";
-            }
+            commentary += critHitCommentary;
+            commentary += elementAffection;
+            commentary += $"\n'{FImonBase.Name}' strikes '{enemyFImon.FImonBase.Name}' for '{damageValue}' with '{attackAbility.Name}' of type '{attackAbility.ElementalType}'";
+            
+            
             return damageValue;
         }
 
