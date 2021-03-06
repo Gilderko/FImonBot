@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 
 
-namespace Tutorial.FimonManager
+namespace Tutorial.FImons
 {
-    public static class FimonManager
+    public static class FImonManager
     {
         public static Dictionary<ulong, FImon> mapping = new Dictionary<ulong, FImon>();
         private static IMongoCollection<FImon> collection = null;
@@ -78,7 +78,7 @@ namespace Tutorial.FimonManager
             }
             else if (ability.AbilityType == AbilityType.UltimateAttack)
             {
-                mapping[userID].FinalAttack = abilityID;
+                mapping[userID].FinalAttackID = abilityID;
             }
             else if (ability.AbilityType == AbilityType.DefensiveAbility)
             {

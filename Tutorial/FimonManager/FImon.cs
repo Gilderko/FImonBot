@@ -6,13 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tutorial.FimonManager
+namespace Tutorial.FImons
 {
     [BsonIgnoreExtraElements]
     public class FImon
     {
-        public FImon (ulong id, string name, string desc, FImonType primaryType, FImonType secondaryType, int strength, int stamina,
-            int inteligence, int luck, int agility, int perception)
+        public FImon (ulong id, string name, string desc, ElementalTypes primaryType, ElementalTypes secondaryType, int strength, int stamina,
+            int inteligence, int luck, int agility, int perception, int abilityPower)
         {
             DiscordUserID = id;
             Name = name;
@@ -25,10 +25,13 @@ namespace Tutorial.FimonManager
             Luck = luck;
             Agility = agility;
             Perception = perception;
+            AbilityPower = abilityPower;
             AutoAttackID = null;
             BasicAttackID = null;
             SpecialAttackID = null;
-            FinalAttack = null;
+            FinalAttackID = null;
+            Experience = 0;
+            UnspentSkillPoints = 0;
         }
 
         [BsonId]
@@ -41,16 +44,25 @@ namespace Tutorial.FimonManager
         public string Description { get; set; }
         
         [BsonElement("primary_type")]
-        public FImonType PrimaryType { get; set; }
+        public ElementalTypes PrimaryType { get; set; }
 
         [BsonElement("secondary_type")]
-        public FImonType SecondaryType { get; set; }        
+        public ElementalTypes SecondaryType { get; set; }
+
+        [BsonElement("experience")]
+        public int Experience { get; set; }
+
+        [BsonElement("skill_points_unspent")]
+        public int UnspentSkillPoints { get; set; }
 
         [BsonElement("strength")]
         public int Strength { get; set; }
 
         [BsonElement("stamina")]
         public int Stamina { get; set; }
+
+        [BsonElement("ability_power")]
+        public int AbilityPower { get; set; }
 
         [BsonElement("inteligence")]
         public int Inteligence { get; set; }
@@ -74,7 +86,7 @@ namespace Tutorial.FimonManager
         public ulong? SpecialAttackID { get; set; }
 
         [BsonElement("final_attack")]
-        public ulong? FinalAttack { get; set; }
+        public ulong? FinalAttackID { get; set; }
 
         [BsonElement("defensive_ability")]
         public ulong? DefensiveAbilityID { get;set; }

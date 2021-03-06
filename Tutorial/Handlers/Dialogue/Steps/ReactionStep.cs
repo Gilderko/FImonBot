@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Tutorial.FimonManager;
+using Tutorial.FImons;
 
 namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 {

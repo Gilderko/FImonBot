@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tutorial.FimonManager
+namespace Tutorial.FImons
 {   
     public class AttackAbility : Ability
     {
-        public AttackAbility(ulong id,AbilityType abilityType, FImonType abilityForm, string name, string description, int upperDamage, int lowerDamage
-            ,int hitChance, int critChance) : base(id ,abilityType, abilityForm,name,description)
+        public AttackAbility(ulong id,AbilityType abilityType, ElementalTypes abilityForm, string name, string description, int cost, int upperDamage, int lowerDamage
+            ,int hitChance, int critChance) : base(id ,abilityType, abilityForm,name,description,cost)
         {
             DamageValueUpper = upperDamage;
             DamageValueLower = lowerDamage;
@@ -32,7 +32,7 @@ namespace Tutorial.FimonManager
 
         public string GetDescriptionForMessage()
         {
-            string data = $"{Description}\nThe ability is of {AbilityForm.ToString()} specialization \nDamage range: {DamageValueLower} - {DamageValueUpper}" +
+            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization \nDamage range: {DamageValueLower} - {DamageValueUpper}" +
                 $"\nHit chance: {HitChance}\nCritical hit chance is: {CritChance}";
             return data;
         }

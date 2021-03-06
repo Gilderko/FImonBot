@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord_Bot_Tutorial.Commands;
@@ -10,7 +12,8 @@ using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using MongoDB.Driver;
 using Newtonsoft.Json;
-using Tutorial.FimonManager;
+using Newtonsoft.Json.Linq;
+using Tutorial.FImons;
 
 namespace Discord_Bot_Tutorial
 {
@@ -24,13 +27,23 @@ namespace Discord_Bot_Tutorial
         
         public async Task RunAsync()
         {
-            string json = "";
+            string jsonBotConfigString = "";
 
             using (FileStream fs = File.OpenRead("config.json"))
             using (StreamReader sr = new StreamReader(fs, new UTF8Encoding(false)))
-                json = await sr.ReadToEndAsync().ConfigureAwait(false);
+                jsonBotConfigString = await sr.ReadToEndAsync().ConfigureAwait(false);
 
-            ConfigJson configJson = JsonConvert.DeserializeObject<ConfigJson>(json);
+
+            string jsonLevelExperienceConfig = "";
+            using (FileStream fs = File.OpenRead("levelExperience.json"))
+            using (StreamReader sr = new StreamReader(fs, new UTF8Encoding(false)))
+                jsonLevelExperienceConfig = await sr.ReadToEndAsync().ConfigureAwait(false);
+
+            
+
+            ConfigJson configJson = JsonConvert.DeserializeObject<ConfigJson>(jsonBotConfigString);
+            List<int> levelConfig = JObject.Parse(jsonLevelExperienceConfig)["experience"].Select(x => (int)x).ToList();
+
 
             DiscordConfiguration config = new DiscordConfiguration
             {
@@ -67,13 +80,16 @@ namespace Discord_Bot_Tutorial
             Commands.RegisterCommands<TeamCommands>();
 
             var client = new MongoClient("mongodb+srv://live2020:live2020pass@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
-            Console.WriteLine(client);
+            
+
+
+            
 
             AbilityManager.SetCollection(client.GetDatabase(databaseName));
             AbilityManager.LoadAbilities();
 
-            FimonManager.SetCollection(client.GetDatabase(databaseName));
-            FimonManager.LoadFimons();
+            FImonManager.SetCollection(client.GetDatabase(databaseName));
+            FImonManager.LoadFimons();
             
             await Client.ConnectAsync();
 

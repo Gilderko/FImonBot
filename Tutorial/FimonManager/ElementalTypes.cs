@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tutorial.FimonManager
+namespace Tutorial.FImons
 {
-    public enum FImonType
+    public enum ElementalTypes
     {
         Fire, Water, Ground, Air, Steel
     }

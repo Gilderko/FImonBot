@@ -13,14 +13,16 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue
         private readonly DiscordClient _client;
         private readonly DiscordChannel _channel;
         private readonly DiscordUser _user;
+        private bool _shouldDeleteMessages;
         private IDialogueStep _currentStep;
 
-        public DialogueHandler(DiscordClient client, DiscordChannel channel, DiscordUser user, IDialogueStep startingStep)
+        public DialogueHandler(DiscordClient client, DiscordChannel channel, DiscordUser user, IDialogueStep startingStep, bool shouldDeleteMessages = true)
         {
             _client = client;
             _channel = channel;
             _user = user;
             _currentStep = startingStep;
+            _shouldDeleteMessages = shouldDeleteMessages;
         }
 
         private readonly List<DiscordMessage> messages = new List<DiscordMessage>();
@@ -29,7 +31,10 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue
         {
             while(_currentStep != null)
             {
-                _currentStep.OnMessageAdded += (message) => messages.Add(message);
+                if (_shouldDeleteMessages)
+                {
+                    _currentStep.OnMessageAdded += (message) => messages.Add(message);
+                }                
 
                 bool canceled = await _currentStep.ProcessStep(_client, _channel, _user).ConfigureAwait(false);
                 if (canceled)

@@ -5,17 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tutorial.FimonManager
+namespace Tutorial.FImons
 {   
     public abstract class Ability
     {
-        public Ability(ulong id,AbilityType abilityType, FImonType abilityForm, string name, string description)
+        public Ability(ulong id,AbilityType abilityType, ElementalTypes abilityForm, string name, string description, int abilityCost)
         {
+            if (id == 0)
+            {
+                throw new Exception();
+            }
             Id = id;
             AbilityType = abilityType;
-            AbilityForm = abilityForm;
+            ElementalType = abilityForm;
             Description = description;
-            Name = name.Trim();           
+            Name = name.Trim();
+            AbilityCost = abilityCost;
         }
 
         [BsonId]
@@ -24,13 +29,16 @@ namespace Tutorial.FimonManager
         [BsonElement("ability_type")]
         public AbilityType AbilityType { get; set; }
 
-        [BsonElement("ability_form")]
-        public FImonType AbilityForm { get; set; }
+        [BsonElement("elemental_type")]
+        public ElementalTypes ElementalType { get; set; }
 
         [BsonElement("name")]
         public string Name { get; set; }
 
         [BsonElement("description")]
-        public string Description { get; set; }        
+        public string Description { get; set; }     
+        
+        [BsonElement("ability_cost")]
+        public int AbilityCost { get; set; }
     }
 }

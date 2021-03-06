@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tutorial.FimonManager
+namespace Tutorial.FImons
 {   
     public class DefensiveAbility : Ability
     {
-        public DefensiveAbility(ulong id, AbilityType abilityType, FImonType abilityForm, string name, string description, int? healVal = null, int? dodgeVal = null) : base(id,abilityType,abilityForm,name,description)
+        public DefensiveAbility(ulong id, AbilityType abilityType, ElementalTypes abilityForm, string name, string description, int cost, int? healVal = null, int? dodgeVal = null) : base(id,abilityType,abilityForm,name,description,cost)
         {
             HealValue = healVal;
             DodgeValue = dodgeVal;
@@ -23,7 +23,7 @@ namespace Tutorial.FimonManager
 
         public string GetDescriptionForMessage()
         {
-            string data = $"{Description}\nThe ability is of {AbilityForm.ToString()} specialization";
+            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization";
             data += HealValue == null ? $"Increases dodge chance by {DodgeValue} for next round" : $"Heals for: {HealValue}";
             return data;
         }
