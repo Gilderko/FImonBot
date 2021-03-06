@@ -13,7 +13,7 @@ namespace Tutorial.FImons
         public const int strengthAutoAttackDamageIncrease = 4;
         public const int strengthAutoAttackCostIncrease = 3;
 
-        public const int abilityPowerDamageIncrease = 3;
+        public const int abilityPowerIntensityIncrease = 3;
         public const int abilityPowerCostIncrease = 2;
 
         public const int staminaHealthIncrease = 4;

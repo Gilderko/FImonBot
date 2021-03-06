@@ -14,15 +14,17 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue
         private readonly DiscordChannel _channel;
         private readonly DiscordUser _user;
         private bool _shouldDeleteMessages;
+        private bool _shouldSendInfo;
         private IDialogueStep _currentStep;
 
-        public DialogueHandler(DiscordClient client, DiscordChannel channel, DiscordUser user, IDialogueStep startingStep, bool shouldDeleteMessages = true)
+        public DialogueHandler(DiscordClient client, DiscordChannel channel, DiscordUser user, IDialogueStep startingStep, bool shouldDeleteMessages = true, bool shouldSentInfo = true)
         {
             _client = client;
             _channel = channel;
             _user = user;
             _currentStep = startingStep;
             _shouldDeleteMessages = shouldDeleteMessages;
+            _shouldSendInfo = shouldSentInfo;
         }
 
         private readonly List<DiscordMessage> messages = new List<DiscordMessage>();
@@ -47,8 +49,11 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue
                         Description = _user.Mention,
                         Color = DiscordColor.Green
                     };
-
-                    await _channel.SendMessageAsync(embed: cancelEmbed).ConfigureAwait(false);
+                    
+                    if (_shouldSendInfo)
+                    {
+                        await _channel.SendMessageAsync(embed: cancelEmbed).ConfigureAwait(false);
+                    }                   
                     return false;
                 }
                 _currentStep = _currentStep.NextStep;
