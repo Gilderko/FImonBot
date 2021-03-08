@@ -90,5 +90,7 @@ namespace Tutorial.FImons
 
         [BsonElement("defensive_ability")]
         public ulong? DefensiveAbilityID { get;set; }
+
+        
     }
 }

@@ -16,8 +16,8 @@ namespace Tutorial.FImons
         public const int abilityPowerIntensityIncrease = 3;
         public const int abilityPowerCostIncrease = 2;
 
-        public const int staminaHealthIncrease = 4;
-        public const int staminaEnergyIncrease = 3;
+        public const int staminaHealthIncrease = 3;
+        public const int staminaEnergyIncrease = 2;
 
         public const int agilityDodgeChanceIncrease = 2;
         public const int agilityHealthDecrease = 2;
@@ -31,8 +31,11 @@ namespace Tutorial.FImons
         public const int inteligenceExpGainIncrease = 4;
         public const int inteligenceCritChanceDecrease = 1;
 
-        public const int primaryTypeModifier = 20;
+        public const int primaryTypeModifier = 15;
         public const int secondaryTypeModifier = 10;
+
+        public const int energyGainWait = 25;
+        public const int abilityPointsToAddOnLevelUp = 2;
 
         public static int TellLevel(int experience)
         {
@@ -80,5 +83,7 @@ namespace Tutorial.FImons
                     return false;
             }
         }  
+
+
     }
 }

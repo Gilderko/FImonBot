@@ -59,6 +59,19 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue
                 _currentStep = _currentStep.NextStep;
             }
             DeleteMessages().ConfigureAwait(false);
+
+            var successEmbed = new DiscordEmbedBuilder()
+            {
+                Title = "The dialogue has successfully been completed",
+                Description = _user.Mention,
+                Color = DiscordColor.Green
+            };
+
+            if (_shouldSendInfo)
+            {
+                await _channel.SendMessageAsync(embed: successEmbed).ConfigureAwait(false);
+            }
+
             return true;
         }
 

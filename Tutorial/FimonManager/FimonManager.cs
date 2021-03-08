@@ -86,5 +86,23 @@ namespace Tutorial.FImons
             }
             collection.ReplaceOne(s => s.DiscordUserID == userID, mapping[userID]);
         }        
+
+        public static int AwardExperience(ulong userID,int experience)
+        {
+            FImon newFImon = mapping[userID];
+            int currentLevel = BaseStats.TellLevel(newFImon.Experience);
+            
+            int modifiedExperience = (int) (experience * (1 +  newFImon.Inteligence * BaseStats.inteligenceExpGainIncrease/100f - newFImon.Luck * BaseStats.luckExpGainDecrease/100f));
+            newFImon.Experience += modifiedExperience;
+
+            int newLevel = BaseStats.TellLevel(newFImon.Experience);
+            if (newLevel > currentLevel)
+            {
+                newFImon.UnspentSkillPoints += BaseStats.abilityPointsToAddOnLevelUp;
+            }
+
+            collection.ReplaceOne(s => s.DiscordUserID == userID, mapping[userID]);
+            return modifiedExperience;
+        }
     }
 }

@@ -223,6 +223,7 @@ namespace Discord_Bot_Tutorial.Commands
             int highBound = 10;
 
             var strengthStep = new IntStep("Please state a value of you strength", null, lowBound, highBound);
+            strengthStep.dynamicOptionalCommentary = pointsToUse.ToString();
             int strengthValue = 1;
             strengthStep.OnValidResult += (result) =>
             {
@@ -231,7 +232,7 @@ namespace Discord_Bot_Tutorial.Commands
                 ((IntStep)strengthStep.GetNextStep())._maxValue = highBound;
                 ((IntStep)strengthStep.GetNextStep()).dynamicOptionalCommentary = pointsToUse.ToString();
                 Console.WriteLine(pointsToUse);
-            };
+            };            
 
             var staminaStep = new IntStep("Please state a value of you stamina", null, lowBound, highBound);
             int staminaValue = 1;
@@ -348,13 +349,13 @@ namespace Discord_Bot_Tutorial.Commands
                             "of point you can insert into an attribute is 10 a minimum is 1.\nPOINTS WHICH YOU WILL NOT USE WILL BE DISCARDED!!!"
             };
 
-            attributesIntroEmbed.AddField("Strength", $"each point increases your auto-attack damage by {BaseStats.strengthAutoAttackDamageIncrease} and increases its cost by {BaseStats.strengthAutoAttackCostIncrease}");
+            attributesIntroEmbed.AddField("Strength", $"each point increases your auto-attack damage by {BaseStats.strengthAutoAttackDamageIncrease}% and increases its cost by {BaseStats.strengthAutoAttackCostIncrease}%");
             attributesIntroEmbed.AddField("Stamina", $"each point increases your energy pool by {BaseStats.staminaEnergyIncrease}% and your health pool by {BaseStats.staminaHealthIncrease}");
             attributesIntroEmbed.AddField("Inteligence", $"each point increases experience gained by {BaseStats.inteligenceExpGainIncrease}%, but decreases your chance to critically hit by {BaseStats.inteligenceCritChanceDecrease}%");
             attributesIntroEmbed.AddField("Luck", $"each point increases your chance to critically hit by {BaseStats.luckCritChanceIncrease}%, but decreases your experience gained by {BaseStats.luckExpGainDecrease}%");
             attributesIntroEmbed.AddField("Agility", $"each point increases your chane to dodge by {BaseStats.agilityDodgeChanceIncrease}%, but decreases your health by {BaseStats.agilityHealthDecrease}%");
-            attributesIntroEmbed.AddField("Perception", $"each point increases your chance to hit by {BaseStats.perceptionHitChanceIncrease}%, but decreases your chance to dodge by {BaseStats.perceptionDodgeChanceDecrease}");
-            attributesIntroEmbed.AddField("Ability power", $"each point increases the damage, healing and dodge chance of all your non AUTO-ATTACK abilities by {BaseStats.abilityPowerIntensityIncrease} and increases their cost by {BaseStats.abilityPowerCostIncrease}%");
+            attributesIntroEmbed.AddField("Perception", $"each point increases your chance to hit by {BaseStats.perceptionHitChanceIncrease}%, but decreases your chance to dodge by {BaseStats.perceptionDodgeChanceDecrease}%");
+            attributesIntroEmbed.AddField("Ability power", $"each point increases the damage, healing of all your non AUTO-ATTACK abilities by {BaseStats.abilityPowerIntensityIncrease} and increases their cost by {BaseStats.abilityPowerCostIncrease}%");
             return attributesIntroEmbed;
         }
 
@@ -362,37 +363,37 @@ namespace Discord_Bot_Tutorial.Commands
         public async Task InitialiseAbilities(CommandContext ctx)
         {    
             AttackAbility att1 = new AttackAbility(1, AbilityType.AutoAttack, ElementalTypes.Ground,
-                "Punch", "Average punch of FI student",12 ,15, 10, 65, 20);
+                "Punch", "Average punch of FI student",20 , 20, 10, 65, 15);
             AttackAbility att2 = new AttackAbility(2, AbilityType.AutoAttack, ElementalTypes.Fire,
-                "Kick", "Jan Claud van Damn Kick", 15, 20, 5, 70, 5);
+                "Kick", "Jan Claud van Damn Kick", 15, 20, 5, 60, 25);
             AttackAbility att3 = new AttackAbility(3, AbilityType.AutoAttack, ElementalTypes.Air,
-                "Scratch", "Scratches you like your girlfriend... so not at all", 8, 10, 5, 90, 0);
+                "Scratch", "Scratches you like your girlfriend... so not at all", 10, 15, 5, 75, 0);
             //-----------------------
             AttackAbility att4 = new AttackAbility(4, AbilityType.BasicAttack, ElementalTypes.Water,
                 "Water gun", "Almighty stream of sodastream water", 15, 20, 16, 70, 10);
             AttackAbility att5 = new AttackAbility(5, AbilityType.BasicAttack, ElementalTypes.Fire,
-                "FI Roast", "Average roast you get from a FI student", 20, 20, 5, 50, 65);
+                "FI Roast", "Average roast you get from a FI student", 20, 15, 5, 75, 70);
             AttackAbility att6 = new AttackAbility(6, AbilityType.BasicAttack, ElementalTypes.Ground,
                 "Matematika Drsně a svižně", "Swift attack with a previously mentioned book", 18, 18, 10, 80, 45);
             //-----------------------
             AttackAbility att7 = new AttackAbility(7, AbilityType.SpecialAttack, ElementalTypes.Fire,
-                "Odpovednik", "Yet another odpovedník", 35, 35, 20, 80, 10);
+                "Odpovednik", "Yet another odpovedník", 35, 35, 20, 50, 25);
             AttackAbility att8 = new AttackAbility(8, AbilityType.SpecialAttack, ElementalTypes.Air,
-                "Sleeping powder", "The powder of thats made from tears of PB152 students", 40, 30, 15, 75, 10);
+                "Sleeping powder", "The powder of thats made from tears of PB152 students", 40, 30, 15, 55, 50);
             AttackAbility att9 = new AttackAbility(9, AbilityType.SpecialAttack, ElementalTypes.Steel,
-                "Naprosto ez xd", "The greatest line to ever exist", 30, 40, 10, 80, 35);
+                "Naprosto ez xd", "The greatest line to ever exist", 30, 40, 10, 50, 35);
             //-----------------------
             AttackAbility att10 = new AttackAbility(10, AbilityType.UltimateAttack, ElementalTypes.Fire,
-                "Really ni**a?", "The almighty question of FI", 75, 60, 50, 95, 10);
+                "Really ni**a?", "The almighty question of FI", 75, 55, 40, 65, 10);
             AttackAbility att11 = new AttackAbility(11, AbilityType.UltimateAttack, ElementalTypes.Air,
-                "Kontr strike", "Sadly test neprošel", 80, 50, 40, 85, 65);
+                "Kontr strike", "Sadly test neprošel", 80, 35, 30, 60, 90);
             AttackAbility att12 = new AttackAbility(12, AbilityType.UltimateAttack, ElementalTypes.Steel,
-                "Bretuna?", "Tunabre...", 90, 75, 35, 60, 35);
+                "Bretuna?", "Tunabre...", 65, 70, 35, 55, 0);
             //-----------------------
             DefensiveAbility def1 = new DefensiveAbility(13, AbilityType.DefensiveAbility, ElementalTypes.Steel,
-                "Harden", "Gets your... thing... even harder", 80, 65);            
+                "Harden", "Gets your... thing... even harder", 55, 1, 75);            
             DefensiveAbility def3 = new DefensiveAbility(14, AbilityType.DefensiveAbility, ElementalTypes.Air,
-                "Basic Heal", "Heal for moderate amount", 20, 30);
+                "Basic Heal", "Heal for moderate amount", 25, 2, 25);
 
             AbilityManager.AddAbility(att1);
             AbilityManager.AddAbility(att2);
@@ -577,6 +578,7 @@ namespace Discord_Bot_Tutorial.Commands
             DiscordUser waitingFightingUser = second;
 
             InCombatFImon winningFImon = null;
+            InCombatFImon loosingFImon = null;
             string battleResult = "";
             while (true)
             {
@@ -608,6 +610,7 @@ namespace Discord_Bot_Tutorial.Commands
                     Console.WriteLine("Surrender");
                     battleResult = $"{currentFightingFImon.FImonBase.Name} surrendered the fight";
                     winningFImon = waitingFightingFImon;
+                    loosingFImon = currentFightingFImon;
                     break; 
                 }
                 
@@ -630,6 +633,7 @@ namespace Discord_Bot_Tutorial.Commands
                     Console.WriteLine("Oponent Died");
                     battleResult = $"{currentFightingFImon.FImonBase.Name} defeated {waitingFightingFImon.FImonBase.Name} in combat";
                     winningFImon = currentFightingFImon;
+                    loosingFImon = waitingFightingFImon;
                     break;
                 }
 
@@ -643,76 +647,81 @@ namespace Discord_Bot_Tutorial.Commands
                 waitingFightingUser = helpUser;
                 helpUser = null;
             }
+
+            int looserExp = random.Next(10,20);
+            int winnerExp = random.Next(30,50);
+
+            int winningExpReward = FImonManager.AwardExperience(winningFImon.FImonBase.DiscordUserID, winnerExp);
+            int loosingExpReward = FImonManager.AwardExperience(loosingFImon.FImonBase.DiscordUserID, looserExp);
             var winningEmbed = new DiscordEmbedBuilder()
             {
-                Title = $"And the winner is {winningFImon.FImonBase.Name}",
+                Title = $"And the winner is: {winningFImon.FImonBase.Name}",
                 Color = DiscordColor.Gold,
-                Description = "The winner received 200(now a dummy amount) of experience\n" + battleResult
+                Description = $"The winner received {winningExpReward} exp and the looser receives {loosingExpReward} exp\n" + battleResult
             };
-
             await ctx.Channel.SendMessageAsync(embed: winningEmbed);
         }
 
         [Command("getfimon")]
         public async Task GetFimon(CommandContext ctx)
         {
-            InCombatFImon currentFightingFImon = new InCombatFImon(FImonManager.GetFimon(ctx.User.Id));
-            DiscordUser currentFightingUser = ctx.User;
-            Dictionary<DiscordEmoji, ReactionStepData> attackOptions = GenerateAttackOptions(ctx, currentFightingFImon);
+            DiscordUser userToFind = ctx.User;
 
-            ulong AttackerAbilityID = 0;
-            var AttackStep = new ReactionStep("Select your attack", attackOptions);
-            
+            InCombatFImon currentFightingFImon = new InCombatFImon(FImonManager.GetFimon(userToFind.Id));
+            DiscordUser currentFightingUser = userToFind;
+            Dictionary<DiscordEmoji, ReactionStepData> attackOptions = GenerateAttackOptions(ctx, currentFightingFImon);
+           
+            var AttackStep = new ReactionStep("Select your attack", attackOptions);           
 
             var optionalEmbed = new DiscordEmbedBuilder();
             AttackStep.optionalEmbed = optionalEmbed;
             AttackStep.optionalEmbed.AddField($"FImon of owner {currentFightingUser.Username}", currentFightingFImon.FImonBase.Name);
+            AttackStep.optionalEmbed.AddField("Description", currentFightingFImon.FImonBase.Description);
             AttackStep.optionalEmbed.AddField($"Dodge chance", currentFightingFImon.GetDodgeChance().ToString());
             AttackStep.optionalEmbed.AddField("Health", $"{currentFightingFImon.health.ToString()}/{currentFightingFImon.maxHealth}");
             AttackStep.optionalEmbed.AddField("Energy", $"{currentFightingFImon.energy.ToString()}/{currentFightingFImon.maxEnergy}");
             AttackStep.optionalEmbed.AddField("Primary type, Secondary type", $"{currentFightingFImon.FImonBase.PrimaryType}, {currentFightingFImon.FImonBase.SecondaryType}");
 
             var userChannel = ctx.Channel;
-            var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, currentFightingUser, AttackStep, false, true);
+            var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, userToFind, AttackStep,true,false);
 
-            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
+            await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
         }
-
 
         private static Dictionary<DiscordEmoji, ReactionStepData> GenerateAttackOptions(CommandContext ctx, InCombatFImon currentFImon)
         {
-            AttackAbility autoAttack = (AttackAbility) AbilityManager.GetAbility((ulong) currentFImon.FImonBase.AutoAttackID);
-            AttackAbility basicAttack = (AttackAbility)AbilityManager.GetAbility((ulong) currentFImon.FImonBase.BasicAttackID);
-            AttackAbility specialAttack = (AttackAbility)AbilityManager.GetAbility((ulong) currentFImon.FImonBase.SpecialAttackID);
-            AttackAbility finalAttack = (AttackAbility)AbilityManager.GetAbility((ulong) currentFImon.FImonBase.FinalAttackID);
-            DefensiveAbility defensiveAbility = (DefensiveAbility)AbilityManager.GetAbility((ulong) currentFImon.FImonBase.DefensiveAbilityID);
+            AttackAbility autoAttack = (AttackAbility) AbilityManager.GetAbility((ulong)currentFImon.FImonBase.AutoAttackID);
+            AttackAbility basicAttack = (AttackAbility)AbilityManager.GetAbility((ulong)currentFImon.FImonBase.BasicAttackID);
+            AttackAbility specialAttack = (AttackAbility)AbilityManager.GetAbility((ulong)currentFImon.FImonBase.SpecialAttackID);
+            AttackAbility finalAttack = (AttackAbility)AbilityManager.GetAbility((ulong)currentFImon.FImonBase.FinalAttackID);
+            DefensiveAbility defensiveAbility = (DefensiveAbility)AbilityManager.GetAbility((ulong)currentFImon.FImonBase.DefensiveAbilityID);
 
-            FImon FImonBase = currentFImon.FImonBase;
+           
             var options = new Dictionary<DiscordEmoji, ReactionStepData>();            
 
             if (currentFImon.HaveEnoughEnergyForAbility(autoAttack))
             {
-                options.Add(DiscordEmoji.FromName(ctx.Client, ":crossed_swords:"), new ReactionStepData { Content = autoAttack.GetDescriptionWithFImon(FImonBase), NextStep = null, optionalData = autoAttack.Id });
+                options.Add(DiscordEmoji.FromName(ctx.Client, ":crossed_swords:"), new ReactionStepData { Content = $"{autoAttack.Name}\n" + autoAttack.GetDescriptionWithFImon(currentFImon), NextStep = null, optionalData = autoAttack.Id });
             }
             if (currentFImon.HaveEnoughEnergyForAbility(basicAttack))
             {
-                options.Add(DiscordEmoji.FromName(ctx.Client, ":one:"), new ReactionStepData { Content = basicAttack.GetDescriptionWithFImon(FImonBase), NextStep = null, optionalData = basicAttack.Id });
+                options.Add(DiscordEmoji.FromName(ctx.Client, ":one:"), new ReactionStepData { Content = $"{basicAttack.Name}\n" + basicAttack.GetDescriptionWithFImon(currentFImon), NextStep = null, optionalData = basicAttack.Id });
             }
             if (currentFImon.HaveEnoughEnergyForAbility(specialAttack))
             {
-                options.Add(DiscordEmoji.FromName(ctx.Client, ":two:"), new ReactionStepData { Content = specialAttack.GetDescriptionWithFImon(FImonBase), NextStep = null, optionalData = specialAttack.Id });
+                options.Add(DiscordEmoji.FromName(ctx.Client, ":two:"), new ReactionStepData { Content = $"{specialAttack.Name}\n" + specialAttack.GetDescriptionWithFImon(currentFImon), NextStep = null, optionalData = specialAttack.Id });
             }
             if (currentFImon.HaveEnoughEnergyForAbility(finalAttack))
             {
-                options.Add(DiscordEmoji.FromName(ctx.Client, ":three:"), new ReactionStepData { Content = finalAttack.GetDescriptionWithFImon(FImonBase), NextStep = null, optionalData = finalAttack.Id });
+                options.Add(DiscordEmoji.FromName(ctx.Client, ":three:"), new ReactionStepData { Content = $"{finalAttack.Name}\n" + finalAttack.GetDescriptionWithFImon(currentFImon), NextStep = null, optionalData = finalAttack.Id });
             }
-            if (currentFImon.HaveEnoughEnergyForAbility(defensiveAbility))
+            if (currentFImon.HaveEnoughEnergyForAbility(defensiveAbility) && currentFImon.defensiveCharges > 0)
             {
-                options.Add(DiscordEmoji.FromName(ctx.Client, ":shield:"), new ReactionStepData { Content = defensiveAbility.GetDescriptionWithFImon(FImonBase), NextStep = null, optionalData = defensiveAbility.Id });
+                options.Add(DiscordEmoji.FromName(ctx.Client, ":shield:"), new ReactionStepData { Content = $"{defensiveAbility.Name}\n" + defensiveAbility.GetDescriptionWithFImon(currentFImon), NextStep = null, optionalData = defensiveAbility.Id });
             }
 
             ulong def = 0;
-            options.Add(DiscordEmoji.FromName(ctx.Client, ":zzz:"), new ReactionStepData { Content = "Skip turn to generate 20% energy", NextStep = null, optionalData = def });
+            options.Add(DiscordEmoji.FromName(ctx.Client, ":zzz:"), new ReactionStepData { Content = $"Skip turn to generate {BaseStats.energyGainWait}% energy", NextStep = null, optionalData = def });
             return options;
         } 
     }

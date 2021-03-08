@@ -37,41 +37,41 @@ namespace Tutorial.FImons
             return data;
         }
 
-        public string GetDescriptionWithFImon(FImon FImonBase)
+        public string GetDescriptionWithFImon(InCombatFImon FImonBase)
         {
             string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization \nDamage range: {GetLowerDamageWithFImon(FImonBase)} - {GetUpperDamageWithFImon(FImonBase)}" +
-                $"\nHit chance: {GetHitChanceWithFImon(FImonBase)}\nCritical hit chance is: {GetCritChanceWithFImon(FImonBase)}";
+                $"\nEnergy cost: {GetCostWithFImon(FImonBase)}  \nHit chance: {GetHitChanceWithFImon(FImonBase)}\nCritical hit chance is: {GetCritChanceWithFImon(FImonBase)}";
             return data;
         }
 
-        public int GetCritChanceWithFImon(FImon FImonBase)
+        public int GetCritChanceWithFImon(InCombatFImon FImonBase)
         {
-            return CritChance + FImonBase.Luck * BaseStats.luckCritChanceIncrease;
+            return CritChance + FImonBase.FImonBase.Luck * BaseStats.luckCritChanceIncrease;
         }
-        public int GetHitChanceWithFImon(FImon FImonBase)
+        public int GetHitChanceWithFImon(InCombatFImon FImonBase)
         {
-            return HitChance + FImonBase.Perception * BaseStats.perceptionHitChanceIncrease;
+            return HitChance + FImonBase.FImonBase.Perception * BaseStats.perceptionHitChanceIncrease;
         }
-        public int GetLowerDamageWithFImon(FImon FImonBase)
+        public int GetLowerDamageWithFImon(InCombatFImon FImonBase)
         {
             if (AbilityType == AbilityType.AutoAttack)
             {
-                return (int)(DamageValueLower * (1 + FImonBase.Strength * BaseStats.strengthAutoAttackDamageIncrease / 100f));
+                return (int)(DamageValueLower * (1 + FImonBase.FImonBase.Strength * BaseStats.strengthAutoAttackDamageIncrease / 100f));
             }
             else
             {
-                return (int)(DamageValueLower * (1 + FImonBase.AbilityPower * BaseStats.abilityPowerIntensityIncrease / 100f));
+                return (int)(DamageValueLower * (1 + FImonBase.FImonBase.AbilityPower * BaseStats.abilityPowerIntensityIncrease / 100f));
             }
         }
-        public int GetUpperDamageWithFImon(FImon FImonBase)
+        public int GetUpperDamageWithFImon(InCombatFImon FImonBase)
         {
             if (AbilityType == AbilityType.AutoAttack)
             {
-                return (int)(DamageValueUpper * (1 + FImonBase.Strength * BaseStats.strengthAutoAttackDamageIncrease / 100f));
+                return (int)(DamageValueUpper * (1 + FImonBase.FImonBase.Strength * BaseStats.strengthAutoAttackDamageIncrease / 100f));
             }
             else
             {
-                return (int)(DamageValueUpper * (1 + FImonBase.AbilityPower * BaseStats.abilityPowerIntensityIncrease / 100f));
+                return (int)(DamageValueUpper * (1 + FImonBase.FImonBase.AbilityPower * BaseStats.abilityPowerIntensityIncrease / 100f));
             }
         }
     }

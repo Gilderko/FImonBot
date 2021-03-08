@@ -41,17 +41,17 @@ namespace Tutorial.FImons
         [BsonElement("ability_cost")]
         public int AbilityCost { get; set; }
 
-        public int GetCostWithFImon(FImon FImonBase)
+        public int GetCostWithFImon(InCombatFImon FImonBase)
         {
             int cost = AbilityCost;
             if (AbilityType == AbilityType.AutoAttack)
             {
-                cost = (int)(cost * (1 + FImonBase.Strength * BaseStats.strengthAutoAttackCostIncrease / 100f));
+                cost = (int)(cost * (1 + FImonBase.FImonBase.Strength * BaseStats.strengthAutoAttackCostIncrease / 100f));
 
             }
             else
             {
-                cost = (int)(cost * (1 + FImonBase.AbilityPower * BaseStats.abilityPowerCostIncrease / 100f));
+                cost = (int)(cost * (1 + FImonBase.FImonBase.AbilityPower * BaseStats.abilityPowerCostIncrease / 100f));
             }
             return cost;
         }

@@ -8,7 +8,7 @@ namespace Tutorial.FImons
 {
     public class InCombatFImon
     {
-        public const int START_HEALTH = 150;
+        public const int START_HEALTH = 125;
         public const int START_ENERGY = 115;
 
         public int maxHealth;
@@ -16,6 +16,8 @@ namespace Tutorial.FImons
 
         public int health;
         public int energy;
+
+        public int defensiveCharges;
 
         public FImon FImonBase;
 
@@ -26,6 +28,7 @@ namespace Tutorial.FImons
             maxHealth = health;
             energy = (int) (START_ENERGY * (1 + FImonBase.Stamina*BaseStats.staminaEnergyIncrease / 100f));
             maxEnergy = energy;
+            defensiveCharges = ((DefensiveAbility )(AbilityManager.GetAbility((ulong) FImonBase.DefensiveAbilityID))).Charges;
         }
 
         public int UseAbilityFImon(Ability abilityToUse, InCombatFImon enemyFImon, out string commentary)
@@ -33,15 +36,16 @@ namespace Tutorial.FImons
             if (abilityToUse == null)
             {
                 WaitTurn();
-                commentary = $"{FImonBase.Name} has decided to wait a turn to replenish 20% of his energy";
+                commentary = $"{FImonBase.Name} has decided to wait a turn to replenish {BaseStats.energyGainWait}% of his energy";
                 return 0;
             }
             else if (abilityToUse.AbilityType == AbilityType.DefensiveAbility)
             {
                 DefensiveAbility defensiveAbility = (DefensiveAbility)abilityToUse;
                 health = Math.Clamp(health + defensiveAbility.GetHealValueWithFImon(FImonBase), 0, maxHealth);
-                energy -= defensiveAbility.GetCostWithFImon(FImonBase);
+                energy -= defensiveAbility.GetCostWithFImon(this);
                 commentary = $"{FImonBase.Name} has decided to heal himself for {defensiveAbility.GetHealValueWithFImon(FImonBase)}";
+                defensiveCharges--;
                 return 0;
             }
             else
@@ -58,9 +62,9 @@ namespace Tutorial.FImons
             AttackAbility attackAbility = (AttackAbility)abilityToUse;       
             Random random = new Random();
 
-            energy -= attackAbility.GetCostWithFImon(FImonBase);
+            energy -= attackAbility.GetCostWithFImon(this);
 
-            int hitChance = attackAbility.GetHitChanceWithFImon(FImonBase);
+            int hitChance = attackAbility.GetHitChanceWithFImon(this);
             int dodgeChance = enemyFImon.GetDodgeChance();
             int didHit = random.Next(1, 101);
             if (didHit > hitChance - dodgeChance)
@@ -69,7 +73,7 @@ namespace Tutorial.FImons
                 return 0;
             }
 
-            int damageValue = random.Next(attackAbility.GetLowerDamageWithFImon(FImonBase), attackAbility.GetUpperDamageWithFImon(FImonBase) + 1);
+            int damageValue = random.Next(attackAbility.GetLowerDamageWithFImon(this), attackAbility.GetUpperDamageWithFImon(this) + 1);
             string elementAffection = "";
 
             if (BaseStats.IsStrongAgainst(attackAbility.ElementalType, enemyFImon.FImonBase.PrimaryType))
@@ -113,7 +117,7 @@ namespace Tutorial.FImons
 
         public bool HaveEnoughEnergyForAbility(Ability abilityToUse)
         {
-            int cost = abilityToUse.GetCostWithFImon(FImonBase);            
+            int cost = abilityToUse.GetCostWithFImon(this);            
             if (cost > energy)
             {
                 return false;
@@ -127,7 +131,7 @@ namespace Tutorial.FImons
         }
         public void WaitTurn()
         {
-            energy = Math.Clamp(energy + (int)(maxHealth * 0.2f), 0, maxEnergy);
+            energy = Math.Clamp(energy + (int)(maxEnergy * BaseStats.energyGainWait/100f), 0, maxEnergy);
         }   
     }
 }
