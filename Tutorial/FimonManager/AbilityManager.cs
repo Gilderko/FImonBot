@@ -60,7 +60,7 @@ namespace Tutorial.FImons
             }
             Console.WriteLine("Ability added");
         }
-        internal static void SetCollection(IMongoDatabase database)
+        public static void SetCollection(IMongoDatabase database)
         {            
             attackCollection = database.GetCollection<AttackAbility>(attackCollectionName);
             defensiveCollection = database.GetCollection<DefensiveAbility>(defensiveCollectionName);
@@ -90,7 +90,7 @@ namespace Tutorial.FImons
             }
         }
 
-        internal static IEnumerable<DefensiveAbility> GetDefensiveAbilities()
+        public static IEnumerable<DefensiveAbility> GetDefensiveAbilities()
         {
             foreach (var ability in defensiveAbilities.Values)
             {

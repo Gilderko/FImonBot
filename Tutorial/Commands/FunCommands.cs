@@ -349,13 +349,15 @@ namespace Discord_Bot_Tutorial.Commands
                             "of point you can insert into an attribute is 10 a minimum is 1.\nPOINTS WHICH YOU WILL NOT USE WILL BE DISCARDED!!!"
             };
 
+            
+
             attributesIntroEmbed.AddField("Strength", $"each point increases your auto-attack damage by {BaseStats.strengthAutoAttackDamageIncrease}% and increases its cost by {BaseStats.strengthAutoAttackCostIncrease}%");
-            attributesIntroEmbed.AddField("Stamina", $"each point increases your energy pool by {BaseStats.staminaEnergyIncrease}% and your health pool by {BaseStats.staminaHealthIncrease}");
+            attributesIntroEmbed.AddField("Stamina", $"each point increases your energy pool by {BaseStats.staminaEnergyIncrease}% and your health pool by {BaseStats.staminaHealthIncrease}%");
             attributesIntroEmbed.AddField("Inteligence", $"each point increases experience gained by {BaseStats.inteligenceExpGainIncrease}%, but decreases your chance to critically hit by {BaseStats.inteligenceCritChanceDecrease}%");
             attributesIntroEmbed.AddField("Luck", $"each point increases your chance to critically hit by {BaseStats.luckCritChanceIncrease}%, but decreases your experience gained by {BaseStats.luckExpGainDecrease}%");
             attributesIntroEmbed.AddField("Agility", $"each point increases your chane to dodge by {BaseStats.agilityDodgeChanceIncrease}%, but decreases your health by {BaseStats.agilityHealthDecrease}%");
             attributesIntroEmbed.AddField("Perception", $"each point increases your chance to hit by {BaseStats.perceptionHitChanceIncrease}%, but decreases your chance to dodge by {BaseStats.perceptionDodgeChanceDecrease}%");
-            attributesIntroEmbed.AddField("Ability power", $"each point increases the damage, healing of all your non AUTO-ATTACK abilities by {BaseStats.abilityPowerIntensityIncrease} and increases their cost by {BaseStats.abilityPowerCostIncrease}%");
+            attributesIntroEmbed.AddField("Ability power", $"each point increases the damage, healing of all your non AUTO-ATTACK abilities by {BaseStats.abilityPowerIntensityIncrease}% and increases their cost by {BaseStats.abilityPowerCostIncrease}%");
             return attributesIntroEmbed;
         }
 
