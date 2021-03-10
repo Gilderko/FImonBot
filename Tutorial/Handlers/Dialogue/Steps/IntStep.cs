@@ -2,8 +2,6 @@
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
@@ -16,7 +14,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 
         public string? dynamicOptionalCommentary = null;
 
-        public IntStep(string content,IDialogueStep nextStep, int minLength, int maxLength) : base(content)
+        public IntStep(string content, IDialogueStep nextStep, int minLength, int maxLength) : base(content)
         {
             _nextStep = nextStep;
             _minValue = minLength;
@@ -48,7 +46,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 
             if (dynamicOptionalCommentary != null)
             {
-                embedBuidler.AddField("You still have atribute points to spend:",dynamicOptionalCommentary);
+                embedBuidler.AddField("You still have atribute points to spend:", dynamicOptionalCommentary);
             }
             embedBuidler.AddField("To Stop the Dialogue", "User the ?cancel command");
 
@@ -64,7 +62,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                 OnMessageAdded(embded);
 
                 var messageResult = await interactivity.WaitForMessageAsync(x => x.ChannelId == channel.Id && x.Author.Id == user.Id).ConfigureAwait(false);
-                               
+
                 if (messageResult.TimedOut)
                 {
                     return true;
@@ -77,7 +75,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                     return true;
                 }
 
-                if (!int.TryParse(messageResult.Result.Content,out int inputValue))
+                if (!int.TryParse(messageResult.Result.Content, out int inputValue))
                 {
                     await TryAgain(channel, $"Your input is not an integer").ConfigureAwait(false);
                     continue;

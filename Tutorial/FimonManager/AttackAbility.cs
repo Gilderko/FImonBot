@@ -1,16 +1,11 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tutorial.FImons
-{   
+{
     public class AttackAbility : Ability
     {
-        public AttackAbility(ulong id,AbilityType abilityType, ElementalTypes abilityForm, string name, string description, int cost, int upperDamage, int lowerDamage
-            ,int hitChance, int critChance) : base(id ,abilityType, abilityForm,name,description,cost)
+        public AttackAbility(ulong id, AbilityType abilityType, ElementalTypes abilityForm, string name, string description, int cost, int upperDamage, int lowerDamage
+            , int hitChance, int critChance) : base(id, abilityType, abilityForm, name, description, cost)
         {
             DamageValueUpper = upperDamage;
             DamageValueLower = lowerDamage;
@@ -19,16 +14,16 @@ namespace Tutorial.FImons
         }
 
         [BsonElement("damage_value_upper")]
-        public int DamageValueUpper { get; set; }
+        public int DamageValueUpper { get; private set; }
 
         [BsonElement("damage_value_lower")]
-        public int DamageValueLower { get; set; }
+        public int DamageValueLower { get; private set; }
 
         [BsonElement("hit_chance")]
-        public int HitChance { get; set; }
+        public int HitChance { get; private set; }
 
         [BsonElement("crit_chance")]
-        public int CritChance { get; set; }
+        public int CritChance { get; private set; }
 
         public string GetDescriptionForMessage()
         {
@@ -37,41 +32,41 @@ namespace Tutorial.FImons
             return data;
         }
 
-        public string GetDescriptionWithFImon(InCombatFImon FImonBase)
+        public string GetDescriptionWithFImon(FImon FImonBase)
         {
             string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization \nDamage range: {GetLowerDamageWithFImon(FImonBase)} - {GetUpperDamageWithFImon(FImonBase)}" +
                 $"\nEnergy cost: {GetCostWithFImon(FImonBase)}  \nHit chance: {GetHitChanceWithFImon(FImonBase)}\nCritical hit chance is: {GetCritChanceWithFImon(FImonBase)}";
             return data;
         }
 
-        public int GetCritChanceWithFImon(InCombatFImon FImonBase)
+        public int GetCritChanceWithFImon(FImon FImonBase)
         {
-            return CritChance + FImonBase.FImonBase.Luck * BaseStats.luckCritChanceIncrease;
+            return CritChance + FImonBase.Luck * BaseStats.luckCritChanceIncrease;
         }
-        public int GetHitChanceWithFImon(InCombatFImon FImonBase)
+        public int GetHitChanceWithFImon(FImon FImonBase)
         {
-            return HitChance + FImonBase.FImonBase.Perception * BaseStats.perceptionHitChanceIncrease;
+            return HitChance + FImonBase.Perception * BaseStats.perceptionHitChanceIncrease;
         }
-        public int GetLowerDamageWithFImon(InCombatFImon FImonBase)
+        public int GetLowerDamageWithFImon(FImon FImonBase)
         {
             if (AbilityType == AbilityType.AutoAttack)
             {
-                return (int)(DamageValueLower * (1 + FImonBase.FImonBase.Strength * BaseStats.strengthAutoAttackDamageIncrease / 100f));
+                return (int)(DamageValueLower * (1 + FImonBase.Strength * BaseStats.strengthAutoAttackDamageIncrease / 100f));
             }
             else
             {
-                return (int)(DamageValueLower * (1 + FImonBase.FImonBase.AbilityPower * BaseStats.abilityPowerIntensityIncrease / 100f));
+                return (int)(DamageValueLower * (1 + FImonBase.AbilityPower * BaseStats.abilityPowerIntensityIncrease / 100f));
             }
         }
-        public int GetUpperDamageWithFImon(InCombatFImon FImonBase)
+        public int GetUpperDamageWithFImon(FImon FImonBase)
         {
             if (AbilityType == AbilityType.AutoAttack)
             {
-                return (int)(DamageValueUpper * (1 + FImonBase.FImonBase.Strength * BaseStats.strengthAutoAttackDamageIncrease / 100f));
+                return (int)(DamageValueUpper * (1 + FImonBase.Strength * BaseStats.strengthAutoAttackDamageIncrease / 100f));
             }
             else
             {
-                return (int)(DamageValueUpper * (1 + FImonBase.FImonBase.AbilityPower * BaseStats.abilityPowerIntensityIncrease / 100f));
+                return (int)(DamageValueUpper * (1 + FImonBase.AbilityPower * BaseStats.abilityPowerIntensityIncrease / 100f));
             }
         }
     }

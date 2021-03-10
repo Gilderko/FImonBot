@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Discord_Bot_Tutorial.Attributes
@@ -28,19 +27,19 @@ namespace Discord_Bot_Tutorial.Attributes
                 return Task.FromResult(false);
             }
 
-            bool contains = CategoryNames.Contains(ctx.Channel.Parent.Name,StringComparer.OrdinalIgnoreCase);
+            bool contains = CategoryNames.Contains(ctx.Channel.Parent.Name, StringComparer.OrdinalIgnoreCase);
 
             switch (CheckMode)
             {
                 case ChannelCheckMode.Any:
                     return Task.FromResult(contains);
-                    
+
                 case ChannelCheckMode.None:
                     return Task.FromResult(!contains);
-                    
+
                 default:
-                    return Task.FromResult(false);                    
-            }             
+                    return Task.FromResult(false);
+            }
         }
     }
 }

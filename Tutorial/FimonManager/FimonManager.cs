@@ -1,6 +1,4 @@
-﻿using DSharpPlus.Entities;
-using MongoDB.Bson;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 
@@ -9,28 +7,36 @@ namespace Tutorial.FImons
 {
     public static class FImonManager
     {
-        public static Dictionary<ulong, FImon> mapping = new Dictionary<ulong, FImon>();
+        private static Dictionary<ulong, FImon> mapping = new Dictionary<ulong, FImon>();
         private static IMongoCollection<FImon> collection = null;
         private const string collectionName = "FImons";
 
         public static void LoadFimons()
         {
             if (collection == null) { return; }
-            Console.WriteLine("Loading Fimons");           
+            Console.WriteLine("Loading Fimons");
 
+            var somet = collection.WithReadConcern(new ReadConcern());
             var allFImon = collection.Find(s => true).ToList();
-            foreach (var FImon in allFImon)
+            
+            foreach (var currentFImon in allFImon)
             {
-                mapping.Add(FImon.DiscordUserID, FImon);
+                mapping.Add(currentFImon.DiscordUserID, currentFImon);
+                currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.AutoAttackID.Value));               
+                currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.BasicAttackID.Value));
+                currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.SpecialAttackID.Value));
+                currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.FinalAttackID.Value));
+                currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.DefensiveAbilityID.Value));
+                currentFImon.UpdateFImonDatabase += UpdateFImon;
             }
         }
 
         public static void AddFimon(FImon newFImon)
         {
-            if (collection == null) 
+            if (collection == null)
             {
                 Console.WriteLine("no database");
-                return; 
+                return;
             }
 
             if (mapping.ContainsKey(newFImon.DiscordUserID))
@@ -39,10 +45,11 @@ namespace Tutorial.FImons
                 return;
             }
 
-            Console.WriteLine("Adding FImon");            
+            Console.WriteLine("Adding FImon");
 
-            mapping.Add(newFImon.DiscordUserID, newFImon);            
-            
+            mapping.Add(newFImon.DiscordUserID, newFImon);
+            newFImon.UpdateFImonDatabase += UpdateFImon;
+
             collection.InsertOne(newFImon);
             Console.WriteLine("FImon added");
         }
@@ -61,48 +68,9 @@ namespace Tutorial.FImons
             return mapping[discordUserID];
         }
 
-        public static void SetAbility(ulong userID, ulong abilityID)
+        public static void UpdateFImon(FImon fImon)
         {
-            Ability ability = AbilityManager.GetAbility(abilityID);
-            if (ability.AbilityType == AbilityType.AutoAttack)
-            {
-                mapping[userID].AutoAttackID = abilityID;
-            }
-            else if (ability.AbilityType == AbilityType.BasicAttack)
-            {
-                mapping[userID].BasicAttackID = abilityID;
-            }
-            else if (ability.AbilityType == AbilityType.SpecialAttack)
-            {
-                mapping[userID].SpecialAttackID = abilityID;
-            }
-            else if (ability.AbilityType == AbilityType.UltimateAttack)
-            {
-                mapping[userID].FinalAttackID = abilityID;
-            }
-            else if (ability.AbilityType == AbilityType.DefensiveAbility)
-            {
-                mapping[userID].DefensiveAbilityID = abilityID;
-            }
-            collection.ReplaceOne(s => s.DiscordUserID == userID, mapping[userID]);
-        }        
-
-        public static int AwardExperience(ulong userID,int experience)
-        {
-            FImon newFImon = mapping[userID];
-            int currentLevel = BaseStats.TellLevel(newFImon.Experience);
-            
-            int modifiedExperience = (int) (experience * (1 +  newFImon.Inteligence * BaseStats.inteligenceExpGainIncrease/100f - newFImon.Luck * BaseStats.luckExpGainDecrease/100f));
-            newFImon.Experience += modifiedExperience;
-
-            int newLevel = BaseStats.TellLevel(newFImon.Experience);
-            if (newLevel > currentLevel)
-            {
-                newFImon.UnspentSkillPoints += BaseStats.abilityPointsToAddOnLevelUp;
-            }
-
-            collection.ReplaceOne(s => s.DiscordUserID == userID, mapping[userID]);
-            return modifiedExperience;
+            collection.ReplaceOne(s => s.DiscordUserID == fImon.DiscordUserID, fImon);
         }
     }
 }

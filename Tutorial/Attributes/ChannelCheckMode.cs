@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Discord_Bot_Tutorial.Attributes
+﻿namespace Discord_Bot_Tutorial.Attributes
 {
     public enum ChannelCheckMode
     {

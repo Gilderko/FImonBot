@@ -1,25 +1,20 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tutorial.FImons
-{   
+{
     public class DefensiveAbility : Ability
     {
-        public DefensiveAbility(ulong id, AbilityType abilityType, ElementalTypes abilityForm, string name, string description, int cost, int charges, int? healVal = null) : base(id,abilityType,abilityForm,name,description,cost)
+        public DefensiveAbility(ulong id, AbilityType abilityType, ElementalTypes abilityForm, string name, string description, int cost, int charges, int? healVal = null) : base(id, abilityType, abilityForm, name, description, cost)
         {
             HealValue = healVal;
             Charges = charges;
         }
 
         [BsonElement("heal_value")]
-        public int? HealValue { get; set; }
+        public int? HealValue { get; private set; }
 
         [BsonElement("charges")]
-        public int Charges { get; set; }
+        public int Charges { get; private set; }
 
         public string GetDescriptionForMessage()
         {
@@ -27,9 +22,9 @@ namespace Tutorial.FImons
             return data;
         }
 
-        public string GetDescriptionWithFImon(InCombatFImon FImonBase)
+        public string GetDescriptionWithFImon(FImon FImonBase)
         {
-            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization\nHeals for: {GetHealValueWithFImon(FImonBase.FImonBase)}\n Energy cost: {GetCostWithFImon(FImonBase)} \nCharges: {FImonBase.defensiveCharges}";
+            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization\nHeals for: {GetHealValueWithFImon(FImonBase)}\n Energy cost: {GetCostWithFImon(FImonBase)} \nCharges: {Charges}";
             return data;
         }
 

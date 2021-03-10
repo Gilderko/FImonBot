@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Tutorial.FImons
 {
     public static class BaseStats
     {
         public static List<int> levelExperienceRequirements = new List<int>();
-        
+
         public const int strengthAutoAttackDamageIncrease = 4;
         public const int strengthAutoAttackCostIncrease = 3;
 
@@ -82,7 +78,7 @@ namespace Tutorial.FImons
                 default:
                     return false;
             }
-        }  
+        }
 
 
     }

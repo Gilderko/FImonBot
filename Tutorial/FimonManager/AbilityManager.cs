@@ -2,29 +2,28 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tutorial.FImons
 {
     public static class AbilityManager
     {
-        public static Dictionary<ulong, AttackAbility> attackAbilities = new Dictionary<ulong, AttackAbility>();
-        public static Dictionary<ulong, DefensiveAbility> defensiveAbilities = new Dictionary<ulong, DefensiveAbility>();
+        private static Dictionary<ulong, AttackAbility> attackAbilities = new Dictionary<ulong, AttackAbility>();
+        private static Dictionary<ulong, DefensiveAbility> defensiveAbilities = new Dictionary<ulong, DefensiveAbility>();
         private static IMongoCollection<AttackAbility> attackCollection = null;
         private static IMongoCollection<DefensiveAbility> defensiveCollection = null;
         private const string attackCollectionName = "AttackAbilities";
         private const string defensiveCollectionName = "DefensiveAbilities";
+
         public static void LoadAbilities()
         {
             if (attackCollection == null || defensiveCollection == null) { return; }
-            Console.WriteLine("Loading Abilities");            
+            Console.WriteLine("Loading Abilities");
 
             var attAb = attackCollection.Find(s => true).ToList();
             var defAb = defensiveCollection.Find(s => true).ToList();
             foreach (var attackAbility in attAb)
             {
-                attackAbilities.Add(attackAbility.Id,attackAbility);
+                attackAbilities.Add(attackAbility.Id, attackAbility);
             }
             foreach (var defensiveAbility in defAb)
             {
@@ -41,7 +40,7 @@ namespace Tutorial.FImons
                 Console.WriteLine("already have this ID");
                 return;
             }
-            Console.WriteLine("Adding Ability");            
+            Console.WriteLine("Adding Ability");
 
             AttackAbility attackAbility = newAbility as AttackAbility;
             DefensiveAbility defensiveAbility = newAbility as DefensiveAbility;
@@ -61,7 +60,7 @@ namespace Tutorial.FImons
             Console.WriteLine("Ability added");
         }
         public static void SetCollection(IMongoDatabase database)
-        {            
+        {
             attackCollection = database.GetCollection<AttackAbility>(attackCollectionName);
             defensiveCollection = database.GetCollection<DefensiveAbility>(defensiveCollectionName);
         }

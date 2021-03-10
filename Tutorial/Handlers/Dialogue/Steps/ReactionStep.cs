@@ -3,13 +3,11 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using Tutorial.FImons;
 
 namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 {
-    
+
     public class ReactionStep : DialogueStepBase
     {
         private IDialogueStep _nextStep;
@@ -18,7 +16,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 
         private DiscordEmoji _selectedEmoji;
 
-        public ReactionStep(string content,Dictionary<DiscordEmoji, ReactionStepData> options) : base(content)
+        public ReactionStep(string content, Dictionary<DiscordEmoji, ReactionStepData> options) : base(content)
         {
             _options = options;
         }
@@ -26,7 +24,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
         public override IDialogueStep NextStep => _nextStep ?? _options[_selectedEmoji].NextStep;
 
         public Action<DiscordEmoji> OnValidResult { get; set; } = delegate { };
-        
+
         public void SetNextStep(IDialogueStep nextstep)
         {
             _nextStep = nextstep;
@@ -50,7 +48,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                     Color = DiscordColor.Blue,
                     Description = $"{user.Mention}, please respond down below :)"
                 };
-            }            
+            }
             else
             {
                 embedBuidler = optionalEmbed;
@@ -71,15 +69,15 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 
                 OnMessageAdded(embed);
 
-                foreach(var emoji in _options.Keys)
+                foreach (var emoji in _options.Keys)
                 {
                     await embed.CreateReactionAsync(emoji).ConfigureAwait(false);
                 }
-                
+
                 await embed.CreateReactionAsync(cancelEmoji).ConfigureAwait(false);
 
                 var reactionResult = await interactivity.WaitForReactionAsync(
-                    x => _options.ContainsKey(x.Emoji) || x.Emoji == cancelEmoji,embed,user).ConfigureAwait(false);
+                    x => _options.ContainsKey(x.Emoji) || x.Emoji == cancelEmoji, embed, user).ConfigureAwait(false);
 
                 if (reactionResult.TimedOut)
                 {
@@ -92,7 +90,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                 }
 
                 _selectedEmoji = reactionResult.Result.Emoji;
-                
+
 
                 OnValidResult(_selectedEmoji);
 

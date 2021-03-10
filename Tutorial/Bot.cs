@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Discord_Bot_Tutorial.Commands;
+﻿using Discord_Bot_Tutorial.Commands;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
@@ -13,6 +7,12 @@ using DSharpPlus.Interactivity.Extensions;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Tutorial.FImons;
 
 namespace Discord_Bot_Tutorial
@@ -24,7 +24,7 @@ namespace Discord_Bot_Tutorial
         public CommandsNextExtension Commands { get; private set; }
 
         public const string databaseName = "FImonDB";
-        
+
         public async Task RunAsync()
         {
             string jsonBotConfigString = "";
@@ -39,7 +39,7 @@ namespace Discord_Bot_Tutorial
             using (StreamReader sr = new StreamReader(fs, new UTF8Encoding(false)))
                 jsonLevelExperienceConfig = await sr.ReadToEndAsync().ConfigureAwait(false);
 
-            
+
 
             ConfigJson configJson = JsonConvert.DeserializeObject<ConfigJson>(jsonBotConfigString);
             List<int> levelConfig = JObject.Parse(jsonLevelExperienceConfig)["experience"].Select(x => (int)x).ToList();
@@ -50,9 +50,9 @@ namespace Discord_Bot_Tutorial
                 Token = configJson.Token,
                 TokenType = TokenType.Bot,
                 AutoReconnect = true,
-                MinimumLogLevel = Microsoft.Extensions.Logging.LogLevel.Debug,                
+                MinimumLogLevel = Microsoft.Extensions.Logging.LogLevel.Debug,
             };
-            
+
             Client = new DiscordClient(config);
 
             Client.Ready += OnClientReady;
@@ -63,7 +63,7 @@ namespace Discord_Bot_Tutorial
             };
 
             Client.UseInteractivity(interactivityConfig);
-            
+
             CommandsNextConfiguration commandsConfig = new CommandsNextConfiguration
             {
                 StringPrefixes = new string[] { configJson.Prefix },
@@ -75,28 +75,28 @@ namespace Discord_Bot_Tutorial
             };
 
             Commands = Client.UseCommandsNext(commandsConfig);
-            
+
             Commands.RegisterCommands<FunCommands>(); // Register new Commands
             Commands.RegisterCommands<TeamCommands>();
 
             var client = new MongoClient("mongodb+srv://live2020:live2020pass@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
-            
 
 
-            
+
+
 
             AbilityManager.SetCollection(client.GetDatabase(databaseName));
             AbilityManager.LoadAbilities();
 
             FImonManager.SetCollection(client.GetDatabase(databaseName));
             FImonManager.LoadFimons();
-            
+
             await Client.ConnectAsync();
 
             await Task.Delay(-1);
         }
 
-        private Task OnClientReady(object sender,ReadyEventArgs e)
+        private Task OnClientReady(object sender, ReadyEventArgs e)
         {
             return Task.CompletedTask;
         }

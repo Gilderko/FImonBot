@@ -2,8 +2,6 @@
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
@@ -14,7 +12,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
         private readonly int? _minLength;
         private readonly int? _maxLength;
 
-        public TextStep(string content,IDialogueStep nextStep,int? minLength = null, int? maxLength = null) : base(content)
+        public TextStep(string content, IDialogueStep nextStep, int? minLength = null, int? maxLength = null) : base(content)
         {
             _nextStep = nextStep;
             _minLength = minLength;
@@ -34,7 +32,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
         {
             var embedBuidler = new DiscordEmbedBuilder()
             {
-                Title = _content,                
+                Title = _content,
                 Color = DiscordColor.Blue,
                 Description = $"{user.Mention}, please respond down below :)"
             };
@@ -59,7 +57,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                 OnMessageAdded(embded);
 
                 var messageResult = await interactivity.WaitForMessageAsync(x => x.ChannelId == channel.Id && x.Author.Id == user.Id).ConfigureAwait(false);
-                               
+
                 if (messageResult.TimedOut)
                 {
                     return true;

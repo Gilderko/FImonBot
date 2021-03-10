@@ -1,8 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
@@ -23,7 +21,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
         public abstract IDialogueStep NextStep { get; }
 
         public abstract Task<bool> ProcessStep(DiscordClient client, DiscordChannel channel, DiscordUser user);
-        
+
         protected async Task TryAgain(DiscordChannel channel, string problem)
         {
             var embedBuilder = new DiscordEmbedBuilder

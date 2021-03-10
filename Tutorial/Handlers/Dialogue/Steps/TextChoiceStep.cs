@@ -3,7 +3,6 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
@@ -14,7 +13,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 
         private readonly Dictionary<string, TextChoiceData> _options;
 
-        public TextChoiceStep(string content,IDialogueStep nextStep, Dictionary<string, TextChoiceData> options) : base(content)
+        public TextChoiceStep(string content, IDialogueStep nextStep, Dictionary<string, TextChoiceData> options) : base(content)
         {
             _nextStep = nextStep;
             _options = options;
@@ -33,10 +32,10 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
         {
             var embedBuidler = new DiscordEmbedBuilder()
             {
-                Title = _content,                
+                Title = _content,
                 Color = DiscordColor.Blue,
                 Description = $"{user.Mention}, please type the response :)"
-            };            
+            };
 
             foreach (var text in _options.Keys)
             {
@@ -56,7 +55,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                 var messageResult = await interactivity.WaitForMessageAsync(x => x.ChannelId == channel.Id && x.Author.Id == user.Id).ConfigureAwait(false);
 
                 Console.WriteLine("got message");
-                
+
                 if (messageResult.TimedOut)
                 {
                     return true;
@@ -75,7 +74,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                     await TryAgain(channel, $"Your input string doesnt match the options").ConfigureAwait(false);
                     continue;
                 }
-                
+
                 OnValidResult(match.OptionalData);
                 Console.WriteLine("returning from step");
                 return false;
@@ -105,7 +104,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
             OptionalData = optionalData;
         }
 
-        public string Description { get; set; }        
+        public string Description { get; set; }
         public object OptionalData { get; set; }
     }
 }

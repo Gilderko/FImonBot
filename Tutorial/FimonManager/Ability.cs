@@ -1,15 +1,11 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Tutorial.FImons
-{   
+{
     public abstract class Ability
     {
-        public Ability(ulong id,AbilityType abilityType, ElementalTypes abilityForm, string name, string description, int abilityCost)
+        public Ability(ulong id, AbilityType abilityType, ElementalTypes abilityForm, string name, string description, int abilityCost)
         {
             if (id == 0)
             {
@@ -24,34 +20,34 @@ namespace Tutorial.FImons
         }
 
         [BsonId]
-        public ulong Id { get; set; }
+        public ulong Id { get; private set; }
 
         [BsonElement("ability_type")]
-        public AbilityType AbilityType { get; set; }
+        public AbilityType AbilityType { get; private set; }
 
         [BsonElement("elemental_type")]
-        public ElementalTypes ElementalType { get; set; }
+        public ElementalTypes ElementalType { get; private set; }
 
         [BsonElement("name")]
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         [BsonElement("description")]
-        public string Description { get; set; }     
-        
-        [BsonElement("ability_cost")]
-        public int AbilityCost { get; set; }
+        public string Description { get; private set; }
 
-        public int GetCostWithFImon(InCombatFImon FImonBase)
+        [BsonElement("ability_cost")]
+        public int AbilityCost { get; private set; }
+
+        public int GetCostWithFImon(FImon FImonBase)
         {
             int cost = AbilityCost;
             if (AbilityType == AbilityType.AutoAttack)
             {
-                cost = (int)(cost * (1 + FImonBase.FImonBase.Strength * BaseStats.strengthAutoAttackCostIncrease / 100f));
+                cost = (int)(cost * (1 + FImonBase.Strength * BaseStats.strengthAutoAttackCostIncrease / 100f));
 
             }
             else
             {
-                cost = (int)(cost * (1 + FImonBase.FImonBase.AbilityPower * BaseStats.abilityPowerCostIncrease / 100f));
+                cost = (int)(cost * (1 + FImonBase.AbilityPower * BaseStats.abilityPowerCostIncrease / 100f));
             }
             return cost;
         }

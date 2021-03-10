@@ -1,9 +1,7 @@
 ﻿using Discord_Bot_Tutorial.Handlers.Dialogue.Steps;
 using DSharpPlus;
 using DSharpPlus.Entities;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Discord_Bot_Tutorial.Handlers.Dialogue
@@ -31,12 +29,12 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue
 
         public async Task<bool> ProcessDialogue()
         {
-            while(_currentStep != null)
+            while (_currentStep != null)
             {
                 if (_shouldDeleteMessages)
                 {
                     _currentStep.OnMessageAdded += (message) => messages.Add(message);
-                }                
+                }
 
                 bool canceled = await _currentStep.ProcessStep(_client, _channel, _user).ConfigureAwait(false);
                 if (canceled)
@@ -49,11 +47,11 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue
                         Description = _user.Mention,
                         Color = DiscordColor.Green
                     };
-                    
+
                     if (_shouldSendInfo)
                     {
                         await _channel.SendMessageAsync(embed: cancelEmbed).ConfigureAwait(false);
-                    }                   
+                    }
                     return false;
                 }
                 _currentStep = _currentStep.NextStep;

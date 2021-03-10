@@ -1,8 +1,6 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
