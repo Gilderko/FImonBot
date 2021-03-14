@@ -1,4 +1,4 @@
-﻿namespace Tutorial.FImons
+﻿namespace Tutorial.Game
 {
     public enum ElementalTypes
     {

@@ -69,7 +69,6 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue
             {
                 await _channel.SendMessageAsync(embed: successEmbed).ConfigureAwait(false);
             }
-
             return true;
         }
 

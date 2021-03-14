@@ -1,11 +1,11 @@
-﻿namespace Tutorial.FImons
+﻿namespace Tutorial.Game.Abilities
 {
     public enum AbilityType
     {
         AutoAttack,
         BasicAttack,
         SpecialAttack,
-        UltimateAttack,
+        FinalAttack,
         DefensiveAbility,
     }
 }

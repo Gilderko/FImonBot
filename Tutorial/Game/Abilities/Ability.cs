@@ -1,7 +1,9 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using System;
+using Tutorial.Game.FImons;
+using Tutorial.Game.Stats;
 
-namespace Tutorial.FImons
+namespace Tutorial.Game.Abilities
 {
     public abstract class Ability
     {

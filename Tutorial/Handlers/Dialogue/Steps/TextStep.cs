@@ -52,11 +52,12 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
 
             while (true)
             {
-                var embded = await channel.SendMessageAsync(embed: embedBuidler).ConfigureAwait(false);
+                var embded = await channel.SendMessageAsync(embed: embedBuidler).ConfigureAwait(false);                
 
                 OnMessageAdded(embded);
 
                 var messageResult = await interactivity.WaitForMessageAsync(x => x.ChannelId == channel.Id && x.Author.Id == user.Id).ConfigureAwait(false);
+                
 
                 if (messageResult.TimedOut)
                 {

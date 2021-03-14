@@ -1,6 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using Tutorial.Game.FImons;
+using Tutorial.Game.Stats;
 
-namespace Tutorial.FImons
+namespace Tutorial.Game.Abilities
 {
     public class AttackAbility : Ability
     {

@@ -1,8 +1,10 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
+using Tutorial.Game.Abilities;
+using Tutorial.Game.Stats;
 
-namespace Tutorial.FImons
+namespace Tutorial.Game.FImons
 {
     [BsonIgnoreExtraElements]
     public class FImon
@@ -10,11 +12,11 @@ namespace Tutorial.FImons
         public delegate void OnFimonUpdate(FImon thisFimon);
         public event OnFimonUpdate UpdateFImonDatabase;
 
-        public FImon(ulong id, string name, string desc, ElementalTypes primaryType, ElementalTypes secondaryType, int strength, int stamina,
+        public FImon(ulong id,string name, string desc, ElementalTypes primaryType, ElementalTypes secondaryType, int strength, int stamina,
             int inteligence, int luck, int agility, int perception, int abilityPower)
         {
             Console.WriteLine("Constructor");
-            DiscordUserID = id;
+            FImonID = id;
             Name = name;
             Description = desc;
             PrimaryType = primaryType;
@@ -35,7 +37,7 @@ namespace Tutorial.FImons
         }
 
         [BsonId]
-        public ulong DiscordUserID { get; private set; }
+        public ulong FImonID { get; private set; }
 
         [BsonElement("name")]
         public string Name { get; private set; }
@@ -93,13 +95,22 @@ namespace Tutorial.FImons
 
         // This part is not for saving data
        
+        [BsonIgnore]
         public AttackAbility AutoAttack { get; private set; }
+
+        [BsonIgnore]
         public AttackAbility BasicAttack { get; private set; }
+
+        [BsonIgnore]
         public AttackAbility SpecialAttack { get; private set; }
+
+        [BsonIgnore]
         public AttackAbility FinalAttack { get; private set; }
+
+        [BsonIgnore]
         public DefensiveAbility DefensiveAbility { get; private set; }
 
-        public void SetAbility(Ability ability)
+        public void SetNewAbility(Ability ability)
         {
             FImon fImon = this;
             InitialiseAbility(ability);
@@ -107,16 +118,18 @@ namespace Tutorial.FImons
         }
 
         public void InitialiseAbility(Ability ability)
-        {            
+        {         
+            if (ability == null)
+            {
+                return;
+            }
             if (ability.AbilityType == AbilityType.AutoAttack)
             {
-                Console.WriteLine("init auto");
                 AutoAttack = (ability as AttackAbility);
                 AutoAttackID = ability.Id;
             }
             else if (ability.AbilityType == AbilityType.BasicAttack)
             {
-                Console.WriteLine("init basic");
                 BasicAttack = (ability as AttackAbility);
                 BasicAttackID = ability.Id;
             }
@@ -125,7 +138,7 @@ namespace Tutorial.FImons
                 SpecialAttack = (ability as AttackAbility);
                 SpecialAttackID = ability.Id;
             }
-            else if (ability.AbilityType == AbilityType.UltimateAttack)
+            else if (ability.AbilityType == AbilityType.FinalAttack)
             {
                 FinalAttack = (ability as AttackAbility);
                 FinalAttackID = ability.Id;

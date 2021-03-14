@@ -13,7 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tutorial.FImons;
+using Tutorial.Game;
 
 namespace Discord_Bot_Tutorial
 {
@@ -76,20 +76,19 @@ namespace Discord_Bot_Tutorial
 
             Commands = Client.UseCommandsNext(commandsConfig);
 
-            Commands.RegisterCommands<FunCommands>(); // Register new Commands
+            Commands.RegisterCommands<FImonCommands>(); // Register new Commands
             Commands.RegisterCommands<TeamCommands>();
 
             var client = new MongoClient("mongodb+srv://live2020:live2020pass@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
-
-
-
-
 
             AbilityManager.SetCollection(client.GetDatabase(databaseName));
             AbilityManager.LoadAbilities();
 
             FImonManager.SetCollection(client.GetDatabase(databaseName));
             FImonManager.LoadFimons();
+
+            TrainerManager.SetCollection(client.GetDatabase(databaseName));
+            TrainerManager.LoadTrainers();
 
             await Client.ConnectAsync();
 

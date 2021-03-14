@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Tutorial.FImons
+namespace Tutorial.Game.Stats
 {
     public static class BaseStats
     {
@@ -79,7 +79,5 @@ namespace Tutorial.FImons
                     return false;
             }
         }
-
-
     }
 }

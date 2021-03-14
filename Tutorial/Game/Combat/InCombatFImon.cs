@@ -1,6 +1,9 @@
 ﻿using System;
+using Tutorial.Game.Stats;
+using Tutorial.Game.FImons;
+using Tutorial.Game.Abilities;
 
-namespace Tutorial.FImons
+namespace Tutorial.Game.Combat
 {
     public class InCombatFImon
     {
@@ -24,7 +27,7 @@ namespace Tutorial.FImons
             MaxHealth = CurrentHealth;
             CurrentEnergy = (int)(START_ENERGY * (1 + FImonBase.Stamina * BaseStats.staminaEnergyIncrease / 100f));
             MaxEnergy = CurrentEnergy;
-            DefensiveCharges = FImonBase.DefensiveAbility.Charges;
+            DefensiveCharges = FImonBase.DefensiveAbility == null ? 0 : FImonBase.DefensiveAbility.Charges;
         }
 
         public int UseAbilityFImon(Ability abilityToUse, InCombatFImon enemyFImon, out string commentary)

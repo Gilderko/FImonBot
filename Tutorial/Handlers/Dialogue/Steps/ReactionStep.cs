@@ -30,11 +30,6 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
             _nextStep = nextstep;
         }
 
-        public Dictionary<DiscordEmoji, ReactionStepData> GetOptions()
-        {
-            return _options;
-        }
-
         public async override Task<bool> ProcessStep(DiscordClient client, DiscordChannel channel, DiscordUser user)
         {
             var cancelEmoji = DiscordEmoji.FromName(client, ":x:");
@@ -61,7 +56,7 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
                 embedBuidler.AddField($"{emoji.ToString()} is used for:", _options[emoji].Content);
             }
 
-            var interactivity = client.GetInteractivity();
+            var interactivity = client.GetInteractivity();            
 
             while (true)
             {

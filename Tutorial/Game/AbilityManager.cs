@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tutorial.Game.Abilities;
 
-namespace Tutorial.FImons
+namespace Tutorial.Game
+
 {
     public static class AbilityManager
     {
@@ -65,15 +67,19 @@ namespace Tutorial.FImons
             defensiveCollection = database.GetCollection<DefensiveAbility>(defensiveCollectionName);
         }
 
-        public static Ability GetAbility(ulong abilityId)
+        public static Ability GetAbility(ulong? abilityId)
         {
-            if (attackAbilities.ContainsKey(abilityId))
+            if (!abilityId.HasValue)
             {
-                return attackAbilities[abilityId] as Ability;
+                return null;
             }
-            else if (defensiveAbilities.ContainsKey(abilityId))
+            if (attackAbilities.ContainsKey(abilityId.Value))
             {
-                return defensiveAbilities[abilityId] as Ability;
+                return attackAbilities[abilityId.Value];
+            }
+            else if (defensiveAbilities.ContainsKey(abilityId.Value))
+            {
+                return defensiveAbilities[abilityId.Value];
             }
             else
             {

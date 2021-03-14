@@ -103,7 +103,6 @@ namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
             Description = desc;
             OptionalData = optionalData;
         }
-
         public string Description { get; set; }
         public object OptionalData { get; set; }
     }
