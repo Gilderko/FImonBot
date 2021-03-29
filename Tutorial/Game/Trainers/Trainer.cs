@@ -94,7 +94,7 @@ namespace Tutorial.Game.Trainers
 
         public bool CanAddFImon()
         {
-            return !(FImon1ID.HasValue && FImon2ID.HasValue && FImon3ID.HasValue && FImon4ID.HasValue);
+            return !(FImon1ID == null && FImon2ID == null && FImon3ID == null && FImon4ID == null);
         }
 
         public bool HasFImon()

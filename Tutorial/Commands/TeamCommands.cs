@@ -187,8 +187,8 @@ namespace Discord_Bot_Tutorial.Commands
 
             if (!reaction.TimedOut)
             {
-                var upRole = ctx.Guild.GetRole(815900308801716254);
-                var downRole = ctx.Guild.GetRole(815900308801716254);
+                var upRole = ctx.Guild.GetRole(811295585285963837);
+                var downRole = ctx.Guild.GetRole(811370096278503455);
                 if (reaction.Result.Emoji == thumbsUpEmoji)
                 {
                     await ctx.Member.GrantRoleAsync(upRole).ConfigureAwait(false);

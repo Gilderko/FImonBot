@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Tutorial.Game.FImons;
 
@@ -7,7 +8,7 @@ namespace Tutorial.Game
 {
     public static class FImonManager
     {
-        private static Dictionary<ulong, FImon> mapping = new Dictionary<ulong, FImon>();
+        private static ConcurrentDictionary<ulong, FImon> mapping = new ConcurrentDictionary<ulong, FImon>();
         private static IMongoCollection<FImon> collection = null;
         private const string collectionName = "FImons";
         private static ulong newIDToAllocate { get; set; } = 1;
@@ -21,7 +22,7 @@ namespace Tutorial.Game
             
             foreach (var currentFImon in allFImon)
             {
-                mapping.Add(currentFImon.FImonID, currentFImon);
+                mapping.AddOrUpdate(currentFImon.FImonID, currentFImon, (ID,fimon) => fimon);
                 if (currentFImon.FImonID > newIDToAllocate)
                 {
                     newIDToAllocate = currentFImon.FImonID;
@@ -59,7 +60,7 @@ namespace Tutorial.Game
 
             Console.WriteLine("Adding FImon");
 
-            mapping.Add(newFImon.FImonID, newFImon);
+            mapping.AddOrUpdate(newFImon.FImonID, newFImon, (ID, fimon) => fimon);
             newFImon.UpdateFImonDatabase += UpdateFImon;
 
             collection.InsertOne(newFImon);

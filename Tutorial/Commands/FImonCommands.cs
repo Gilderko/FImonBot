@@ -628,7 +628,7 @@ namespace Discord_Bot_Tutorial.Commands
             await ctx.Channel.SendMessageAsync(embed: FImonEmbed).ConfigureAwait(false);            
         }
 
-        private static Dictionary<DiscordEmoji, ReactionStepData> GenerateFImonOptions(DiscordClient discordClient, Trainer trainer)
+        private Dictionary<DiscordEmoji, ReactionStepData> GenerateFImonOptions(DiscordClient discordClient, Trainer trainer)
         {
             var option = new Dictionary<DiscordEmoji, ReactionStepData>();
 

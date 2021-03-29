@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Tutorial.Game.Trainers;
@@ -9,7 +10,7 @@ namespace Tutorial.Game
 {
     static class TrainerManager
     {
-        private static Dictionary<ulong, Trainer> trainerMapping = new Dictionary<ulong, Trainer>();
+        private static ConcurrentDictionary<ulong, Trainer> trainerMapping = new ConcurrentDictionary<ulong, Trainer>();
         private static IMongoCollection<Trainer> collection = null;
         private const string collectionName = "Trainers";
         
@@ -22,7 +23,7 @@ namespace Tutorial.Game
 
             foreach (var currentTrainer in allTrainers)
             {
-                trainerMapping.Add(currentTrainer.TrainerID, currentTrainer);
+                trainerMapping.AddOrUpdate(currentTrainer.TrainerID, currentTrainer, ((ID,Trainer) => Trainer));
                 currentTrainer.FImon1 = FImonManager.GetFimon(currentTrainer.FImon1ID.GetValueOrDefault());
                 currentTrainer.FImon2 = FImonManager.GetFimon(currentTrainer.FImon2ID.GetValueOrDefault());
                 currentTrainer.FImon3 = FImonManager.GetFimon(currentTrainer.FImon3ID.GetValueOrDefault());
@@ -41,9 +42,9 @@ namespace Tutorial.Game
                 return;
             }
 
-            var newTrainer = new Trainer(ID, name, backstory, imageUrl);            
+            var newTrainer = new Trainer(ID, name, backstory, imageUrl);
 
-            trainerMapping.Add(newTrainer.TrainerID, newTrainer);
+            trainerMapping.AddOrUpdate(newTrainer.TrainerID, newTrainer, ((ID, Trainer) => Trainer));
             newTrainer.UpdateTrainerDatabase += UpdateTrainer;
 
             collection.InsertOne(newTrainer);

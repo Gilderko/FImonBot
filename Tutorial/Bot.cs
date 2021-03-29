@@ -39,8 +39,6 @@ namespace Discord_Bot_Tutorial
             using (StreamReader sr = new StreamReader(fs, new UTF8Encoding(false)))
                 jsonLevelExperienceConfig = await sr.ReadToEndAsync().ConfigureAwait(false);
 
-
-
             ConfigJson configJson = JsonConvert.DeserializeObject<ConfigJson>(jsonBotConfigString);
             List<int> levelConfig = JObject.Parse(jsonLevelExperienceConfig)["experience"].Select(x => (int)x).ToList();
 

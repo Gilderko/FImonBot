@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Tutorial.Game.Abilities;
@@ -9,8 +10,8 @@ namespace Tutorial.Game
 {
     public static class AbilityManager
     {
-        private static Dictionary<ulong, AttackAbility> attackAbilities = new Dictionary<ulong, AttackAbility>();
-        private static Dictionary<ulong, DefensiveAbility> defensiveAbilities = new Dictionary<ulong, DefensiveAbility>();
+        private static ConcurrentDictionary<ulong, AttackAbility> attackAbilities = new ConcurrentDictionary<ulong, AttackAbility>();
+        private static ConcurrentDictionary<ulong, DefensiveAbility> defensiveAbilities = new ConcurrentDictionary<ulong, DefensiveAbility>();
         private static IMongoCollection<AttackAbility> attackCollection = null;
         private static IMongoCollection<DefensiveAbility> defensiveCollection = null;
         private const string attackCollectionName = "AttackAbilities";
@@ -25,11 +26,11 @@ namespace Tutorial.Game
             var defAb = defensiveCollection.Find(s => true).ToList();
             foreach (var attackAbility in attAb)
             {
-                attackAbilities.Add(attackAbility.Id, attackAbility);
+                attackAbilities.AddOrUpdate(attackAbility.Id, attackAbility,(ID,ability) => ability);
             }
             foreach (var defensiveAbility in defAb)
             {
-                defensiveAbilities.Add(defensiveAbility.Id, defensiveAbility);
+                defensiveAbilities.AddOrUpdate(defensiveAbility.Id, defensiveAbility, (ID, ability) => ability);
             }
         }
 
@@ -50,13 +51,13 @@ namespace Tutorial.Game
             if (attackAbility != null)
             {
                 Console.WriteLine("Adding Attack");
-                attackAbilities.Add(attackAbility.Id, attackAbility);
+                attackAbilities.AddOrUpdate(attackAbility.Id, attackAbility, (ID, ability) => ability);
                 attackCollection.InsertOne(attackAbility);
             }
             else if (defensiveAbility != null)
             {
                 Console.WriteLine("Adding Defense");
-                defensiveAbilities.Add(defensiveAbility.Id, defensiveAbility);
+                defensiveAbilities.AddOrUpdate(defensiveAbility.Id, defensiveAbility, (ID, ability) => ability);
                 defensiveCollection.InsertOne(defensiveAbility);
             }
             Console.WriteLine("Ability added");
