@@ -20,12 +20,15 @@ namespace FImonBotDiscord.Commands
 {
     public class SharedBaseForCommands : BaseCommandModule
     {
+        public const ulong authorID = 317634903959142401;
+
         [Command("ping")] // The actual string they have to type to trigger it
         [Description("Returns pong")]
         private async Task Ping(CommandContext ctx)
         {
             await ctx.Channel.SendMessageAsync("Pong").ConfigureAwait(false);
         }
+
         protected Dictionary<DiscordEmoji, ReactionStepData> GenerateAttackOptions(CommandContext ctx, InCombatFImon currentFImon)
         {
             AttackAbility autoAttack = currentFImon.FImonBase.AutoAttack;
@@ -161,7 +164,6 @@ namespace FImonBotDiscord.Commands
             return attributesIntroEmbed;
         }
 
-
         protected static void GenerateAttacksChoiceOptions(Dictionary<string, TextChoiceData> options, AbilityType abilityType)
         {
             foreach (var ability in AbilityManager.GetAttackAbilities())
@@ -184,7 +186,7 @@ namespace FImonBotDiscord.Commands
             }
         }
 
-        protected async Task<FImon> SelectYourFImon(DiscordUser discordUser, DiscordChannel discordChannel, DiscordClient discordClient)
+        protected async Task<FImon> SelectYourFImon(DiscordUser discordUser, DiscordChannel discordChannel, DiscordClient discordClient, DiscordUser responder = null)
         {
             Trainer trainer = TrainerManager.GetTrainer(discordUser.Id);
 
@@ -201,14 +203,14 @@ namespace FImonBotDiscord.Commands
 
             var options = GenerateFImonOptions(discordClient, trainer);
 
-            var chooseStep = new ReactionStep("Which FImon do you want to preview", options);
+            var chooseStep = new ReactionStep("Which FImon do you want to select?", options);
             FImon selectedFImon = null;
             chooseStep.OnValidResult += (result) =>
             {
                 selectedFImon = (FImon)options[result].optionalData;
             };
 
-            var inputDialogueHandler = new DialogueHandler(discordClient, discordChannel, discordUser, chooseStep, false, false);
+            var inputDialogueHandler = new DialogueHandler(discordClient, discordChannel, responder, chooseStep, false, false);
             bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
 
             if (!succeeded)
@@ -233,6 +235,21 @@ namespace FImonBotDiscord.Commands
         protected async Task<ulong> SendCorrectMessage(DiscordEmbed embedMessage, CommandContext ctx)
         {
             return (await ctx.Channel.SendMessageAsync(embed: embedMessage)).Id;
+        }
+
+        protected async Task<bool> ConfirmPreviousStep(CommandContext ctx, DiscordUser responderOverride)
+        {
+            var options = new Dictionary<DiscordEmoji, ReactionStepData>()
+            {
+                { DiscordEmoji.FromName(ctx.Client,":white_check_mark:"), new ReactionStepData{ Content = "Confirm", NextStep = null}},                
+            };
+            var reactionStep = new ReactionStep("Do you want to proceed?", options);
+
+            var inputDialogueHandler = new DialogueHandler(ctx.Client, ctx.Channel, responderOverride, reactionStep);
+
+            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
+
+            return succeeded;
         }
     }
 }

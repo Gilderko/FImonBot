@@ -80,6 +80,7 @@ namespace FImonBotDiscord
             Commands.RegisterCommands<TrainerCommands>();
             Commands.RegisterCommands<AbilityCommands>();
             Commands.RegisterCommands<SharedBaseForCommands>();
+            Commands.RegisterCommands<AdminCommands>();
 
             var client = new MongoClient("mongodb+srv://live2020:live2020pass@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 
@@ -91,6 +92,8 @@ namespace FImonBotDiscord
 
             TrainerManager.SetCollection(client.GetDatabase(databaseName));
             TrainerManager.LoadTrainers();
+
+            await BanManager.LoadFile();
 
             await Client.ConnectAsync();
 

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FImonBotDiscord.Commands
 {
-    public class TeamCommands : SharedHelpForCommands
+    public class TeamCommands : SharedBaseForCommands
     {
         [Command("add")]
         [Description("Adds two numbers together")]

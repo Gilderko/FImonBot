@@ -18,14 +18,14 @@ namespace FImonBotDiscord.Game
             {
                 if (!bannedUsers.Contains(user.Id))
                 {
-                    comment = $"Banning a {user.Username} bot";
+                    comment = $"Banning {user.Username}";
                     bannedUsers.Add(user.Id);
                     SaveFile();
                     return true;
                 }
                 else
                 {
-                    comment = $"{user.Username} bot is already banned";
+                    comment = $"{user.Username} is already banned";
                     return false;
                 }
             }
@@ -37,7 +37,7 @@ namespace FImonBotDiscord.Game
             {
                 if (bannedUsers.Contains(user.Id))
                 {
-                    comment = $"Unbanning a {user.Username} bot";
+                    comment = $"Unbanning {user.Username}";
                     bannedUsers.Remove(user.Id);
                     SaveFile();
                     return true;

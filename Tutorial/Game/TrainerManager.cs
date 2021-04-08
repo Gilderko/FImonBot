@@ -93,6 +93,16 @@ namespace FImonBotDiscord.Game
             collection.DeleteOne(trainer => trainer.TrainerID == trainerID);
         }
 
+        public static void DeleteTrainersFImon(ulong trainerId, ulong FImonId)
+        {
+            if (collection == null) { return; }
+            if (!trainerMapping.ContainsKey(trainerId)) { return; }
+
+            var trainer = trainerMapping[trainerId];
+            trainer.RemoveFImon(FImonId);
+            FImonManager.DeleteFImon(FImonId);
+        }
+
         internal static void SetCollection(IMongoDatabase database)
         {
             collection = database.GetCollection<Trainer>(collectionName);

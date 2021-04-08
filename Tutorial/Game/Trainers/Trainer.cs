@@ -96,10 +96,33 @@ namespace FImonBotDiscord.Game.Trainers
         {
             return !(FImon1ID == null && FImon2ID == null && FImon3ID == null && FImon4ID == null);
         }
-
         public bool HasFImon()
         {
             return FImon1 != null || FImon2 != null || FImon3 != null || FImon4 != null;
+        }
+
+        public void RemoveFImon(ulong fimonID)
+        {
+            if (FImon1ID == fimonID)
+            {
+                FImon1ID = null;
+                FImon1 = null;
+            }
+            if (FImon2ID == fimonID)
+            {
+                FImon2ID = null;
+                FImon2 = null;
+            }
+            if (FImon3ID == fimonID)
+            {
+                FImon3ID = null;
+                FImon3 = null;
+            }
+            if (FImon4ID == fimonID)
+            {
+                FImon4ID = null;
+                FImon4 = null;
+            }
         }
     }
 }

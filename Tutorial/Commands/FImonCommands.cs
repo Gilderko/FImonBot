@@ -176,8 +176,8 @@ namespace FImonBotDiscord.Commands
             FImonManager.AddFimon(trainer.TrainerID,FImonName, description, primaryType, secondaryType, strengthValue, staminaValue, inteligenceValue, luckValue,
                 agilityValue, perceptionValue, abilityPowerValue);
 
-            await ctx.Channel.SendMessageAsync("FIMON added successfully");
-            await ctx.Channel.SendMessageAsync($"{FImonName} {description} {primaryType.ToString()} {secondaryType.ToString()}");
+            await SendCorrectMessage("FIMON added successfully",ctx);
+            await SendCorrectMessage($"{FImonName} {description} {primaryType.ToString()} {secondaryType.ToString()}",ctx);
         }               
 
         [Command("getfimon")]
@@ -187,12 +187,55 @@ namespace FImonBotDiscord.Commands
             FImon selectedFImon = await SelectYourFImon(ctx.User,ctx.Channel,ctx.Client);
             
             if (selectedFImon == null)
-            {
+            {                
                 return;
             } 
 
             var FImonEmbed = GenerateFImonEmbed(trainer, new InCombatFImon(selectedFImon), true);
-            await ctx.Channel.SendMessageAsync(embed: FImonEmbed).ConfigureAwait(false);            
+            await SendCorrectMessage(FImonEmbed,ctx).ConfigureAwait(false);            
+        }
+
+        [Command("deletefimon")]
+        public async Task DeleteFImon(CommandContext ctx)
+        {
+            var message = ctx.Message;
+            var caller = ctx.Member;
+
+            DiscordUser userFImonToDelete;
+            if (caller.Id == authorID)
+            {
+                if (message.MentionedUsers.Count == 0) 
+                {
+                    userFImonToDelete = caller; 
+                }
+                else
+                {
+                    userFImonToDelete = message.MentionedUsers.First();
+                }
+            }
+            else
+            {
+                if (message.MentionedUsers.Count == 0)
+                {
+                    userFImonToDelete = caller;
+                }
+                else
+                {
+                    await SendErrorMessage("You can´t delete others FImons",ctx);
+                    return;
+                }
+            }
+
+            var FImonToDelete = await SelectYourFImon(userFImonToDelete, ctx.Channel, ctx.Client, caller);
+
+            if (FImonToDelete == null)
+            {
+                await SendCorrectMessage("No deletion occured", ctx);
+                return;
+            }
+
+            TrainerManager.DeleteTrainersFImon(userFImonToDelete.Id, FImonToDelete.FImonID);
+            await SendCorrectMessage("FImon has been deleted", ctx);
         }
     }
 }
