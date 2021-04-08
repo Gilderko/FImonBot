@@ -1,4 +1,4 @@
-﻿using Discord_Bot_Tutorial.Commands;
+﻿using FImonBotDiscord.Commands;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
@@ -13,9 +13,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tutorial.Game;
+using FImonBotDiscord.Game;
 
-namespace Discord_Bot_Tutorial
+namespace FImonBotDiscord
 {
     public class Bot
     {
@@ -76,6 +76,10 @@ namespace Discord_Bot_Tutorial
 
             Commands.RegisterCommands<FImonCommands>(); // Register new Commands
             Commands.RegisterCommands<TeamCommands>();
+            Commands.RegisterCommands<CombatCommands>();
+            Commands.RegisterCommands<TrainerCommands>();
+            Commands.RegisterCommands<AbilityCommands>();
+            Commands.RegisterCommands<SharedBaseForCommands>();
 
             var client = new MongoClient("mongodb+srv://live2020:live2020pass@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 

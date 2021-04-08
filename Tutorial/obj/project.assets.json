@@ -4590,9 +4590,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Skolaahobby\\HOBBY\\Discord\\Tutorial\\Tutorial\\Tutorial.csproj",
-      "projectName": "Tutorial",
-      "projectPath": "D:\\Skolaahobby\\HOBBY\\Discord\\Tutorial\\Tutorial\\Tutorial.csproj",
+      "projectUniqueName": "D:\\Skolaahobby\\HOBBY\\Discord\\Tutorial\\Tutorial\\FImonBot.csproj",
+      "projectName": "FImonBot",
+      "projectPath": "D:\\Skolaahobby\\HOBBY\\Discord\\Tutorial\\Tutorial\\FImonBot.csproj",
       "packagesPath": "C:\\Users\\bigbr\\.nuget\\packages\\",
       "outputPath": "D:\\Skolaahobby\\HOBBY\\Discord\\Tutorial\\Tutorial\\obj\\",
       "projectStyle": "PackageReference",

@@ -3,9 +3,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Tutorial.Game.Abilities;
+using FImonBotDiscord.Game.Abilities;
 
-namespace Tutorial.Game
+namespace FImonBotDiscord.Game
 
 {
     public static class AbilityManager

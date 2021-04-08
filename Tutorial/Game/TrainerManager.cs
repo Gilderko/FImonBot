@@ -3,10 +3,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using Tutorial.Game.Trainers;
+using FImonBotDiscord.Game.Trainers;
 
 
-namespace Tutorial.Game
+namespace FImonBotDiscord.Game
 {
     static class TrainerManager
     {
@@ -53,6 +53,11 @@ namespace Tutorial.Game
 
         public static void UpdateTrainer(Trainer trainerToUpdate)
         {
+            if (collection == null)
+            {
+                Console.WriteLine("No database");
+                return;
+            }
             collection.ReplaceOne(s => s.TrainerID == trainerToUpdate.TrainerID, trainerToUpdate);
         }
 
@@ -63,6 +68,29 @@ namespace Tutorial.Game
                 return null;
             }
             return trainerMapping[trainerID];
+        }
+
+        public static void DeleteTrainer(ulong trainerID)
+        {
+            if (collection == null)
+            {
+                Console.WriteLine("No database");
+                return;
+            }
+            if (!trainerMapping.ContainsKey(trainerID))
+            {
+                return;
+            }
+
+            var trainer = trainerMapping[trainerID];
+
+            if (trainer.FImon1ID.HasValue) { FImonManager.DeleteFImon(trainer.FImon1ID.Value); }
+            if (trainer.FImon2ID.HasValue) { FImonManager.DeleteFImon(trainer.FImon2ID.Value); }
+            if (trainer.FImon3ID.HasValue) { FImonManager.DeleteFImon(trainer.FImon3ID.Value); }
+            if (trainer.FImon4ID.HasValue) { FImonManager.DeleteFImon(trainer.FImon4ID.Value); }
+
+            trainerMapping.Remove(trainerID, out trainer);
+            collection.DeleteOne(trainer => trainer.TrainerID == trainerID);
         }
 
         internal static void SetCollection(IMongoDatabase database)

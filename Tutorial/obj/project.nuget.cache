@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "pj2EQrD4L5N2EmiSjYFHHP8QbrYd51Qbo+j9j6TZ1st84MENeotK13RaFXfMY6ZfTzaLJEfa86ySdXzdLIKzHA==",
+  "dgSpecHash": "TBQxKEZkiI1rFr5ql1hqcKYKm88YaLO3N8uoTP6ao5T22RlFTCmiWeAAawJSNyOmT4em6qXhEF6UPpb7ewnK5w==",
   "success": true,
-  "projectFilePath": "D:\\Skolaahobby\\HOBBY\\Discord\\Tutorial\\Tutorial\\Tutorial.csproj",
+  "projectFilePath": "D:\\Skolaahobby\\HOBBY\\Discord\\Tutorial\\Tutorial\\FImonBot.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\bigbr\\.nuget\\packages\\concurrenthashset\\1.1.0\\concurrenthashset.1.1.0.nupkg.sha512",
     "C:\\Users\\bigbr\\.nuget\\packages\\dnsclient\\1.4.0\\dnsclient.1.4.0.nupkg.sha512",

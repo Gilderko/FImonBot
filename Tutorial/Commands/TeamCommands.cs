@@ -1,5 +1,5 @@
-﻿using Discord_Bot_Tutorial.Handlers.Dialogue;
-using Discord_Bot_Tutorial.Handlers.Dialogue.Steps;
+﻿using FImonBotDiscord.Handlers.Dialogue;
+using FImonBotDiscord.Handlers.Dialogue.Steps;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -11,9 +11,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Discord_Bot_Tutorial.Commands
+namespace FImonBotDiscord.Commands
 {
-    public class TeamCommands : BaseCommandModule
+    public class TeamCommands : SharedHelpForCommands
     {
         [Command("add")]
         [Description("Adds two numbers together")]

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Tutorial.Game.Stats
+namespace FImonBotDiscord.Game.Stats
 {
     public static class BaseStats
     {

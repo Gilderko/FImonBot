@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using Tutorial.Game.FImons;
+using FImonBotDiscord.Game.FImons;
 
-namespace Tutorial.Game.Trainers
+namespace FImonBotDiscord.Game.Trainers
 {
     [BsonIgnoreExtraElements]
-    class Trainer
+    public class Trainer
     {
         public delegate void OnTrainerUpdate(Trainer thisTrainer);
         public event OnTrainerUpdate UpdateTrainerDatabase;

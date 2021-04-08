@@ -4,7 +4,7 @@ using DSharpPlus.Interactivity.Extensions;
 using System;
 using System.Threading.Tasks;
 
-namespace Discord_Bot_Tutorial.Handlers.Dialogue.Steps
+namespace FImonBotDiscord.Handlers.Dialogue.Steps
 {
     public class IntStep : DialogueStepBase
     {

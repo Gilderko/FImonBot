@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Tutorial.Game.FImons;
+using FImonBotDiscord.Game.FImons;
 
-namespace Tutorial.Game
+namespace FImonBotDiscord.Game
 {
     public static class FImonManager
     {
@@ -83,7 +83,27 @@ namespace Tutorial.Game
 
         public static void UpdateFImon(FImon fImon)
         {
+            if (collection == null)
+            {
+                Console.WriteLine("No database loaded");
+                return;
+            }
             collection.ReplaceOne(s => s.FImonID == fImon.FImonID, fImon);
+        }
+
+        public static void DeleteFImon(ulong fImonID)
+        {
+            if (collection == null)
+            {
+                Console.WriteLine("No database loaded");
+                return;
+            }
+            if (mapping.ContainsKey(fImonID))
+            {
+                FImon result;
+                mapping.Remove(fImonID,out result);
+                collection.DeleteOne(FImon => FImon.FImonID == fImonID);
+            }            
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Discord_Bot_Tutorial
+namespace FImonBotDiscord
 {
     public struct ConfigJson
     {

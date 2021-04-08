@@ -1,4 +1,4 @@
-﻿namespace Tutorial.Game
+﻿namespace FImonBotDiscord.Game
 {
     public enum ElementalTypes
     {

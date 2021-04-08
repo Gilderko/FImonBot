@@ -1,10 +1,10 @@
-﻿using Discord_Bot_Tutorial.Handlers.Dialogue.Steps;
+﻿using FImonBotDiscord.Handlers.Dialogue.Steps;
 using DSharpPlus;
 using DSharpPlus.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Discord_Bot_Tutorial.Handlers.Dialogue
+namespace FImonBotDiscord.Handlers.Dialogue
 {
     public class DialogueHandler
     {
