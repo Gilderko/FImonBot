@@ -32,6 +32,12 @@ namespace FImonBotDiscord.Commands
             var enemyUser = mentioned[0];
             var challenger = ctx.Member;
 
+            if (TrainerManager.GetTrainer(enemyUser.Id) == null || TrainerManager.GetTrainer(challenger.Id) == null)
+            {
+                await SendErrorMessage("Please create trainers before the fight", ctx.Channel);
+                return;
+            }
+
             ActionsManager.SetUserInAction(ctx.Member.Id);
             ActionsManager.SetUserInAction(enemyUser.Id);
             var myFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
@@ -71,14 +77,13 @@ namespace FImonBotDiscord.Commands
 
             var random = new Random();
             int indexChoice = random.Next(0, 2);
-            var options = new List<DiscordUser> { { challenger }, { enemyUser } };
-            var optionFImon = new List<FImon> { { myFImon }, { enemyFImon } };
+            var options = new List<Tuple<DiscordUser, FImon>> { new Tuple<DiscordUser, FImon>(challenger, myFImon), new Tuple<DiscordUser, FImon>(enemyUser, enemyFImon) };
 
-            var first = options[indexChoice];
-            var second = options.Find(s => s != first);
+            var first = options[indexChoice].Item1;
+            var second = options[1-indexChoice].Item1;
 
-            var firstFImon = optionFImon[indexChoice];
-            var secondFImon = optionFImon.Find(s => s != firstFImon);
+            var firstFImon = options[indexChoice].Item2;
+            var secondFImon = options[indexChoice].Item2;
 
             var firstAttacker = new InCombatFImon(firstFImon);
             var secondAttacker = new InCombatFImon(secondFImon);
@@ -98,6 +103,8 @@ namespace FImonBotDiscord.Commands
             DiscordUser helpUser = null;
             DiscordUser waitingFightingUser = second;
 
+            DiscordUser winningUser = null;
+            DiscordUser loosingUser = null;
             InCombatFImon winningFImon = null;
             InCombatFImon loosingFImon = null;
             string battleResult = "";
@@ -127,6 +134,8 @@ namespace FImonBotDiscord.Commands
                     battleResult = $"{currentFightingFImon.FImonBase.Name} surrendered the fight";
                     winningFImon = waitingFightingFImon;
                     loosingFImon = currentFightingFImon;
+                    winningUser = waitingFightingUser;
+                    loosingUser = currentFightingUser;
                     break;
                 }
 
@@ -150,6 +159,8 @@ namespace FImonBotDiscord.Commands
                     battleResult = $"{currentFightingFImon.FImonBase.Name} defeated {waitingFightingFImon.FImonBase.Name} in combat";
                     winningFImon = currentFightingFImon;
                     loosingFImon = waitingFightingFImon;
+                    winningUser = currentFightingUser;
+                    loosingUser = waitingFightingUser;
                     break;
                 }
 
@@ -169,11 +180,16 @@ namespace FImonBotDiscord.Commands
 
             int winningExpReward = winningFImon.FImonBase.AwardExperience(winnerExp);
             int loosingExpReward = loosingFImon.FImonBase.AwardExperience(looserExp);
+
+            TrainerManager.GetTrainer(winningUser.Id).Experience += winnerExp / 3;
+            TrainerManager.GetTrainer(loosingUser.Id).Experience += looserExp / 3;
+
             var winningEmbed = new DiscordEmbedBuilder()
             {
                 Title = $"And the winner is: {winningFImon.FImonBase.Name}",
                 Color = DiscordColor.Gold,
-                Description = $"The winner received {winningExpReward} exp and the looser receives {loosingExpReward} exp\n" + battleResult
+                Description = $"The winner received {winningExpReward} exp and the looser receives {loosingExpReward} exp\n The trainers receive a 3rd of the experience their " +
+                $"FImons gained \n" + battleResult
             };
             await SendCorrectMessage(winningEmbed, ctx.Channel);
             ActionsManager.RemoveUserFromAction(ctx.Member.Id);

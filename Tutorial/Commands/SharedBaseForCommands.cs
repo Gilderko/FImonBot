@@ -69,7 +69,7 @@ namespace FImonBotDiscord.Commands
         protected DiscordEmbedBuilder GenerateFImonEmbed(Trainer trainer, InCombatFImon currentFightingFImon, bool displayAttacks)
         {
             var optionalEmbed = new DiscordEmbedBuilder();
-            optionalEmbed.AddField($"FImon of owner {trainer.Name}", currentFightingFImon.FImonBase.Name);
+            optionalEmbed.AddField($"FImon of owner {trainer.Name}", $"{currentFightingFImon.FImonBase.Name} -> Lvl {currentFightingFImon.FImonBase.GetLevel()}");
             optionalEmbed.AddField("Description", currentFightingFImon.FImonBase.Description);
             optionalEmbed.AddField($"Dodge chance", currentFightingFImon.GetDodgeChance().ToString());
             optionalEmbed.AddField("Health", $"{currentFightingFImon.CurrentHealth.ToString()}/{currentFightingFImon.MaxHealth}");

@@ -23,6 +23,7 @@ namespace FImonBotDiscord.Game.Trainers
             ImageUrl = imageUrl;
             BattlesLost = 0;
             BattlesWon = 0;
+            Experience = 0;
             FImon1ID = null;
             FImon2ID = null;
             FImon3ID = null;
@@ -58,6 +59,9 @@ namespace FImonBotDiscord.Game.Trainers
 
         [BsonElement("battles_lost")]
         public ulong BattlesLost { get; set; }
+
+        [BsonElement("experience")]
+        public int Experience { get; set; }
 
         [BsonIgnore]
         public FImon FImon1 { get;  set; }

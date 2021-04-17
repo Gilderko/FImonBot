@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FImonBotDiscord.Game;
+using FImonBotDiscord.Game.Stats;
 
 namespace FImonBotDiscord
 {
@@ -40,8 +41,8 @@ namespace FImonBotDiscord
                 jsonLevelExperienceConfig = await sr.ReadToEndAsync().ConfigureAwait(false);
 
             ConfigJson configJson = JsonConvert.DeserializeObject<ConfigJson>(jsonBotConfigString);
-            List<int> levelConfig = JObject.Parse(jsonLevelExperienceConfig)["experience"].Select(x => (int)x).ToList();
-
+            var levelConfig = JObject.Parse(jsonLevelExperienceConfig)["experience"].ToObject<int[]>();
+            BaseStats.InitialiseBaseStats(levelConfig);
 
             DiscordConfiguration config = new DiscordConfiguration
             {

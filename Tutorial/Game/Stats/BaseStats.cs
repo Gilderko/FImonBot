@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FImonBotDiscord.Game.Stats
 {
     public static class BaseStats
     {
         public static List<int> levelExperienceRequirements = new List<int>();
+        public static readonly string[] attibutesOptions = {"strength", "stamina", "ability power", "inteligence", "luck", "agility", "perception"};
 
         public const int strengthAutoAttackDamageIncrease = 4;
         public const int strengthAutoAttackCostIncrease = 3;
@@ -56,9 +59,13 @@ namespace FImonBotDiscord.Game.Stats
             return index + 1;
         }
 
-        public static void InitialiseBaseStats(List<int> levelReq)
+        public static void InitialiseBaseStats(int[] levelReq)
         {
-            levelExperienceRequirements = levelReq;
+            foreach (var req in levelReq)
+            {
+                Console.WriteLine(req);
+            }
+            levelExperienceRequirements = levelReq.ToList();
         }
 
         public static bool IsStrongAgainst(ElementalTypes attackingType, ElementalTypes defendingType)

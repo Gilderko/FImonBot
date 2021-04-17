@@ -78,10 +78,11 @@ namespace FImonBotDiscord.Commands
                 ImageUrl = trainer.ImageUrl
             };
             trainerEmbed.AddField("Battle history", $"{trainer.BattlesWon} wins vs {trainer.BattlesLost} loses");
-            if (trainer.FImon1ID != null) { trainerEmbed.AddField(trainer.FImon1.Name,$"{trainer.FImon1.PrimaryType} {trainer.FImon1.SecondaryType} "); }
-            if (trainer.FImon2ID != null) { trainerEmbed.AddField(trainer.FImon2.Name, $"{trainer.FImon2.PrimaryType} {trainer.FImon2.SecondaryType} "); }
-            if (trainer.FImon3ID != null) { trainerEmbed.AddField(trainer.FImon3.Name, $"{trainer.FImon3.PrimaryType} {trainer.FImon3.SecondaryType} "); }
-            if (trainer.FImon4ID != null) { trainerEmbed.AddField(trainer.FImon4.Name, $"{trainer.FImon4.PrimaryType} {trainer.FImon4.SecondaryType} "); }
+            trainerEmbed.AddField("Experience", $"{trainer.Experience}exp");
+            if (trainer.FImon1ID != null) { trainerEmbed.AddField($"{trainer.FImon1.Name} -> Lvl {trainer.FImon1.GetLevel()}",$"{trainer.FImon1.PrimaryType} {trainer.FImon1.SecondaryType} "); }
+            if (trainer.FImon2ID != null) { trainerEmbed.AddField($"{trainer.FImon2.Name} -> Lvl {trainer.FImon2.GetLevel()}", $"{trainer.FImon2.PrimaryType} {trainer.FImon2.SecondaryType} "); }
+            if (trainer.FImon3ID != null) { trainerEmbed.AddField($"{trainer.FImon3.Name} -> Lvl {trainer.FImon3.GetLevel()}", $"{trainer.FImon3.PrimaryType} {trainer.FImon3.SecondaryType} "); }
+            if (trainer.FImon4ID != null) { trainerEmbed.AddField($"{trainer.FImon4.Name} -> Lvl {trainer.FImon4.GetLevel()}", $"{trainer.FImon4.PrimaryType} {trainer.FImon4.SecondaryType} "); }
 
             trainerEmbed.AddField("Backstory", trainer.Backstory);
 
@@ -136,6 +137,56 @@ namespace FImonBotDiscord.Commands
             {
                 await SendCorrectMessage("No trainer has been deleted", ctx.Channel);
             }
+            ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+        }
+
+        [Command("convertExperience")]
+        [RequireNotBanned]
+        [RequireNotInAction]
+        public async Task CovertExperienceToFImon(CommandContext ctx)
+        {
+            var trainer = TrainerManager.GetTrainer(ctx.Member.Id);
+
+            if (trainer == null)
+            {
+                await SendErrorMessage("You dont have a trainer yet",ctx.Channel);
+                return;
+            }
+            if (trainer.Experience == 0)
+            {
+                await SendErrorMessage("You dont have any experience to convert", ctx.Channel);
+                return;
+            }
+
+            ActionsManager.SetUserInAction(ctx.Member.Id);
+            var selectedFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
+
+            if (selectedFImon == null)
+            {
+                await SendErrorMessage("You failed to select a FImon", ctx.Channel);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                return;
+            }
+
+            var selectExpAmmountStep = new IntStep("How much experience do you want to convert to your selected FImon?", null, 0, trainer.Experience);
+            int expToConvert = 0;
+            selectExpAmmountStep.OnValidResult += result =>
+            {
+                expToConvert = result;
+            };
+
+            var inputDialogueHandler = new DialogueHandler(ctx.Client, ctx.Channel, ctx.User, selectExpAmmountStep);
+
+            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
+
+            if (!succeeded)
+            {
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                return;
+            }
+
+            selectedFImon.AwardExperience(expToConvert);
+            await SendCorrectMessage($"Successfully converted {expToConvert} amount of experience to {selectedFImon.Name}",ctx.Channel);
             ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }
     }

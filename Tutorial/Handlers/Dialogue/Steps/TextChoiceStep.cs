@@ -19,7 +19,7 @@ namespace FImonBotDiscord.Handlers.Dialogue.Steps
             _options = options;
         }
 
-        public Action<object> OnValidResult { get; set; } = delegate { };
+        public Action<TextChoiceData> OnValidResult { get; set; } = delegate { };
 
         public override IDialogueStep NextStep => _nextStep;
 
@@ -42,13 +42,15 @@ namespace FImonBotDiscord.Handlers.Dialogue.Steps
                 embedBuidler.AddField($"'{text}'", _options[text].Description);
             }
 
+            embedBuidler = optionalEmbed;
+
             embedBuidler.AddField("To Stop the Dialogue", "User the ?cancel command");
 
             var interactivity = client.GetInteractivity();
 
             while (true)
             {
-                var embded = await channel.SendMessageAsync(embed: embedBuidler).ConfigureAwait(false);
+                var embded = await channel.SendMessageAsync(embedBuidler).ConfigureAwait(false);
 
                 OnMessageAdded(embded);
 
@@ -75,7 +77,7 @@ namespace FImonBotDiscord.Handlers.Dialogue.Steps
                     continue;
                 }
 
-                OnValidResult(match.OptionalData);
+                OnValidResult(match);
                 Console.WriteLine("returning from step");
                 return false;
             }
@@ -103,6 +105,13 @@ namespace FImonBotDiscord.Handlers.Dialogue.Steps
             Description = desc;
             OptionalData = optionalData;
         }
+
+        public TextChoiceData(string desc, string optionalData)
+        {
+            Description = desc;
+            OptionalData = optionalData;
+        }
+
         public string Description { get; set; }
         public object OptionalData { get; set; }
     }

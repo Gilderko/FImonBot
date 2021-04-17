@@ -36,3 +36,4 @@ D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\obj\Debug\net5.0\ref\FImonBot.dll
 D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\obj\Debug\net5.0\FImonBot.pdb
 D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\obj\Debug\net5.0\FImonBot.genruntimeconfig.cache
 D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\obj\Debug\net5.0\FImonBot.csprojAssemblyReference.cache
+D:\Skolaahobby\HOBBY\Discord\Tutorial\Tutorial\bin\Debug\net5.0\levelExperience.json

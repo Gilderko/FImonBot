@@ -55,7 +55,7 @@ namespace FImonBotDiscord.Game.FImons
         public int Experience { get; private set; }
 
         [BsonElement("skill_points_unspent")]
-        public int UnspentSkillPoints { get; set; }
+        public int UnspentSkillPoints { get; private set; }
 
         [BsonElement("strength")]
         public int Strength { get; set; }
@@ -110,6 +110,11 @@ namespace FImonBotDiscord.Game.FImons
         [BsonIgnore]
         public DefensiveAbility DefensiveAbility { get; private set; }
 
+        public int GetLevel()
+        {
+            return BaseStats.TellLevel(Experience);
+        }
+
         public void SetNewAbility(Ability ability)
         {
             FImon fImon = this;
@@ -161,11 +166,49 @@ namespace FImonBotDiscord.Game.FImons
             int newLevel = BaseStats.TellLevel(newFImon.Experience);
             if (newLevel > currentLevel)
             {
-                newFImon.UnspentSkillPoints += BaseStats.abilityPointsToAddOnLevelUp;
+                newFImon.UnspentSkillPoints += BaseStats.abilityPointsToAddOnLevelUp * (newLevel - currentLevel);
             }
 
             UpdateFImonDatabase(this);
             return modifiedExperience;
+        }
+
+        public void IncreaseAttribute(string statType, int statIncrease)
+        {
+            switch (statType)
+            {
+                case "strength":
+                    Strength += statIncrease;
+                    UnspentSkillPoints -= statIncrease;
+                    break;
+                case "stamina":
+                    Stamina += statIncrease;
+                    UnspentSkillPoints -= statIncrease;
+                    break;
+                case "ability power":
+                    AbilityPower += statIncrease;
+                    UnspentSkillPoints -= statIncrease;
+                    break;
+                case "inteligence":
+                    Inteligence += statIncrease;
+                    UnspentSkillPoints -= statIncrease;
+                    break;
+                case "luck":
+                    Luck += statIncrease;
+                    UnspentSkillPoints -= statIncrease;
+                    break;
+                case "agility":
+                    Agility += statIncrease;
+                    UnspentSkillPoints -= statIncrease;
+                    break;
+                case "perception":
+                    Perception += statIncrease;
+                    UnspentSkillPoints -= statIncrease;
+                    break;
+                default:
+                    break;
+            }
+            UpdateFImonDatabase(this);
         }
     }
 }

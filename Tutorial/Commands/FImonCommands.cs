@@ -262,5 +262,70 @@ namespace FImonBotDiscord.Commands
             await SendCorrectMessage("FImon has been deleted", ctx.Channel);
             ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }
+
+        [Command("increaseStats")]
+        [RequireNotBanned]
+        [RequireNotInAction]
+        public async Task IncreaseFImonStats(CommandContext ctx)
+        {
+            ActionsManager.SetUserInAction(ctx.Member.Id);
+
+            var trainer = TrainerManager.GetTrainer(ctx.Member.Id);
+            if (trainer == null)
+            {
+                await SendErrorMessage("You dont have a trainer", ctx.Channel);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                return;
+            }
+
+            var userChannel = await ctx.Member.CreateDmChannelAsync();
+            var FImon = await SelectYourFImon(ctx.Member, userChannel, ctx.Client);
+            if (FImon.UnspentSkillPoints == 0)
+            {
+                await SendErrorMessage("Selected FImon doesnt have any unspent skill-points", userChannel);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                return;
+            }
+            
+            var atributesInfo = AttributesEmbedInfo();
+            atributesInfo.Description = "Please select which attribute would you like to increase";       
+
+            var options = new Dictionary<string, TextChoiceData>();
+
+            foreach (var key in BaseStats.attibutesOptions)
+            {
+                options.Add(key, new TextChoiceData("- attribute option", key));
+            }
+
+            var textChoiceStep = new TextChoiceStep("Which attribute would you like to increase?",null, options);
+            string answer = null;
+            textChoiceStep.optionalEmbed = atributesInfo;
+            textChoiceStep.OnValidResult += result =>
+            {
+                answer = result.OptionalData as string;
+            };
+
+            var statIncreaseStep = new IntStep("By how many point would you like to increase?", null, 0, FImon.UnspentSkillPoints);
+            int statIncrease = 0;
+            statIncreaseStep.OnValidResult += result =>
+            {
+                statIncrease = result;
+            };
+
+            textChoiceStep.SetNextStep(statIncreaseStep);
+
+            var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, ctx.User, textChoiceStep);
+
+            bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
+
+            if (!succeeded)
+            {
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                return;
+            }
+
+            FImon.IncreaseAttribute(answer.ToLower().Trim(), statIncrease);
+            ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+        }
     }
 }

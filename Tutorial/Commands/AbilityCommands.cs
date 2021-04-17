@@ -57,7 +57,7 @@ namespace FImonBotDiscord.Commands
             ulong abilityID = 0;
             attackSetStep.OnValidResult = (result) =>
             {
-                abilityID = (ulong)result;
+                abilityID = (ulong) result.OptionalData;
             };
 
             attackSetStep.SetNextStep(null);

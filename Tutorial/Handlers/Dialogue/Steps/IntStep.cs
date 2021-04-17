@@ -14,11 +14,11 @@ namespace FImonBotDiscord.Handlers.Dialogue.Steps
 
         public string? dynamicOptionalCommentary = null;
 
-        public IntStep(string content, IDialogueStep nextStep, int minLength, int maxLength) : base(content)
+        public IntStep(string content, IDialogueStep nextStep, int minValue, int maxValue) : base(content)
         {
             _nextStep = nextStep;
-            _minValue = minLength;
-            _maxValue = maxLength;
+            _minValue = minValue;
+            _maxValue = maxValue;
         }
 
         public Action<int> OnValidResult { get; set; } = delegate { };
