@@ -23,6 +23,10 @@ namespace FImonBotDiscord.Game.Trainers
             ImageUrl = imageUrl;
             BattlesLost = 0;
             BattlesWon = 0;
+            FImon1ID = null;
+            FImon2ID = null;
+            FImon3ID = null;
+            FImon4ID = null;
         }
 
         [BsonId]
@@ -94,11 +98,11 @@ namespace FImonBotDiscord.Game.Trainers
 
         public bool CanAddFImon()
         {
-            return !(FImon1ID == null && FImon2ID == null && FImon3ID == null && FImon4ID == null);
+            return FImon1ID == null || FImon2ID == null || FImon3ID == null || FImon4ID == null;
         }
         public bool HasFImon()
         {
-            return FImon1 != null || FImon2 != null || FImon3 != null || FImon4 != null;
+            return FImon1ID != null || FImon2ID != null || FImon3ID != null || FImon4ID != null;
         }
 
         public void RemoveFImon(ulong fimonID)

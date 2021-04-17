@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using FImonBot.CommandAttributes;
 using FImonBotDiscord.Commands;
 using FImonBotDiscord.Game;
 using FImonBotDiscord.Game.Abilities;
@@ -19,12 +20,16 @@ namespace FImonBotDiscord.Commands
     public class AbilityCommands : SharedBaseForCommands
     {
         [Command("setallabilities")]
+        [RequireNotBanned]
+        [RequireNotInAction]
         public async Task SetAllAbilites(CommandContext ctx)
         {
+            ActionsManager.SetUserInAction(ctx.Member.Id);
             FImon selectedFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
 
             if (selectedFImon == null)
             {
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 return;
             }
 
@@ -33,6 +38,7 @@ namespace FImonBotDiscord.Commands
             await SetAbility(ctx, selectedFImon, AbilityType.SpecialAttack);
             await SetAbility(ctx, selectedFImon, AbilityType.FinalAttack);
             await SetAbility(ctx, selectedFImon, AbilityType.DefensiveAbility);
+            ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }
 
         public async Task SetAbility(CommandContext ctx, FImon fImon, AbilityType abilityType)
@@ -56,84 +62,112 @@ namespace FImonBotDiscord.Commands
 
             attackSetStep.SetNextStep(null);
 
-            var userChannel = ctx.Channel;
+            var userChannel = await ctx.Member.CreateDmChannelAsync();
             var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, ctx.User, attackSetStep, false, false);
 
             bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
             Console.WriteLine(abilityID);
 
-            if (!succeeded) { return; }
+            if (!succeeded) 
+            {
+                return; 
+            }
 
             fImon.SetNewAbility(AbilityManager.GetAbility(abilityID));
-            await SendCorrectMessage("Added ability correctly", ctx); ;
         }
 
         [Command("setautoattack")]
+        [RequireNotBanned]
+        [RequireNotInAction]
         public async Task SetAutoAttack(CommandContext ctx)
         {
+            ActionsManager.SetUserInAction(ctx.Member.Id);
             FImon selectedFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
 
             if (selectedFImon == null)
             {
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 return;
             }
 
             await SetAbility(ctx, selectedFImon, AbilityType.AutoAttack);
+            ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }
 
         [Command("setbasicattack")]
+        [RequireNotBanned]
+        [RequireNotInAction]
         public async Task SetBasicAttack(CommandContext ctx)
         {
+            ActionsManager.SetUserInAction(ctx.Member.Id);
             FImon selectedFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
 
             if (selectedFImon == null)
             {
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 return;
             }
 
             await SetAbility(ctx, selectedFImon, AbilityType.BasicAttack);
+            ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }
 
         [Command("setspecialattack")]
+        [RequireNotBanned]
+        [RequireNotInAction]
         public async Task SetSpecialAttack(CommandContext ctx)
         {
+            ActionsManager.SetUserInAction(ctx.Member.Id);
             FImon selectedFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
 
             if (selectedFImon == null)
             {
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 return;
             }
 
             await SetAbility(ctx, selectedFImon, AbilityType.SpecialAttack);
+            ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }
 
         [Command("setfinalattack")]
+        [RequireNotBanned]
+        [RequireNotInAction]
         public async Task SetFinalAttack(CommandContext ctx)
         {
+            ActionsManager.SetUserInAction(ctx.Member.Id);
             FImon selectedFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
 
             if (selectedFImon == null)
             {
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 return;
             }
 
             await SetAbility(ctx, selectedFImon, AbilityType.FinalAttack);
+            ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }
 
         [Command("setdefensive")]
+        [RequireNotBanned]
+        [RequireNotInAction]
         public async Task SetDefensiveAbility(CommandContext ctx)
         {
+            ActionsManager.SetUserInAction(ctx.Member.Id);
             FImon selectedFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
 
             if (selectedFImon == null)
             {
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 return;
             }
 
             await SetAbility(ctx, selectedFImon, AbilityType.DefensiveAbility);
+            ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }
 
         [Command("initialiseAbilities")]
+        [RequireAdmin]
         public async Task InitialiseAbilities(CommandContext ctx)
         {
             AttackAbility att1 = new AttackAbility(1, AbilityType.AutoAttack, ElementalTypes.Ground,
@@ -184,10 +218,12 @@ namespace FImonBotDiscord.Commands
             AbilityManager.AddAbility(def1);
             AbilityManager.AddAbility(def3);
 
-            await SendCorrectMessage("Added abilities", ctx);
+            await SendCorrectMessage("Added abilities", ctx.Channel);
         }
 
         [Command("getabilities")]
+        [RequireNotBanned]
+        [RequireAdmin]
         public async Task GetAbilities(CommandContext ctx)
         {
             foreach (var ab in AbilityManager.GetAttackAbilities())

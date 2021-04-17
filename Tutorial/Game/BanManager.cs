@@ -7,55 +7,86 @@ using System.Threading.Tasks;
 
 namespace FImonBotDiscord.Game
 {
-    public class ActionManager
+    public class BanManager
     {
-        private static HashSet<ulong> inActionUsers = new HashSet<ulong>();
+        private static HashSet<ulong> bannedUsers = new HashSet<ulong>();
+        private const string fileBanName = "bans.sav";
         private static readonly object guildLock = new object();
-        public static bool SetUserInAction(DiscordUser user)
+        public static bool BanUser(DiscordUser user, out string comment)
         {
             lock (guildLock)
             {
-                if (!inActionUsers.Contains(user.Id))
+                if (!bannedUsers.Contains(user.Id))
                 {
-                    inActionUsers.Add(user.Id);
+                    comment = $"Banning {user.Username}";
+                    bannedUsers.Add(user.Id);
+                    SaveFile();
                     return true;
                 }
                 else
                 {
+                    comment = $"{user.Username} is already banned";
                     return false;
                 }
             }
         }
 
-        public static bool RemoveUserFromAction(DiscordUser user)
+        public static bool UnBanUser(DiscordUser user, out string comment)
         {
             lock (guildLock)
             {
-                if (inActionUsers.Contains(user.Id))
+                if (bannedUsers.Contains(user.Id))
                 {
-                    inActionUsers.Remove(user.Id);
+                    comment = $"Unbanning {user.Username}";
+                    bannedUsers.Remove(user.Id);
+                    SaveFile();
                     return true;
                 }
                 else
                 {
+                    comment = $"{user.Username} is not banned";
                     return false;
                 }
             }
         }
 
-        public static bool IsInAction(ulong userID)
+        public static bool IsBanned(ulong userID)
         {
-            bool isInActiion = false;
+            bool isbanned = false;
             lock (guildLock)
             {
-                isInActiion = inActionUsers.Contains(userID);
+                isbanned = bannedUsers.Contains(userID);
             }
-            return isInActiion;
+            return isbanned;
         }
 
         public static IEnumerable<ulong> GetBannedUsersIDs()
         {
-            return inActionUsers;
-        }  
+            return bannedUsers;
+        }
+
+        private static void SaveFile()
+        {
+            object state = bannedUsers;
+            using (FileStream stream = File.Open(fileBanName, FileMode.Create))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(stream, state);
+            }
+        }
+
+        public static async Task LoadFile()
+        {
+            if (!File.Exists(fileBanName))
+            {
+                return;
+            }
+            using (FileStream stream = File.Open(fileBanName, FileMode.Open))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                var loadedBannedUsers = (HashSet<ulong>)formatter.Deserialize(stream);
+                bannedUsers = loadedBannedUsers ?? new HashSet<ulong>();
+            }
+        }
     }
 }

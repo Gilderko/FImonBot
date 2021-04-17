@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FImonBot.CommandAttributes
 {
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class RequireNotBanned : CheckBaseAttribute
     {
         public RequireNotBanned()
@@ -24,7 +24,7 @@ namespace FImonBot.CommandAttributes
                 return Task.FromResult(false);
             }
 
-            return Task.FromResult(BanManager.IsBanned(ctx.Member.Id));
+            return Task.FromResult(!BanManager.IsBanned(ctx.Member.Id));
         }
     }
 }

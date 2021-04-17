@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "TBQxKEZkiI1rFr5ql1hqcKYKm88YaLO3N8uoTP6ao5T22RlFTCmiWeAAawJSNyOmT4em6qXhEF6UPpb7ewnK5w==",
+  "dgSpecHash": "FFRfahixO7NWbaPeBYsvXe/TdRDDqJaEs+wi6CsC1CetMWRejrqrkqG2PrcgB3U1608TUW8sifjB3gFV1c/G6A==",
   "success": true,
   "projectFilePath": "D:\\Skolaahobby\\HOBBY\\Discord\\Tutorial\\Tutorial\\FImonBot.csproj",
   "expectedPackageFiles": [
@@ -16,10 +16,10 @@
     "C:\\Users\\bigbr\\.nuget\\packages\\microsoft.netcore.platforms\\2.1.2\\microsoft.netcore.platforms.2.1.2.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
-    "C:\\Users\\bigbr\\.nuget\\packages\\mongodb.bson\\2.12.0\\mongodb.bson.2.12.0.nupkg.sha512",
-    "C:\\Users\\bigbr\\.nuget\\packages\\mongodb.driver\\2.12.0\\mongodb.driver.2.12.0.nupkg.sha512",
-    "C:\\Users\\bigbr\\.nuget\\packages\\mongodb.driver.core\\2.12.0\\mongodb.driver.core.2.12.0.nupkg.sha512",
-    "C:\\Users\\bigbr\\.nuget\\packages\\mongodb.libmongocrypt\\1.2.0\\mongodb.libmongocrypt.1.2.0.nupkg.sha512",
+    "C:\\Users\\bigbr\\.nuget\\packages\\mongodb.bson\\2.12.2\\mongodb.bson.2.12.2.nupkg.sha512",
+    "C:\\Users\\bigbr\\.nuget\\packages\\mongodb.driver\\2.12.2\\mongodb.driver.2.12.2.nupkg.sha512",
+    "C:\\Users\\bigbr\\.nuget\\packages\\mongodb.driver.core\\2.12.2\\mongodb.driver.core.2.12.2.nupkg.sha512",
+    "C:\\Users\\bigbr\\.nuget\\packages\\mongodb.libmongocrypt\\1.2.1\\mongodb.libmongocrypt.1.2.1.nupkg.sha512",
     "C:\\Users\\bigbr\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
     "C:\\Users\\bigbr\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\bigbr\\.nuget\\packages\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",

@@ -82,17 +82,19 @@ namespace FImonBotDiscord
             Commands.RegisterCommands<SharedBaseForCommands>();
             Commands.RegisterCommands<AdminCommands>();
 
-            var client = new MongoClient("mongodb+srv://live2020:live2020pass@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+            var client = new MongoClient("mongodb+srv://adminPokus:mypassword123@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 
+            Console.WriteLine(client.GetDatabase(databaseName));
+            
             AbilityManager.SetCollection(client.GetDatabase(databaseName));
             AbilityManager.LoadAbilities();
 
             FImonManager.SetCollection(client.GetDatabase(databaseName));
             FImonManager.LoadFimons();
-
+            
             TrainerManager.SetCollection(client.GetDatabase(databaseName));
             TrainerManager.LoadTrainers();
-
+            
             await BanManager.LoadFile();
 
             await Client.ConnectAsync();

@@ -12,47 +12,60 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FImonBot.CommandAttributes;
 
 namespace FImonBotDiscord.Commands
 {
     public class CombatCommands : SharedBaseForCommands
     {
         [Command("fight")]
+        [RequireNotBanned]
+        [RequireNotInAction]
         public async Task Fight(CommandContext ctx)
         {
             var mentioned = ctx.Message.MentionedUsers;
             if (mentioned.Count != 1)
             {
-                await SendErrorMessage("You need to tag someone to fight him",ctx);
+                await SendErrorMessage("You need to tag someone to fight him", ctx.Channel);
                 return;
             }
             var enemyUser = mentioned[0];
-            var challenger = ctx.User;
+            var challenger = ctx.Member;
 
+            ActionsManager.SetUserInAction(ctx.Member.Id);
+            ActionsManager.SetUserInAction(enemyUser.Id);
             var myFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
             if (myFImon == null)
             {
-                await SendErrorMessage($"Fight can not proceed due to {challenger.Username} actions",ctx);
+                await SendErrorMessage($"Fight can not proceed due to {challenger.Username} actions", ctx.Channel);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                ActionsManager.RemoveUserFromAction(enemyUser.Id);
                 return;
             }
 
             var enemyFImon = await SelectYourFImon(enemyUser, ctx.Channel, ctx.Client);
             if (enemyFImon == null)
             {
-                await SendErrorMessage($"Fight can not proceed due to {enemyUser.Username} actions",ctx);
+                await SendErrorMessage($"Fight can not proceed due to {enemyUser.Username} actions", ctx.Channel);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                ActionsManager.RemoveUserFromAction(enemyUser.Id);
                 return;
             }
 
             if (myFImon.AutoAttackID == null || myFImon.BasicAttackID == null || myFImon.SpecialAttackID == null ||
                 myFImon.FinalAttackID == null || myFImon.DefensiveAbilityID == null)
             {
-                await SendErrorMessage("Please set up all your abilities before you want to fight",ctx);
+                await SendErrorMessage("Please set up all your abilities before you want to fight", ctx.Channel);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                ActionsManager.RemoveUserFromAction(enemyUser.Id);
                 return;
             }
             if (enemyFImon.AutoAttackID == null || enemyFImon.BasicAttackID == null || enemyFImon.SpecialAttackID == null ||
                 enemyFImon.FinalAttackID == null || enemyFImon.DefensiveAbilityID == null)
             {
-                await SendErrorMessage("Enemy FImon does not have all of his abilities set up",ctx);
+                await SendErrorMessage("Enemy FImon does not have all of his abilities set up", ctx.Channel);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                ActionsManager.RemoveUserFromAction(enemyUser.Id);
                 return;
             }
 
@@ -75,6 +88,7 @@ namespace FImonBotDiscord.Commands
                 Title = $"The first attacker will be... {firstAttacker.FImonBase.Name}",
                 Color = DiscordColor.DarkGreen,
             };
+            await SendCorrectMessage(embedShow, ctx.Channel);
 
             InCombatFImon currentFightingFImon = firstAttacker;
             InCombatFImon helpFimon = null;
@@ -128,7 +142,7 @@ namespace FImonBotDiscord.Commands
                     Description = commentary
                 };
 
-                await SendCorrectMessage(report,ctx);
+                await SendCorrectMessage(report, ctx.Channel);
 
                 if (waitingFightingFImon.CurrentHealth <= 0)
                 {
@@ -161,7 +175,9 @@ namespace FImonBotDiscord.Commands
                 Color = DiscordColor.Gold,
                 Description = $"The winner received {winningExpReward} exp and the looser receives {loosingExpReward} exp\n" + battleResult
             };
-            await SendCorrectMessage(winningEmbed,ctx);
+            await SendCorrectMessage(winningEmbed, ctx.Channel);
+            ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+            ActionsManager.RemoveUserFromAction(enemyUser.Id);
         }
     }
 }

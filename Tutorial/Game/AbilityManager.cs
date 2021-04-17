@@ -22,14 +22,20 @@ namespace FImonBotDiscord.Game
             if (attackCollection == null || defensiveCollection == null) { return; }
             Console.WriteLine("Loading Abilities");
 
+            Console.WriteLine(attackCollection.EstimatedDocumentCount());
+
             var attAb = attackCollection.Find(s => true).ToList();
+            Console.WriteLine("got attacks");
             var defAb = defensiveCollection.Find(s => true).ToList();
+            Console.WriteLine("got defensives");
             foreach (var attackAbility in attAb)
             {
+                Console.WriteLine("Added attack abb");
                 attackAbilities.AddOrUpdate(attackAbility.Id, attackAbility,(ID,ability) => ability);
             }
             foreach (var defensiveAbility in defAb)
             {
+                Console.WriteLine("Added def");
                 defensiveAbilities.AddOrUpdate(defensiveAbility.Id, defensiveAbility, (ID, ability) => ability);
             }
         }

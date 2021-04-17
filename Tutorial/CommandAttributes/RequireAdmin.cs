@@ -3,16 +3,18 @@ using DSharpPlus.CommandsNext.Attributes;
 using FImonBotDiscord.Game;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FImonBot.CommandAttributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class RequireNotInAction : CheckBaseAttribute
+    public class RequireAdmin : CheckBaseAttribute
     {
-        public RequireNotInAction()
+        public const ulong authorID = 317634903959142401;
+
+        public RequireAdmin()
         {
 
         }
@@ -24,7 +26,7 @@ namespace FImonBot.CommandAttributes
                 return Task.FromResult(false);
             }
 
-            return Task.FromResult(!ActionsManager.IsInAction(ctx.Member.Id));
+            return Task.FromResult(ctx.Member.Id == authorID);
         }
     }
 }

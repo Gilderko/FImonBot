@@ -27,7 +27,7 @@ namespace FImonBotDiscord.Commands
         [Description("Greets a person in DM")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageMessages)]
         public async Task Greet(CommandContext ctx)
-        {
+        {            
             DiscordMessage message = await ctx.Member.SendMessageAsync("Oi cunt").ConfigureAwait(false);
             await Task.Delay(3000);
             await message.DeleteAsync();

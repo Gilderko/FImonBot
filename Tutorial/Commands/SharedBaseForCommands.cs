@@ -22,7 +22,7 @@ namespace FImonBotDiscord.Commands
     {
         public const ulong authorID = 317634903959142401;
 
-        [Command("ping")] // The actual string they have to type to trigger it
+        [Command("ping")]
         [Description("Returns pong")]
         private async Task Ping(CommandContext ctx)
         {
@@ -210,7 +210,7 @@ namespace FImonBotDiscord.Commands
                 selectedFImon = (FImon)options[result].optionalData;
             };
 
-            var inputDialogueHandler = new DialogueHandler(discordClient, discordChannel, responder, chooseStep, false, false);
+            var inputDialogueHandler = new DialogueHandler(discordClient, discordChannel, responder ?? discordUser, chooseStep, true, false);
             bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
 
             if (!succeeded)
@@ -220,21 +220,21 @@ namespace FImonBotDiscord.Commands
             return selectedFImon;
         }
 
-        protected async Task SendErrorMessage(string errorMessage, CommandContext ctx)
+        protected async Task SendErrorMessage(string errorMessage, DiscordChannel channel)
         {
-            var errMessage = await ctx.Channel.SendMessageAsync($"`{errorMessage}`");
+            var errMessage = await channel.SendMessageAsync($"`{errorMessage}`");
             await Task.Delay(5000);
             await errMessage.DeleteAsync();
         }
 
-        protected async Task<ulong> SendCorrectMessage(string correctMessage, CommandContext ctx)
+        protected async Task<ulong> SendCorrectMessage(string correctMessage, DiscordChannel channel)
         {
-            return (await ctx.Channel.SendMessageAsync($"`{correctMessage}`")).Id;
+            return (await channel.SendMessageAsync($"`{correctMessage}`")).Id;
         }
 
-        protected async Task<ulong> SendCorrectMessage(DiscordEmbed embedMessage, CommandContext ctx)
+        protected async Task<ulong> SendCorrectMessage(DiscordEmbed embedMessage, DiscordChannel channel)
         {
-            return (await ctx.Channel.SendMessageAsync(embed: embedMessage)).Id;
+            return (await channel.SendMessageAsync(embed: embedMessage)).Id;
         }
 
         protected async Task<bool> ConfirmPreviousStep(CommandContext ctx, DiscordUser responderOverride)
@@ -245,7 +245,7 @@ namespace FImonBotDiscord.Commands
             };
             var reactionStep = new ReactionStep("Do you want to proceed?", options);
 
-            var inputDialogueHandler = new DialogueHandler(ctx.Client, ctx.Channel, responderOverride, reactionStep);
+            var inputDialogueHandler = new DialogueHandler(ctx.Client, ctx.Channel, responderOverride, reactionStep, true, false);
 
             bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
 

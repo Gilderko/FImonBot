@@ -17,6 +17,7 @@ using FImonBotDiscord.Game.Combat;
 using FImonBotDiscord.Game.Stats;
 using FImonBotDiscord.Game.Trainers;
 using DSharpPlus;
+using FImonBot.CommandAttributes;
 
 namespace FImonBotDiscord.Commands
 {
@@ -24,20 +25,24 @@ namespace FImonBotDiscord.Commands
     {     
         
         [Command("addfimon")]
+        [RequireNotBanned]
+        [RequireNotInAction]
         public async Task AddFimonCommand(CommandContext ctx)
         {
             var userID = ctx.User.Id;
             var trainer = TrainerManager.GetTrainer(userID);
             if (trainer == null)
             {
-                await SendErrorMessage("Mate... you dont have a trainer yet",ctx);
+                await SendErrorMessage("Mate... you dont have a trainer yet", ctx.Channel);
                 return;
             }
             if (!trainer.CanAddFImon())
             {
-                await SendErrorMessage("Mate... you already have max amount of FImons",ctx);
+                await SendErrorMessage("Mate... you already have max amount of FImons", ctx.Channel);
                 return;
             }
+
+            ActionsManager.SetUserInAction(ctx.Member.Id);
 
             var nameStep = new TextStep("Welcome \nPlease choose the name for your FImon", null, 1, 30);
             string FImonName = "";
@@ -166,24 +171,30 @@ namespace FImonBotDiscord.Commands
             perceptionStep.SetNextStep(abilityPowerStep);
             abilityPowerStep.SetNextStep(null);
 
-            var userChannel = ctx.Channel;
+            var userChannel = await ctx.Member.CreateDmChannelAsync();
             var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, ctx.User, nameStep);
 
             bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
 
-            if (!succeeded) { return; }            
+            if (!succeeded) 
+            {
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                return; 
+            }            
 
             FImonManager.AddFimon(trainer.TrainerID,FImonName, description, primaryType, secondaryType, strengthValue, staminaValue, inteligenceValue, luckValue,
                 agilityValue, perceptionValue, abilityPowerValue);
 
-            await SendCorrectMessage("FIMON added successfully",ctx);
-            await SendCorrectMessage($"{FImonName} {description} {primaryType.ToString()} {secondaryType.ToString()}",ctx);
+            await SendCorrectMessage("FIMON added successfully", userChannel);
+            await SendCorrectMessage($"{FImonName} {description} {primaryType.ToString()} {secondaryType.ToString()}", userChannel);
+            ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }               
 
         [Command("getfimon")]
+        [RequireNotBanned]
         public async Task GetFimon(CommandContext ctx)
         {
-            Trainer trainer = TrainerManager.GetTrainer(ctx.User.Id);
+            Trainer trainer = TrainerManager.GetTrainer(ctx.Member.Id);
             FImon selectedFImon = await SelectYourFImon(ctx.User,ctx.Channel,ctx.Client);
             
             if (selectedFImon == null)
@@ -192,12 +203,16 @@ namespace FImonBotDiscord.Commands
             } 
 
             var FImonEmbed = GenerateFImonEmbed(trainer, new InCombatFImon(selectedFImon), true);
-            await SendCorrectMessage(FImonEmbed,ctx).ConfigureAwait(false);            
+            await SendCorrectMessage(FImonEmbed, ctx.Channel).ConfigureAwait(false);            
         }
 
         [Command("deletefimon")]
+        [RequireNotBanned]
+        [RequireNotInAction]
         public async Task DeleteFImon(CommandContext ctx)
         {
+            ActionsManager.SetUserInAction(ctx.Member.Id);
+
             var message = ctx.Message;
             var caller = ctx.Member;
 
@@ -221,21 +236,31 @@ namespace FImonBotDiscord.Commands
                 }
                 else
                 {
-                    await SendErrorMessage("You can´t delete others FImons",ctx);
+                    await SendErrorMessage("You can´t delete others FImons", ctx.Channel);
+                    ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                     return;
                 }
+            }
+
+            if (!TrainerManager.GetTrainer(userFImonToDelete.Id).HasFImon())
+            {
+                await SendErrorMessage("Person whos FImon you want to delete does not have any", ctx.Channel);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                return;
             }
 
             var FImonToDelete = await SelectYourFImon(userFImonToDelete, ctx.Channel, ctx.Client, caller);
 
             if (FImonToDelete == null)
             {
-                await SendCorrectMessage("No deletion occured", ctx);
+                await SendCorrectMessage("No deletion occured", ctx.Channel);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 return;
             }
 
             TrainerManager.DeleteTrainersFImon(userFImonToDelete.Id, FImonToDelete.FImonID);
-            await SendCorrectMessage("FImon has been deleted", ctx);
+            await SendCorrectMessage("FImon has been deleted", ctx.Channel);
+            ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }
     }
 }
