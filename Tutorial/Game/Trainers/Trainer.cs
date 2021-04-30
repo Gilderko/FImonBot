@@ -131,11 +131,18 @@ namespace FImonBot.Game.Trainers
                 FImon4ID = null;
                 FImon4 = null;
             }
+            UpdateTrainerDatabase(this);
         }
 
         public void AddExperience(int ammountToAdd)
         {
             Experience += ammountToAdd;
+            UpdateTrainerDatabase(this);
+        }
+
+        public void RemoveExperience(int ammountToRemove)
+        {
+            Experience += ammountToRemove;
             UpdateTrainerDatabase(this);
         }
 

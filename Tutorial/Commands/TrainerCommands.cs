@@ -160,6 +160,11 @@ namespace FImonBot.Commands
                 await SendErrorMessage("You dont have any experience to convert", ctx.Channel);
                 return;
             }
+            if (!trainer.HasFImon())
+            {
+                await SendErrorMessage("You dont have any FImons", ctx.Channel);
+                return;
+            }
 
             ActionsManager.SetUserInAction(ctx.Member.Id);
             var selectedFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
@@ -189,6 +194,7 @@ namespace FImonBot.Commands
             }
 
             selectedFImon.AwardExperience(expToConvert);
+            trainer.RemoveExperience(expToConvert);
             await SendCorrectMessage($"Successfully converted {expToConvert} amount of experience to {selectedFImon.Name}",ctx.Channel);
             ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }

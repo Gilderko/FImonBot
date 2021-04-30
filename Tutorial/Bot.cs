@@ -87,15 +87,20 @@ namespace FImonBot
             var client = new MongoClient("mongodb+srv://adminPokus:mypassword123@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 
             Console.WriteLine(client.GetDatabase(databaseName));
-            
-            AbilityManager.SetCollection(client.GetDatabase(databaseName));
+
+            var database = client.GetDatabase(databaseName);
+
+            AbilityManager.SetCollection(database);
             AbilityManager.LoadAbilities();
 
-            FImonManager.SetCollection(client.GetDatabase(databaseName));
+            FImonManager.SetCollection(database);
             FImonManager.LoadFimons();
             
-            TrainerManager.SetCollection(client.GetDatabase(databaseName));
+            TrainerManager.SetCollection(database);
             TrainerManager.LoadTrainers();
+
+            QuizManager.SetCollection(database);
+            QuizManager.LoadQuestions();
             
             await BanManager.LoadFile();
 

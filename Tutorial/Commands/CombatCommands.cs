@@ -18,32 +18,48 @@ namespace FImonBot.Commands
 {
     public class CombatCommands : SharedBaseForCommands
     {        
+        /// <summary>
+        /// Tag a DiscordUser to challenge him to a fight
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
         [Command("fight")]
         [RequireForFight]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task Fight(CommandContext ctx)
         {
-            Console.WriteLine("AHA");
+            ChannelAllocator.AllocateRoom(ctx.Channel.Id);
+            ActionsManager.SetUserInAction(ctx.Member.Id);
+
             var mentioned = ctx.Message.MentionedUsers;
             if (mentioned.Count != 1)
             {
                 await SendErrorMessage("You need to tag someone to fight him", ctx.Channel);
+                ChannelAllocator.FreeRoom(ctx.Channel.Id);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 return;
             }
             var enemyUser = mentioned[0];
             var challenger = ctx.Member;
-
-            if (TrainerManager.GetTrainer(enemyUser.Id) == null || TrainerManager.GetTrainer(challenger.Id) == null)
+            
+            if (ActionsManager.IsInAction(enemyUser.Id))
             {
-                Console.WriteLine("BAD");
-                await SendErrorMessage("Please create trainers before the fight", ctx.Channel);
+                await SendErrorMessage("Enemy user is already in action", ctx.Channel);
+                ChannelAllocator.FreeRoom(ctx.Channel.Id);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 return;
             }
 
-            ActionsManager.SetUserInAction(ctx.Member.Id);
+            if (TrainerManager.GetTrainer(enemyUser.Id) == null || TrainerManager.GetTrainer(challenger.Id) == null)
+            {
+                await SendErrorMessage("Please create trainers before the fight", ctx.Channel);
+                ChannelAllocator.FreeRoom(ctx.Channel.Id);
+                ActionsManager.RemoveUserFromAction(ctx.Member.Id);
+                return;
+            }
+
             ActionsManager.SetUserInAction(enemyUser.Id);
-            ChannelAllocator.AllocateRoom(ctx.Channel.Id);
             var myFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
             if (myFImon == null)
             {
@@ -53,7 +69,7 @@ namespace FImonBot.Commands
                 ChannelAllocator.FreeRoom(ctx.Channel.Id);
                 return;
             }
-
+            
             var enemyFImon = await SelectYourFImon(enemyUser, ctx.Channel, ctx.Client);
             if (enemyFImon == null)
             {
@@ -192,8 +208,14 @@ namespace FImonBot.Commands
             int winningExpReward = winningFImon.FImonBase.AwardExperience(winnerExp);
             int loosingExpReward = loosingFImon.FImonBase.AwardExperience(looserExp);
 
-            TrainerManager.GetTrainer(winningUser.Id).AddExperience(winnerExp / 3);
-            TrainerManager.GetTrainer(loosingUser.Id).AddExperience(looserExp / 3);
+
+            var winningTrainer = TrainerManager.GetTrainer(winningUser.Id);
+            winningTrainer.AddExperience(winnerExp / 3);
+            winningTrainer.WonBattle();
+
+            var loosingTrainer = TrainerManager.GetTrainer(loosingUser.Id);
+            loosingTrainer.AddExperience(winnerExp / 3);
+            loosingTrainer.LostBattle();            
 
             var winningEmbed = new DiscordEmbedBuilder()
             {

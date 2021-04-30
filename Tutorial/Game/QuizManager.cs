@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace FImonBot.Game
 {
-    public class QuizManager
+    public static class QuizManager
     {
         private static ConcurrentDictionary<ulong, Question> mapping = new ConcurrentDictionary<ulong, Question>();
         private static IMongoCollection<Question> collection = null;
         private const string collectionName = "Questions";
 
-        public void LoadQuestions()
+        public static void LoadQuestions()
         {
             if (collection == null) { return; }
            
@@ -28,7 +28,7 @@ namespace FImonBot.Game
             }
         }
 
-        public void AddQuestion(ulong quesID, string question, string correctOption, int expReward, params string[] options)
+        public static void AddQuestion(ulong quesID, string question, int expReward, params string[] options)
         {
             if (collection == null)
             {
@@ -42,7 +42,7 @@ namespace FImonBot.Game
                 return;
             }
 
-            var newQuestion = new Question(quesID, question, correctOption, expReward, options);
+            var newQuestion = new Question(quesID, question, options[0], expReward, options);
 
             Console.WriteLine("Adding Question");
 

@@ -19,7 +19,7 @@ namespace FImonBot.Commands
 {
     public class AbilityCommands : SharedBaseForCommands
     {
-        [Command("setAllAbilities")]
+        [Command("setAllAbilities")]       
         [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]

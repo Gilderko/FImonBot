@@ -70,13 +70,12 @@ namespace FImonBot.Commands
 
         protected DiscordEmbedBuilder GenerateFImonEmbed(Trainer trainer, InCombatFImon currentFightingFImon, bool displayAttacks)
         {
-            var optionalEmbed = new DiscordEmbedBuilder();
-            optionalEmbed.AddField($"FImon of owner {trainer.Name}", $"{currentFightingFImon.FImonBase.Name} -> Lvl {currentFightingFImon.FImonBase.GetLevel()}");
-            optionalEmbed.AddField("Description", currentFightingFImon.FImonBase.Description);
-            optionalEmbed.AddField($"Dodge chance", currentFightingFImon.GetDodgeChance().ToString());
-            optionalEmbed.AddField("Health", $"{currentFightingFImon.CurrentHealth.ToString()}/{currentFightingFImon.MaxHealth}");
-            optionalEmbed.AddField("Energy", $"{currentFightingFImon.CurrentEnergy.ToString()}/{currentFightingFImon.MaxEnergy}");
-            optionalEmbed.AddField("Primary type, Secondary type", $"{currentFightingFImon.FImonBase.PrimaryType}, {currentFightingFImon.FImonBase.SecondaryType}");
+            var FImonEmbded = new DiscordEmbedBuilder();
+            FImonEmbded.AddField($"Trainer: {trainer.Name}", $"{currentFightingFImon.FImonBase.Name} -> Lvl {currentFightingFImon.FImonBase.GetLevel()}");
+            FImonEmbded.AddField("Description", currentFightingFImon.FImonBase.Description);            
+            FImonEmbded.AddField("Health & Energy", $"{currentFightingFImon.CurrentHealth.ToString()}/{currentFightingFImon.MaxHealth} | {currentFightingFImon.CurrentEnergy.ToString()}/{currentFightingFImon.MaxEnergy}");
+            FImonEmbded.AddField("Primary type | Secondary type", $"{currentFightingFImon.FImonBase.PrimaryType} | {currentFightingFImon.FImonBase.SecondaryType}");
+            FImonEmbded.AddField($"Dodge chance", currentFightingFImon.GetDodgeChance().ToString());
 
             if (displayAttacks)
             {
@@ -88,26 +87,26 @@ namespace FImonBot.Commands
                 DefensiveAbility defensiveAbility = currentFightingFImon.FImonBase.DefensiveAbility;
                 if (FImonBase.AutoAttack != null)
                 {
-                    optionalEmbed.AddField($"{autoAttack.Name}\n", autoAttack.GetDescriptionWithFImon(FImonBase));
+                    FImonEmbded.AddField($"{autoAttack.Name}\n", autoAttack.GetDescriptionWithFImon(FImonBase));
                 }
                 if (FImonBase.BasicAttack != null)
                 {
-                    optionalEmbed.AddField($"{basicAttack.Name}\n", basicAttack.GetDescriptionWithFImon(FImonBase));
+                    FImonEmbded.AddField($"{basicAttack.Name}\n", basicAttack.GetDescriptionWithFImon(FImonBase));
                 }
                 if (FImonBase.SpecialAttack != null)
                 {
-                    optionalEmbed.AddField($"{specialAttack.Name}\n", specialAttack.GetDescriptionWithFImon(FImonBase));
+                    FImonEmbded.AddField($"{specialAttack.Name}\n", specialAttack.GetDescriptionWithFImon(FImonBase));
                 }
                 if (FImonBase.FinalAttack != null)
                 {
-                    optionalEmbed.AddField($"{finalAttack.Name}\n", finalAttack.GetDescriptionWithFImon(FImonBase));
+                    FImonEmbded.AddField($"{finalAttack.Name}\n", finalAttack.GetDescriptionWithFImon(FImonBase));
                 }
                 if (FImonBase.DefensiveAbility != null)
                 {
-                    optionalEmbed.AddField($"{defensiveAbility.Name}\n", defensiveAbility.GetDescriptionWithFImon(FImonBase));
+                    FImonEmbded.AddField($"{defensiveAbility.Name}\n", defensiveAbility.GetDescriptionWithFImon(FImonBase));
                 }
             }
-            return optionalEmbed;
+            return FImonEmbded;
         }
 
         protected Dictionary<DiscordEmoji, ReactionStepData> GenerateFImonOptions(DiscordClient discordClient, Trainer trainer)
@@ -193,13 +192,11 @@ namespace FImonBot.Commands
             Trainer trainer = TrainerManager.GetTrainer(discordUser.Id);
 
             if (trainer == null)
-            {
-                await discordChannel.SendMessageAsync("Sadly you don´t have a trainer");
+            {                
                 return null;
             }
             if (!trainer.HasFImon())
-            {
-                await discordChannel.SendMessageAsync("Sadly you don´t have any FImons");
+            {                
                 return null;
             }
 

@@ -47,14 +47,14 @@ namespace FImonBot.Handlers.Dialogue.Steps
             else
             {
                 embedBuidler = optionalEmbed;
-            }
-
-            embedBuidler.AddField("To stop the dialogue", "React with the :x: emoji");
+            }            
 
             foreach (var emoji in _options.Keys)
             {
                 embedBuidler.AddField($"{emoji.ToString()} is used for:", _options[emoji].Content);
             }
+
+            embedBuidler.AddField("To stop the dialogue", "React with the :x: emoji");
 
             var interactivity = client.GetInteractivity();            
 

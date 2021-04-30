@@ -17,11 +17,6 @@ namespace FImonBot.Game.QuizQuestions
             CorrectOption = correctOption;
             ExpReward = expReward;
             Options = options;
-
-            if (!options.Contains(correctOption))
-            {
-                throw new Exception();
-            }
         }
 
         [BsonId]

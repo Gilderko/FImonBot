@@ -29,15 +29,17 @@ namespace FImonBot.Game.Abilities
 
         public string GetDescriptionForMessage()
         {
-            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization \nDamage range: {DamageValueLower} - {DamageValueUpper}" +
-                $"\nEnergy cost: {AbilityCost}\nHit chance: {HitChance}\nCritical hit chance is: {CritChance}";
+            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization " +
+                $"\nDamage range: {DamageValueLower} - {DamageValueUpper} \nEnergy cost: {AbilityCost}" +
+                $"\nHit chance: {HitChance} | Critical hit chance is: {CritChance}";
             return data;
         }
 
         public string GetDescriptionWithFImon(FImon FImonBase)
         {
-            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization \nDamage range: {GetLowerDamageWithFImon(FImonBase)} - {GetUpperDamageWithFImon(FImonBase)}" +
-                $"\nEnergy cost: {GetCostWithFImon(FImonBase)}  \nHit chance: {GetHitChanceWithFImon(FImonBase)}\nCritical hit chance is: {GetCritChanceWithFImon(FImonBase)}";
+            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization " +
+                $"\nDamage range: {GetLowerDamageWithFImon(FImonBase)} - {GetUpperDamageWithFImon(FImonBase)} \nEnergy cost: {GetCostWithFImon(FImonBase)}" +
+                $"\nHit chance: {GetHitChanceWithFImon(FImonBase)} | Critical hit chance is: {GetCritChanceWithFImon(FImonBase)}";
             return data;
         }
 

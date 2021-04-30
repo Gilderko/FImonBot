@@ -20,13 +20,15 @@ namespace FImonBot.Game.Abilities
 
         public string GetDescriptionForMessage()
         {
-            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization\nHeals for: {HealValue}\n Energy cost: {AbilityCost} \nCharges: {Charges}";
+            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization" +
+                $"\nHeals for: {HealValue} | Energy cost: {AbilityCost} | Charges: {Charges}";
             return data;
         }
 
         public string GetDescriptionWithFImon(FImon FImonBase)
         {
-            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization\nHeals for: {GetHealValueWithFImon(FImonBase)}\n Energy cost: {GetCostWithFImon(FImonBase)} \nCharges: {Charges}";
+            string data = $"{Description}\nThe ability is of {ElementalType.ToString()} specialization\n" +
+                $"Heals for: {GetHealValueWithFImon(FImonBase)} | Energy cost: {GetCostWithFImon(FImonBase)} | Charges: {Charges}";
             return data;
         }
 

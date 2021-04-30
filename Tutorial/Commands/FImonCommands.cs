@@ -23,6 +23,12 @@ namespace FImonBot.Commands
 {
     public class FImonCommands : SharedBaseForCommands
     {             
+
+        /// <summary>
+        /// Command for creating a FImon
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <returns></returns>
         [Command("addfimon")]
         [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]

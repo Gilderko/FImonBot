@@ -114,7 +114,7 @@ namespace FImonBot.Game
             Trainer trainer = trainerMapping[trainerID];
 
             if (trainer.FImon1ID.HasValue) 
-            { 
+            {
                 FImonManager.DeleteFImon(trainer.FImon1ID.Value); 
             }
             if (trainer.FImon2ID.HasValue) 
