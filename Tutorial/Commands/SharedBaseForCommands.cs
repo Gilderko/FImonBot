@@ -1,28 +1,30 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
-using FImonBotDiscord.Handlers.Dialogue.Steps;
+using FImonBot.Handlers.Dialogue.Steps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FImonBotDiscord.Game.Abilities;
-using FImonBotDiscord.Game.Combat;
-using FImonBotDiscord.Game.FImons;
-using FImonBotDiscord.Game.Stats;
-using FImonBotDiscord.Game.Trainers;
+using FImonBot.Game.Abilities;
+using FImonBot.Game.Combat;
+using FImonBot.Game.FImons;
+using FImonBot.Game.Stats;
+using FImonBot.Game.Trainers;
 using DSharpPlus;
 using DSharpPlus.CommandsNext.Attributes;
-using FImonBotDiscord.Game;
-using FImonBotDiscord.Handlers.Dialogue;
+using FImonBot.Game;
+using FImonBot.Handlers.Dialogue;
+using FImonBot.CommandAttributes;
 
-namespace FImonBotDiscord.Commands
+namespace FImonBot.Commands
 {
     public class SharedBaseForCommands : BaseCommandModule
     {
         public const ulong authorID = 317634903959142401;
 
         [Command("ping")]
+        [RequireChannelNameIncludes("afk")]
         [Description("Returns pong")]
         private async Task Ping(CommandContext ctx)
         {

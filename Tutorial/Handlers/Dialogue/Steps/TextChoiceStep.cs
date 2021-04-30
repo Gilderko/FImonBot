@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace FImonBotDiscord.Handlers.Dialogue.Steps
+namespace FImonBot.Handlers.Dialogue.Steps
 {
     public class TextChoiceStep : DialogueStepBase
     {
@@ -42,7 +42,7 @@ namespace FImonBotDiscord.Handlers.Dialogue.Steps
                 embedBuidler.AddField($"'{text}'", _options[text].Description);
             }
 
-            embedBuidler = optionalEmbed;
+            embedBuidler = embedBuidler ?? optionalEmbed;
 
             embedBuidler.AddField("To Stop the Dialogue", "User the ?cancel command");
 

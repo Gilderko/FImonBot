@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FImonBotDiscord.Game.Stats
+namespace FImonBot.Game.Stats
 {
     public static class BaseStats
     {

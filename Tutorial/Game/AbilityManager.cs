@@ -1,13 +1,15 @@
 ﻿using MongoDB.Driver;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using FImonBotDiscord.Game.Abilities;
+using FImonBot.Game.Abilities;
+using System;
 
-namespace FImonBotDiscord.Game
-
+namespace FImonBot.Game
 {
+    /// <summary>
+    /// Class used for Loading, Adding (Saving), Geting, DefensiveAbilities and AttackAbilities
+    /// </summary>
     public static class AbilityManager
     {
         private static ConcurrentDictionary<ulong, AttackAbility> attackAbilities = new ConcurrentDictionary<ulong, AttackAbility>();
@@ -17,69 +19,76 @@ namespace FImonBotDiscord.Game
         private const string attackCollectionName = "AttackAbilities";
         private const string defensiveCollectionName = "DefensiveAbilities";
 
+        /// <summary>
+        /// Method used for downloading all the abilities from remote MongoDB into cache
+        /// </summary>
         public static void LoadAbilities()
         {
-            if (attackCollection == null || defensiveCollection == null) { return; }
-            Console.WriteLine("Loading Abilities");
+            if (attackCollection == null || defensiveCollection == null) 
+            {
+                throw new MongoException("database collection not connected");
+            }
 
-            Console.WriteLine(attackCollection.EstimatedDocumentCount());
-
-            var attAb = attackCollection.Find(s => true).ToList();
-            Console.WriteLine("got attacks");
-            var defAb = defensiveCollection.Find(s => true).ToList();
-            Console.WriteLine("got defensives");
+            List<AttackAbility> attAb = attackCollection.Find(s => true).ToList();
+            List<DefensiveAbility> defAb = defensiveCollection.Find(s => true).ToList();
             foreach (var attackAbility in attAb)
             {
-                Console.WriteLine("Added attack abb");
                 attackAbilities.AddOrUpdate(attackAbility.Id, attackAbility,(ID,ability) => ability);
             }
             foreach (var defensiveAbility in defAb)
             {
-                Console.WriteLine("Added def");
                 defensiveAbilities.AddOrUpdate(defensiveAbility.Id, defensiveAbility, (ID, ability) => ability);
             }
         }
 
+        /// <summary>
+        /// Method used for adding a new ability to database and cache
+        /// </summary>
+        /// <param name="newAbility"></param>
         public static void AddAbility(Ability newAbility)
         {
-            if (attackCollection == null || defensiveCollection == null) { return; }
-
+            if (attackCollection == null || defensiveCollection == null) 
+            {
+                throw new MongoException("database collection not connected");
+            }
             if (attackAbilities.ContainsKey(newAbility.Id) || defensiveAbilities.ContainsKey(newAbility.Id))
             {
-                Console.WriteLine("already have this ID");
-                return;
+                throw new ArgumentException("given ID already exists");
             }
-            Console.WriteLine("Adding Ability");
 
             AttackAbility attackAbility = newAbility as AttackAbility;
             DefensiveAbility defensiveAbility = newAbility as DefensiveAbility;
 
             if (attackAbility != null)
             {
-                Console.WriteLine("Adding Attack");
                 attackAbilities.AddOrUpdate(attackAbility.Id, attackAbility, (ID, ability) => ability);
                 attackCollection.InsertOne(attackAbility);
             }
             else if (defensiveAbility != null)
             {
-                Console.WriteLine("Adding Defense");
                 defensiveAbilities.AddOrUpdate(defensiveAbility.Id, defensiveAbility, (ID, ability) => ability);
                 defensiveCollection.InsertOne(defensiveAbility);
             }
-            Console.WriteLine("Ability added");
         }
-        public static void SetCollection(IMongoDatabase database)
+
+        internal static void SetCollection(IMongoDatabase database)
         {
             attackCollection = database.GetCollection<AttackAbility>(attackCollectionName);
             defensiveCollection = database.GetCollection<DefensiveAbility>(defensiveCollectionName);
         }
 
+        /// <summary>
+        /// Method that returns Defensive or Attack ability as an Ability according to ID
+        /// </summary>
+        /// <param name="abilityId"></param>
+        /// <returns></returns>
         public static Ability GetAbility(ulong? abilityId)
         {
             if (!abilityId.HasValue)
             {
                 return null;
             }
+
             if (attackAbilities.ContainsKey(abilityId.Value))
             {
                 return attackAbilities[abilityId.Value];

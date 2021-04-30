@@ -1,12 +1,12 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using FImonBotDiscord.Game;
-using FImonBotDiscord.Game.Abilities;
-using FImonBotDiscord.Game.Combat;
-using FImonBotDiscord.Game.FImons;
-using FImonBotDiscord.Handlers.Dialogue;
-using FImonBotDiscord.Handlers.Dialogue.Steps;
+using FImonBot.Game;
+using FImonBot.Game.Abilities;
+using FImonBot.Game.Combat;
+using FImonBot.Game.FImons;
+using FImonBot.Handlers.Dialogue;
+using FImonBot.Handlers.Dialogue.Steps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,15 +14,17 @@ using System.Text;
 using System.Threading.Tasks;
 using FImonBot.CommandAttributes;
 
-namespace FImonBotDiscord.Commands
+namespace FImonBot.Commands
 {
     public class CombatCommands : SharedBaseForCommands
-    {
+    {        
         [Command("fight")]
+        [RequireForFight]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task Fight(CommandContext ctx)
         {
+            Console.WriteLine("AHA");
             var mentioned = ctx.Message.MentionedUsers;
             if (mentioned.Count != 1)
             {
@@ -34,18 +36,21 @@ namespace FImonBotDiscord.Commands
 
             if (TrainerManager.GetTrainer(enemyUser.Id) == null || TrainerManager.GetTrainer(challenger.Id) == null)
             {
+                Console.WriteLine("BAD");
                 await SendErrorMessage("Please create trainers before the fight", ctx.Channel);
                 return;
             }
 
             ActionsManager.SetUserInAction(ctx.Member.Id);
             ActionsManager.SetUserInAction(enemyUser.Id);
+            ChannelAllocator.AllocateRoom(ctx.Channel.Id);
             var myFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
             if (myFImon == null)
             {
                 await SendErrorMessage($"Fight can not proceed due to {challenger.Username} actions", ctx.Channel);
                 ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 ActionsManager.RemoveUserFromAction(enemyUser.Id);
+                ChannelAllocator.FreeRoom(ctx.Channel.Id);
                 return;
             }
 
@@ -55,6 +60,7 @@ namespace FImonBotDiscord.Commands
                 await SendErrorMessage($"Fight can not proceed due to {enemyUser.Username} actions", ctx.Channel);
                 ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 ActionsManager.RemoveUserFromAction(enemyUser.Id);
+                ChannelAllocator.FreeRoom(ctx.Channel.Id);
                 return;
             }
 
@@ -64,6 +70,7 @@ namespace FImonBotDiscord.Commands
                 await SendErrorMessage("Please set up all your abilities before you want to fight", ctx.Channel);
                 ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 ActionsManager.RemoveUserFromAction(enemyUser.Id);
+                ChannelAllocator.FreeRoom(ctx.Channel.Id);
                 return;
             }
             if (enemyFImon.AutoAttackID == null || enemyFImon.BasicAttackID == null || enemyFImon.SpecialAttackID == null ||
@@ -72,6 +79,7 @@ namespace FImonBotDiscord.Commands
                 await SendErrorMessage("Enemy FImon does not have all of his abilities set up", ctx.Channel);
                 ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 ActionsManager.RemoveUserFromAction(enemyUser.Id);
+                ChannelAllocator.FreeRoom(ctx.Channel.Id);
                 return;
             }
 
@@ -83,7 +91,7 @@ namespace FImonBotDiscord.Commands
             var second = options[1-indexChoice].Item1;
 
             var firstFImon = options[indexChoice].Item2;
-            var secondFImon = options[indexChoice].Item2;
+            var secondFImon = options[1-indexChoice].Item2;
 
             var firstAttacker = new InCombatFImon(firstFImon);
             var secondAttacker = new InCombatFImon(secondFImon);
@@ -105,10 +113,13 @@ namespace FImonBotDiscord.Commands
 
             DiscordUser winningUser = null;
             DiscordUser loosingUser = null;
+
             InCombatFImon winningFImon = null;
             InCombatFImon loosingFImon = null;
             string battleResult = "";
-            
+
+            Console.WriteLine(first.Username);
+            Console.WriteLine(second.Username);
             while (true)
             {
                 Dictionary<DiscordEmoji, ReactionStepData> attackOptions = GenerateAttackOptions(ctx, currentFightingFImon);
@@ -181,8 +192,8 @@ namespace FImonBotDiscord.Commands
             int winningExpReward = winningFImon.FImonBase.AwardExperience(winnerExp);
             int loosingExpReward = loosingFImon.FImonBase.AwardExperience(looserExp);
 
-            TrainerManager.GetTrainer(winningUser.Id).Experience += winnerExp / 3;
-            TrainerManager.GetTrainer(loosingUser.Id).Experience += looserExp / 3;
+            TrainerManager.GetTrainer(winningUser.Id).AddExperience(winnerExp / 3);
+            TrainerManager.GetTrainer(loosingUser.Id).AddExperience(looserExp / 3);
 
             var winningEmbed = new DiscordEmbedBuilder()
             {
@@ -194,6 +205,7 @@ namespace FImonBotDiscord.Commands
             await SendCorrectMessage(winningEmbed, ctx.Channel);
             ActionsManager.RemoveUserFromAction(ctx.Member.Id);
             ActionsManager.RemoveUserFromAction(enemyUser.Id);
+            ChannelAllocator.FreeRoom(ctx.Channel.Id);
         }
     }
 }

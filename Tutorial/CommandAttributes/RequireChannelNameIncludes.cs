@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 namespace FImonBot.CommandAttributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class RequireAdmin : CheckBaseAttribute
+    public class RequireChannelNameIncludes : CheckBaseAttribute
     {
-        public const ulong authorID = 317634903959142401;
+        public string stringName;
 
-        public RequireAdmin()
+        public RequireChannelNameIncludes(string name)
         {
-
+            stringName = name;
         }
 
         public override Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
@@ -26,7 +26,7 @@ namespace FImonBot.CommandAttributes
                 return Task.FromResult(false);
             }
 
-            return Task.FromResult(ctx.Member.Id == authorID);
+            return Task.FromResult(ctx.Channel.Name.Contains(stringName, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace FImonBotDiscord
+namespace FImonBot
 {
     public struct ConfigJson
     {

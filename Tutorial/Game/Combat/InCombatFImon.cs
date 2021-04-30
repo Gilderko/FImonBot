@@ -1,9 +1,9 @@
 ﻿using System;
-using FImonBotDiscord.Game.Stats;
-using FImonBotDiscord.Game.FImons;
-using FImonBotDiscord.Game.Abilities;
+using FImonBot.Game.Stats;
+using FImonBot.Game.FImons;
+using FImonBot.Game.Abilities;
 
-namespace FImonBotDiscord.Game.Combat
+namespace FImonBot.Game.Combat
 {
     public class InCombatFImon
     {

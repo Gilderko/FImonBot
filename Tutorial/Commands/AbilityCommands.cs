@@ -3,23 +3,24 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FImonBot.CommandAttributes;
-using FImonBotDiscord.Commands;
-using FImonBotDiscord.Game;
-using FImonBotDiscord.Game.Abilities;
-using FImonBotDiscord.Game.FImons;
-using FImonBotDiscord.Handlers.Dialogue;
-using FImonBotDiscord.Handlers.Dialogue.Steps;
+using FImonBot.Commands;
+using FImonBot.Game;
+using FImonBot.Game.Abilities;
+using FImonBot.Game.FImons;
+using FImonBot.Handlers.Dialogue;
+using FImonBot.Handlers.Dialogue.Steps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FImonBotDiscord.Commands
+namespace FImonBot.Commands
 {
     public class AbilityCommands : SharedBaseForCommands
     {
-        [Command("setallabilities")]
+        [Command("setAllAbilities")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task SetAllAbilites(CommandContext ctx)
@@ -77,6 +78,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("setautoattack")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task SetAutoAttack(CommandContext ctx)
@@ -95,6 +97,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("setbasicattack")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task SetBasicAttack(CommandContext ctx)
@@ -113,6 +116,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("setspecialattack")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task SetSpecialAttack(CommandContext ctx)
@@ -131,6 +135,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("setfinalattack")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task SetFinalAttack(CommandContext ctx)
@@ -149,6 +154,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("setdefensive")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task SetDefensiveAbility(CommandContext ctx)
@@ -167,6 +173,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("initialiseAbilities")]
+        [RequireChannelNameIncludes("afk")]
         [RequireAdmin]
         public async Task InitialiseAbilities(CommandContext ctx)
         {
@@ -222,6 +229,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("getabilities")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireAdmin]
         public async Task GetAbilities(CommandContext ctx)

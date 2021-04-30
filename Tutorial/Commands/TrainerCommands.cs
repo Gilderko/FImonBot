@@ -2,20 +2,21 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FImonBot.CommandAttributes;
-using FImonBotDiscord.Game;
-using FImonBotDiscord.Handlers.Dialogue;
-using FImonBotDiscord.Handlers.Dialogue.Steps;
+using FImonBot.Game;
+using FImonBot.Handlers.Dialogue;
+using FImonBot.Handlers.Dialogue.Steps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FImonBotDiscord.Commands
+namespace FImonBot.Commands
 {
     public class TrainerCommands : SharedBaseForCommands
     {
         [Command("createTrainer")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task CreateTrainer(CommandContext ctx)
@@ -60,10 +61,10 @@ namespace FImonBotDiscord.Commands
         }
 
         [RequireNotBanned]
+        [RequireChannelNameIncludes("afk")]
         [Command("getTrainer")]        
         public async Task GetTrainer(CommandContext ctx)
         {
-
             var trainer = TrainerManager.GetTrainer(ctx.Member.Id);
             if (trainer == null)
             {
@@ -90,6 +91,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("deleteTrainer")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task DeleteTrainer(CommandContext ctx)
@@ -141,6 +143,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("convertExperience")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task CovertExperienceToFImon(CommandContext ctx)

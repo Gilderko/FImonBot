@@ -1,5 +1,5 @@
-﻿using FImonBotDiscord.Handlers.Dialogue;
-using FImonBotDiscord.Handlers.Dialogue.Steps;
+﻿using FImonBot.Handlers.Dialogue;
+using FImonBot.Handlers.Dialogue.Steps;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FImonBotDiscord.Commands
+namespace FImonBot.Commands
 {
     public class TeamCommands : SharedBaseForCommands
     {

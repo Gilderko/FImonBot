@@ -1,6 +1,6 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using FImonBotDiscord.Game;
+using FImonBot.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;

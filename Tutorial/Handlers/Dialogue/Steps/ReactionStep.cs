@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace FImonBotDiscord.Handlers.Dialogue.Steps
+namespace FImonBot.Handlers.Dialogue.Steps
 {
 
     public class ReactionStep : DialogueStepBase

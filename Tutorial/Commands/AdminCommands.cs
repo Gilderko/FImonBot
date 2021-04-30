@@ -2,7 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using FImonBot.CommandAttributes;
-using FImonBotDiscord.Game;
+using FImonBot.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +10,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace FImonBotDiscord.Commands
+namespace FImonBot.Commands
 {
     public class AdminCommands : SharedBaseForCommands
     {
         private delegate bool ManageOtherBot(DiscordUser user, out string comment);
 
         [Command("ban")]
+        [RequireChannelNameIncludes("admin")]
         [RequireAdmin]
         public async Task Ban(CommandContext ctx)
         {
@@ -24,6 +25,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("unban")]
+        [RequireChannelNameIncludes("admin")]
         [RequireAdmin]
         public async Task Unban(CommandContext ctx)
         {
@@ -65,6 +67,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("getbans")]
+        [RequireChannelNameIncludes("admin")]
         [RequireAdmin]
         public async Task GetBannedPeople(CommandContext ctx)
         {

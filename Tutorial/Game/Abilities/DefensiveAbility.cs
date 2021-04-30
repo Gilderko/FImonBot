@@ -1,8 +1,8 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using FImonBotDiscord.Game.FImons;
-using FImonBotDiscord.Game.Stats;
+using FImonBot.Game.FImons;
+using FImonBot.Game.Stats;
 
-namespace FImonBotDiscord.Game.Abilities
+namespace FImonBot.Game.Abilities
 {
     public class DefensiveAbility : Ability
     {

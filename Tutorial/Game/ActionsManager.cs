@@ -5,7 +5,7 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 
-namespace FImonBotDiscord.Game
+namespace FImonBot.Game
 {
     public class ActionsManager
     {

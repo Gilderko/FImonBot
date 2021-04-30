@@ -3,7 +3,7 @@ using DSharpPlus.Entities;
 using System;
 using System.Threading.Tasks;
 
-namespace FImonBotDiscord.Handlers.Dialogue.Steps
+namespace FImonBot.Handlers.Dialogue.Steps
 {
     public interface IDialogueStep
     {

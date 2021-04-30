@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FImonBotDiscord
+namespace FImonBot
 {
     class Program
     {

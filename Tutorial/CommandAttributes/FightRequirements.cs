@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 namespace FImonBot.CommandAttributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class RequireAdmin : CheckBaseAttribute
+    public class RequireForFight : CheckBaseAttribute
     {
-        public const ulong authorID = 317634903959142401;
+        public const string stringName = "battle";
 
-        public RequireAdmin()
+        public RequireForFight()
         {
 
         }
@@ -26,7 +26,8 @@ namespace FImonBot.CommandAttributes
                 return Task.FromResult(false);
             }
 
-            return Task.FromResult(ctx.Member.Id == authorID);
+            return Task.FromResult(ctx.Channel.Name.Contains(stringName,StringComparison.OrdinalIgnoreCase) &&
+                !ChannelAllocator.IsOccupiedChannel(ctx.Channel.Id));
         }
     }
 }

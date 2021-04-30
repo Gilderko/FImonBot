@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using FImonBotDiscord.Game.FImons;
+using FImonBot.Game.FImons;
 
-namespace FImonBotDiscord.Game.Trainers
+namespace FImonBot.Game.Trainers
 {
     [BsonIgnoreExtraElements]
     public class Trainer
@@ -55,13 +55,13 @@ namespace FImonBotDiscord.Game.Trainers
         public ulong? FImon4ID { get; private set; }
 
         [BsonElement("battles_win")]
-        public ulong BattlesWon { get; set; }
+        public ulong BattlesWon { get; private set; }
 
         [BsonElement("battles_lost")]
-        public ulong BattlesLost { get; set; }
+        public ulong BattlesLost { get; private set; }
 
         [BsonElement("experience")]
-        public int Experience { get; set; }
+        public int Experience { get; private set; }
 
         [BsonIgnore]
         public FImon FImon1 { get;  set; }
@@ -131,6 +131,24 @@ namespace FImonBotDiscord.Game.Trainers
                 FImon4ID = null;
                 FImon4 = null;
             }
+        }
+
+        public void AddExperience(int ammountToAdd)
+        {
+            Experience += ammountToAdd;
+            UpdateTrainerDatabase(this);
+        }
+
+        public void WonBattle()
+        {
+            BattlesWon++;
+            UpdateTrainerDatabase(this);
+        }
+
+        public void LostBattle()
+        {
+            BattlesLost++;
+            UpdateTrainerDatabase(this);
         }
     }
 }

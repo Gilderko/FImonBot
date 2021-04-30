@@ -1,4 +1,4 @@
-﻿namespace FImonBotDiscord.Game.Abilities
+﻿namespace FImonBot.Game.Abilities
 {
     public enum AbilityType
     {

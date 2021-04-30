@@ -1,10 +1,10 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
-using FImonBotDiscord.Game.Abilities;
-using FImonBotDiscord.Game.Stats;
+using FImonBot.Game.Abilities;
+using FImonBot.Game.Stats;
 
-namespace FImonBotDiscord.Game.FImons
+namespace FImonBot.Game.FImons
 {
     [BsonIgnoreExtraElements]
     public class FImon

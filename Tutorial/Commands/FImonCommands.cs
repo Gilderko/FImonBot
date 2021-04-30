@@ -1,5 +1,5 @@
-﻿using FImonBotDiscord.Handlers.Dialogue;
-using FImonBotDiscord.Handlers.Dialogue.Steps;
+﻿using FImonBot.Handlers.Dialogue;
+using FImonBot.Handlers.Dialogue.Steps;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -10,21 +10,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FImonBotDiscord.Game;
-using FImonBotDiscord.Game.FImons;
-using FImonBotDiscord.Game.Abilities;
-using FImonBotDiscord.Game.Combat;
-using FImonBotDiscord.Game.Stats;
-using FImonBotDiscord.Game.Trainers;
+using FImonBot.Game;
+using FImonBot.Game.FImons;
+using FImonBot.Game.Abilities;
+using FImonBot.Game.Combat;
+using FImonBot.Game.Stats;
+using FImonBot.Game.Trainers;
 using DSharpPlus;
 using FImonBot.CommandAttributes;
 
-namespace FImonBotDiscord.Commands
+namespace FImonBot.Commands
 {
     public class FImonCommands : SharedBaseForCommands
-    {     
-        
+    {             
         [Command("addfimon")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task AddFimonCommand(CommandContext ctx)
@@ -191,6 +191,7 @@ namespace FImonBotDiscord.Commands
         }               
 
         [Command("getfimon")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         public async Task GetFimon(CommandContext ctx)
         {
@@ -207,6 +208,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("deletefimon")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task DeleteFImon(CommandContext ctx)
@@ -264,6 +266,7 @@ namespace FImonBotDiscord.Commands
         }
 
         [Command("increaseStats")]
+        [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task IncreaseFImonStats(CommandContext ctx)

@@ -1,4 +1,4 @@
-﻿using FImonBotDiscord.Commands;
+﻿using FImonBot.Commands;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
@@ -13,10 +13,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FImonBotDiscord.Game;
-using FImonBotDiscord.Game.Stats;
+using FImonBot.Game;
+using FImonBot.Game.Stats;
 
-namespace FImonBotDiscord
+namespace FImonBot
 {
     public class Bot
     {
@@ -58,7 +58,7 @@ namespace FImonBotDiscord
 
             InteractivityConfiguration interactivityConfig = new InteractivityConfiguration()
             {
-                Timeout = TimeSpan.FromMinutes(3)
+                Timeout = TimeSpan.FromMinutes(2)
             };
 
             Client.UseInteractivity(interactivityConfig);
@@ -76,12 +76,13 @@ namespace FImonBotDiscord
             Commands = Client.UseCommandsNext(commandsConfig);
 
             Commands.RegisterCommands<FImonCommands>(); // Register new Commands
-            Commands.RegisterCommands<TeamCommands>();
+            // Commands.RegisterCommands<TeamCommands>();
             Commands.RegisterCommands<CombatCommands>();
             Commands.RegisterCommands<TrainerCommands>();
             Commands.RegisterCommands<AbilityCommands>();
             Commands.RegisterCommands<SharedBaseForCommands>();
             Commands.RegisterCommands<AdminCommands>();
+            Commands.RegisterCommands<QuizCommands>();
 
             var client = new MongoClient("mongodb+srv://adminPokus:mypassword123@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 
