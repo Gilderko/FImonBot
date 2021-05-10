@@ -1,28 +1,23 @@
-﻿using FImonBot.Handlers.Dialogue;
-using FImonBot.Handlers.Dialogue.Steps;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity;
-using DSharpPlus.Interactivity.EventHandling;
-using DSharpPlus.Interactivity.Extensions;
+using FImonBot.CommandAttributes;
+using FImonBot.Game;
+using FImonBot.Game.Combat;
+using FImonBot.Game.FImons;
+using FImonBot.Game.Stats;
+using FImonBot.Game.Trainers;
+using FImonBot.Handlers.Dialogue;
+using FImonBot.Handlers.Dialogue.Steps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FImonBot.Game;
-using FImonBot.Game.FImons;
-using FImonBot.Game.Abilities;
-using FImonBot.Game.Combat;
-using FImonBot.Game.Stats;
-using FImonBot.Game.Trainers;
-using DSharpPlus;
-using FImonBot.CommandAttributes;
 
 namespace FImonBot.Commands
 {
     public class FImonCommands : SharedBaseForCommands
-    {             
+    {
 
         /// <summary>
         /// Command for creating a FImon
@@ -182,19 +177,19 @@ namespace FImonBot.Commands
 
             bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
 
-            if (!succeeded) 
+            if (!succeeded)
             {
                 ActionsManager.RemoveUserFromAction(ctx.Member.Id);
-                return; 
-            }            
+                return;
+            }
 
-            FImonManager.AddFimon(trainer.TrainerID,FImonName, description, primaryType, secondaryType, strengthValue, staminaValue, inteligenceValue, luckValue,
+            FImonManager.AddFimon(trainer.TrainerID, FImonName, description, primaryType, secondaryType, strengthValue, staminaValue, inteligenceValue, luckValue,
                 agilityValue, perceptionValue, abilityPowerValue);
 
             await SendCorrectMessage("FIMON added successfully", userChannel);
             await SendCorrectMessage($"{FImonName} {description} {primaryType.ToString()} {secondaryType.ToString()}", userChannel);
             ActionsManager.RemoveUserFromAction(ctx.Member.Id);
-        }               
+        }
 
         [Command("getfimon")]
         [RequireChannelNameIncludes("afk")]
@@ -202,15 +197,15 @@ namespace FImonBot.Commands
         public async Task GetFimon(CommandContext ctx)
         {
             Trainer trainer = TrainerManager.GetTrainer(ctx.Member.Id);
-            FImon selectedFImon = await SelectYourFImon(ctx.User,ctx.Channel,ctx.Client);
-            
+            FImon selectedFImon = await SelectYourFImon(ctx.User, ctx.Channel, ctx.Client);
+
             if (selectedFImon == null)
-            {                
+            {
                 return;
-            } 
+            }
 
             var FImonEmbed = GenerateFImonEmbed(trainer, new InCombatFImon(selectedFImon), true);
-            await SendCorrectMessage(FImonEmbed, ctx.Channel).ConfigureAwait(false);            
+            await SendCorrectMessage(FImonEmbed, ctx.Channel).ConfigureAwait(false);
         }
 
         [Command("deletefimon")]
@@ -227,9 +222,9 @@ namespace FImonBot.Commands
             DiscordUser userFImonToDelete;
             if (caller.Id == authorID)
             {
-                if (message.MentionedUsers.Count == 0) 
+                if (message.MentionedUsers.Count == 0)
                 {
-                    userFImonToDelete = caller; 
+                    userFImonToDelete = caller;
                 }
                 else
                 {
@@ -295,9 +290,9 @@ namespace FImonBot.Commands
                 ActionsManager.RemoveUserFromAction(ctx.Member.Id);
                 return;
             }
-            
+
             var atributesInfo = AttributesEmbedInfo();
-            atributesInfo.Description = "Please select which attribute would you like to increase";       
+            atributesInfo.Description = "Please select which attribute would you like to increase";
 
             var options = new Dictionary<string, TextChoiceData>();
 
@@ -306,7 +301,7 @@ namespace FImonBot.Commands
                 options.Add(key, new TextChoiceData("- attribute option", key));
             }
 
-            var textChoiceStep = new TextChoiceStep("Which attribute would you like to increase?",null, options);
+            var textChoiceStep = new TextChoiceStep("Which attribute would you like to increase?", null, options);
             string answer = null;
             textChoiceStep.optionalEmbed = atributesInfo;
             textChoiceStep.OnValidResult += result =>

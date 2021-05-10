@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FImonBot.Game.FImons;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using FImonBot.Game.FImons;
 
 namespace FImonBot.Game.Trainers
 {
@@ -64,16 +59,16 @@ namespace FImonBot.Game.Trainers
         public int Experience { get; private set; }
 
         [BsonIgnore]
-        public FImon FImon1 { get;  set; }
+        public FImon FImon1 { get; set; }
 
         [BsonIgnore]
-        public FImon FImon2 { get;  set; }
+        public FImon FImon2 { get; set; }
 
         [BsonIgnore]
-        public FImon FImon3 { get;  set; }
+        public FImon FImon3 { get; set; }
 
         [BsonIgnore]
-        public FImon FImon4 { get;  set; }
+        public FImon FImon4 { get; set; }
 
         public void AddFImon(FImon fImonToAdd)
         {

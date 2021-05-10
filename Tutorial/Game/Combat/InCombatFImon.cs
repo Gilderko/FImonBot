@@ -1,7 +1,7 @@
-﻿using System;
-using FImonBot.Game.Stats;
+﻿using FImonBot.Game.Abilities;
 using FImonBot.Game.FImons;
-using FImonBot.Game.Abilities;
+using FImonBot.Game.Stats;
+using System;
 
 namespace FImonBot.Game.Combat
 {

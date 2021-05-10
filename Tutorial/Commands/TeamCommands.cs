@@ -1,11 +1,11 @@
-﻿using FImonBot.Handlers.Dialogue;
-using FImonBot.Handlers.Dialogue.Steps;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.EventHandling;
 using DSharpPlus.Interactivity.Extensions;
+using FImonBot.Handlers.Dialogue;
+using FImonBot.Handlers.Dialogue.Steps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +27,7 @@ namespace FImonBot.Commands
         [Description("Greets a person in DM")]
         [RequireBotPermissions(DSharpPlus.Permissions.ManageMessages)]
         public async Task Greet(CommandContext ctx)
-        {            
+        {
             DiscordMessage message = await ctx.Member.SendMessageAsync("Oi cunt").ConfigureAwait(false);
             await Task.Delay(3000);
             await message.DeleteAsync();

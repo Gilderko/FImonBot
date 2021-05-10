@@ -2,9 +2,7 @@
 using MongoDB.Driver;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FImonBot.Game
@@ -15,17 +13,16 @@ namespace FImonBot.Game
         private static IMongoCollection<Question> collection = null;
         private const string collectionName = "Questions";
 
-        public static void LoadQuestions()
+        public static async Task LoadQuestions()
         {
             if (collection == null) { return; }
-           
-            var questionsReceived = collection.Find(s => true).ToList();
-            Console.WriteLine("got questions");
 
-            foreach (var question in questionsReceived)
+            var questionsReceived = (await collection.FindAsync(s => true)).ToList();
+
+            Parallel.ForEach(questionsReceived, question =>
             {
                 mapping.AddOrUpdate(question.QuestionID, question, (ID, question) => question);
-            }
+            });
         }
 
         public static void AddQuestion(ulong quesID, string question, int expReward, params string[] options)

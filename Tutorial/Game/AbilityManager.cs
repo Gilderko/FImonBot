@@ -1,9 +1,10 @@
-﻿using MongoDB.Driver;
+﻿using FImonBot.Game.Abilities;
+using MongoDB.Driver;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using FImonBot.Game.Abilities;
-using System;
+using System.Threading.Tasks;
 
 namespace FImonBot.Game
 {
@@ -22,23 +23,18 @@ namespace FImonBot.Game
         /// <summary>
         /// Method used for downloading all the abilities from remote MongoDB into cache
         /// </summary>
-        public static void LoadAbilities()
+        public static async Task LoadAbilities()
         {
-            if (attackCollection == null || defensiveCollection == null) 
+            if (attackCollection == null || defensiveCollection == null)
             {
                 throw new MongoException("database collection not connected");
             }
 
-            List<AttackAbility> attAb = attackCollection.Find(s => true).ToList();
-            List<DefensiveAbility> defAb = defensiveCollection.Find(s => true).ToList();
-            foreach (var attackAbility in attAb)
-            {
-                attackAbilities.AddOrUpdate(attackAbility.Id, attackAbility,(ID,ability) => ability);
-            }
-            foreach (var defensiveAbility in defAb)
-            {
-                defensiveAbilities.AddOrUpdate(defensiveAbility.Id, defensiveAbility, (ID, ability) => ability);
-            }
+            List<AttackAbility> attAb = (await attackCollection.FindAsync(s => true)).ToList();
+            List<DefensiveAbility> defAb = (await defensiveCollection.FindAsync(s => true)).ToList();
+
+            Parallel.ForEach(attAb, attackAbility => attackAbilities.AddOrUpdate(attackAbility.Id, attackAbility, (ID, ability) => ability));
+            Parallel.ForEach(defAb, defensiveAbility => defensiveAbilities.AddOrUpdate(defensiveAbility.Id, defensiveAbility, (ID, ability) => ability));
         }
 
         /// <summary>
@@ -47,7 +43,7 @@ namespace FImonBot.Game
         /// <param name="newAbility"></param>
         public static void AddAbility(Ability newAbility)
         {
-            if (attackCollection == null || defensiveCollection == null) 
+            if (attackCollection == null || defensiveCollection == null)
             {
                 throw new MongoException("database collection not connected");
             }

@@ -1,21 +1,18 @@
-﻿using DSharpPlus.CommandsNext;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using FImonBot.Handlers.Dialogue.Steps;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FImonBot.CommandAttributes;
+using FImonBot.Game;
 using FImonBot.Game.Abilities;
 using FImonBot.Game.Combat;
 using FImonBot.Game.FImons;
 using FImonBot.Game.Stats;
 using FImonBot.Game.Trainers;
-using DSharpPlus;
-using DSharpPlus.CommandsNext.Attributes;
-using FImonBot.Game;
 using FImonBot.Handlers.Dialogue;
-using FImonBot.CommandAttributes;
+using FImonBot.Handlers.Dialogue.Steps;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FImonBot.Commands
 {
@@ -72,7 +69,7 @@ namespace FImonBot.Commands
         {
             var FImonEmbded = new DiscordEmbedBuilder();
             FImonEmbded.AddField($"Trainer: {trainer.Name}", $"{currentFightingFImon.FImonBase.Name} -> Lvl {currentFightingFImon.FImonBase.GetLevel()}");
-            FImonEmbded.AddField("Description", currentFightingFImon.FImonBase.Description);            
+            FImonEmbded.AddField("Description", currentFightingFImon.FImonBase.Description);
             FImonEmbded.AddField("Health & Energy", $"{currentFightingFImon.CurrentHealth.ToString()}/{currentFightingFImon.MaxHealth} | {currentFightingFImon.CurrentEnergy.ToString()}/{currentFightingFImon.MaxEnergy}");
             FImonEmbded.AddField("Primary type | Secondary type", $"{currentFightingFImon.FImonBase.PrimaryType} | {currentFightingFImon.FImonBase.SecondaryType}");
             FImonEmbded.AddField($"Dodge chance", currentFightingFImon.GetDodgeChance().ToString());
@@ -192,11 +189,11 @@ namespace FImonBot.Commands
             Trainer trainer = TrainerManager.GetTrainer(discordUser.Id);
 
             if (trainer == null)
-            {                
+            {
                 return null;
             }
             if (!trainer.HasFImon())
-            {                
+            {
                 return null;
             }
 
@@ -240,7 +237,7 @@ namespace FImonBot.Commands
         {
             var options = new Dictionary<DiscordEmoji, ReactionStepData>()
             {
-                { DiscordEmoji.FromName(ctx.Client,":white_check_mark:"), new ReactionStepData{ Content = "Confirm", NextStep = null}},                
+                { DiscordEmoji.FromName(ctx.Client,":white_check_mark:"), new ReactionStepData{ Content = "Confirm", NextStep = null}},
             };
             var reactionStep = new ReactionStep("Do you want to proceed?", options);
 

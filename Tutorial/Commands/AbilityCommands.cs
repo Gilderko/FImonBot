@@ -1,9 +1,6 @@
-﻿using DSharpPlus;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
 using FImonBot.CommandAttributes;
-using FImonBot.Commands;
 using FImonBot.Game;
 using FImonBot.Game.Abilities;
 using FImonBot.Game.FImons;
@@ -11,15 +8,13 @@ using FImonBot.Handlers.Dialogue;
 using FImonBot.Handlers.Dialogue.Steps;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FImonBot.Commands
 {
     public class AbilityCommands : SharedBaseForCommands
     {
-        [Command("setAllAbilities")]       
+        [Command("setAllAbilities")]
         [RequireChannelNameIncludes("afk")]
         [RequireNotBanned]
         [RequireNotInAction]
@@ -58,7 +53,7 @@ namespace FImonBot.Commands
             ulong abilityID = 0;
             attackSetStep.OnValidResult = (result) =>
             {
-                abilityID = (ulong) result.OptionalData;
+                abilityID = (ulong)result.OptionalData;
             };
 
             attackSetStep.SetNextStep(null);
@@ -69,9 +64,9 @@ namespace FImonBot.Commands
             bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
             Console.WriteLine(abilityID);
 
-            if (!succeeded) 
+            if (!succeeded)
             {
-                return; 
+                return;
             }
 
             fImon.SetNewAbility(AbilityManager.GetAbility(abilityID));

@@ -7,7 +7,7 @@ namespace FImonBot.Game.Stats
     public static class BaseStats
     {
         private static List<int> levelExperienceRequirements = new List<int>();
-        public static readonly string[] attibutesOptions = {"strength", "stamina", "ability power", "inteligence", "luck", "agility", "perception"};
+        public static readonly string[] attibutesOptions = { "strength", "stamina", "ability power", "inteligence", "luck", "agility", "perception" };
 
         public const int strengthAutoAttackDamageIncrease = 4;
         public const int strengthAutoAttackCostIncrease = 3;

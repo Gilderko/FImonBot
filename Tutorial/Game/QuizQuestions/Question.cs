@@ -1,16 +1,11 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FImonBot.Game.QuizQuestions
 {
     [BsonIgnoreExtraElements]
     public class Question
     {
-        public Question(ulong quesID,string question, string correctOption, int expReward, params string[] options)
+        public Question(ulong quesID, string question, string correctOption, int expReward, params string[] options)
         {
             QuestionID = quesID;
             QuestionValue = question;

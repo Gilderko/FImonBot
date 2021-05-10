@@ -1,8 +1,8 @@
-﻿using MongoDB.Bson;
+﻿using FImonBot.Game.Abilities;
+using FImonBot.Game.Stats;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
-using FImonBot.Game.Abilities;
-using FImonBot.Game.Stats;
 
 namespace FImonBot.Game.FImons
 {
@@ -12,7 +12,7 @@ namespace FImonBot.Game.FImons
         public delegate void OnFimonUpdate(FImon thisFimon);
         public event OnFimonUpdate UpdateFImonDatabase;
 
-        public FImon(ulong id,string name, string desc, ElementalTypes primaryType, ElementalTypes secondaryType, int strength, int stamina,
+        public FImon(ulong id, string name, string desc, ElementalTypes primaryType, ElementalTypes secondaryType, int strength, int stamina,
             int inteligence, int luck, int agility, int perception, int abilityPower)
         {
             Console.WriteLine("Constructor");
@@ -94,7 +94,7 @@ namespace FImonBot.Game.FImons
         public ulong? DefensiveAbilityID { get; private set; }
 
         // This part is not for saving data
-       
+
         [BsonIgnore]
         public AttackAbility AutoAttack { get; private set; }
 
@@ -123,7 +123,7 @@ namespace FImonBot.Game.FImons
         }
 
         public void InitialiseAbility(Ability ability)
-        {         
+        {
             if (ability == null)
             {
                 return;

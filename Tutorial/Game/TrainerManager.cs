@@ -1,9 +1,10 @@
-﻿using MongoDB.Driver;
+﻿using FImonBot.Game.Trainers;
+using MongoDB.Driver;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using FImonBot.Game.Trainers;
+using System.Threading.Tasks;
 
 namespace FImonBot.Game
 {
@@ -19,24 +20,23 @@ namespace FImonBot.Game
         /// <summary>
         /// Method used for downloading all the Trainerns from remote MongoDB into cache and setting their FImons
         /// </summary>
-        public static void LoadTrainers()
+        public static async Task LoadTrainers()
         {
-            if (collection == null) 
+            if (collection == null)
             {
-                throw new MongoException("database collection not connected"); 
+                throw new MongoException("database collection not connected");
             }
 
-            List<Trainer> allTrainers = collection.Find(s => true).ToList();
-
-            foreach (var currentTrainer in allTrainers)
+            List<Trainer> allTrainers = (await collection.FindAsync(s => true)).ToList();
+            Parallel.ForEach(allTrainers, currentTrainer =>
             {
-                trainerMapping.AddOrUpdate(currentTrainer.TrainerID, currentTrainer, ((ID,Trainer) => Trainer));
+                trainerMapping.AddOrUpdate(currentTrainer.TrainerID, currentTrainer, ((ID, Trainer) => Trainer));
                 currentTrainer.FImon1 = !currentTrainer.FImon1ID.HasValue ? null : FImonManager.GetFimon(currentTrainer.FImon1ID.Value);
                 currentTrainer.FImon2 = !currentTrainer.FImon2ID.HasValue ? null : FImonManager.GetFimon(currentTrainer.FImon2ID.Value);
                 currentTrainer.FImon3 = !currentTrainer.FImon3ID.HasValue ? null : FImonManager.GetFimon(currentTrainer.FImon3ID.Value);
                 currentTrainer.FImon4 = !currentTrainer.FImon4ID.HasValue ? null : FImonManager.GetFimon(currentTrainer.FImon4ID.Value);
                 currentTrainer.UpdateTrainerDatabase += UpdateTrainer;
-            }
+            });
         }
 
         /// <summary>
@@ -108,26 +108,26 @@ namespace FImonBot.Game
 
             if (!trainerMapping.ContainsKey(trainerID))
             {
-                throw new ArgumentException("given ID doesnt exist");
+                throw new ArgumentException("given trainer ID doesnt exist");
             }
 
             Trainer trainer = trainerMapping[trainerID];
 
-            if (trainer.FImon1ID.HasValue) 
+            if (trainer.FImon1ID.HasValue)
             {
-                FImonManager.DeleteFImon(trainer.FImon1ID.Value); 
+                FImonManager.DeleteFImon(trainer.FImon1ID.Value);
             }
-            if (trainer.FImon2ID.HasValue) 
-            { 
-                FImonManager.DeleteFImon(trainer.FImon2ID.Value); 
+            if (trainer.FImon2ID.HasValue)
+            {
+                FImonManager.DeleteFImon(trainer.FImon2ID.Value);
             }
-            if (trainer.FImon3ID.HasValue) 
-            { 
-                FImonManager.DeleteFImon(trainer.FImon3ID.Value); 
+            if (trainer.FImon3ID.HasValue)
+            {
+                FImonManager.DeleteFImon(trainer.FImon3ID.Value);
             }
-            if (trainer.FImon4ID.HasValue) 
-            { 
-                FImonManager.DeleteFImon(trainer.FImon4ID.Value); 
+            if (trainer.FImon4ID.HasValue)
+            {
+                FImonManager.DeleteFImon(trainer.FImon4ID.Value);
             }
 
             trainerMapping.Remove(trainerID, out trainer);
@@ -146,9 +146,9 @@ namespace FImonBot.Game
                 throw new MongoException("database collection not connected");
             }
 
-            if (!trainerMapping.ContainsKey(trainerId)) 
+            if (!trainerMapping.ContainsKey(trainerId))
             {
-                throw new ArgumentException("given ID already exists");
+                throw new ArgumentException("given trainerId ID doesnt exist");
             }
 
             var trainer = trainerMapping[trainerId];

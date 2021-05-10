@@ -1,8 +1,9 @@
-﻿using MongoDB.Driver;
+﻿using FImonBot.Game.FImons;
+using MongoDB.Driver;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using FImonBot.Game.FImons;
+using System.Threading.Tasks;
 
 namespace FImonBot.Game
 {
@@ -19,29 +20,29 @@ namespace FImonBot.Game
         /// <summary>
         /// Method used for downloading all the FImons from remote MongoDB into cache and setting their Abilities
         /// </summary>
-        public static void LoadFimons()
+        public static async Task LoadFimons()
         {
             if (collection == null)
             {
                 throw new MongoException("database collection not connected");
             }
 
-            var allFImon = collection.Find(s => true).ToList();
-            
-            foreach (var currentFImon in allFImon)
+            var allFImon = (await collection.FindAsync(s => true)).ToList();
+
+            Parallel.ForEach(allFImon, currentFImon =>
             {
-                mapping.AddOrUpdate(currentFImon.FImonID, currentFImon, (ID,fimon) => fimon);
+                mapping.AddOrUpdate(currentFImon.FImonID, currentFImon, (ID, fimon) => fimon);
                 if (currentFImon.FImonID > newIDToAllocate)
                 {
                     newIDToAllocate = currentFImon.FImonID;
                 }
-                currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.AutoAttackID));               
+                currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.AutoAttackID));
                 currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.BasicAttackID));
                 currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.SpecialAttackID));
                 currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.FinalAttackID));
                 currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.DefensiveAbilityID));
                 currentFImon.UpdateFImonDatabase += UpdateFImon;
-            }
+            });
             newIDToAllocate += 1;
         }
 
@@ -60,7 +61,7 @@ namespace FImonBot.Game
         /// <param name="agility"></param>
         /// <param name="perception"></param>
         /// <param name="abilityPower"></param>
-        public static void AddFimon(ulong trainerID,string name, string desc, ElementalTypes primaryType, ElementalTypes secondaryType, int strength, int stamina,
+        public static void AddFimon(ulong trainerID, string name, string desc, ElementalTypes primaryType, ElementalTypes secondaryType, int strength, int stamina,
             int inteligence, int luck, int agility, int perception, int abilityPower)
         {
             if (collection == null)
@@ -70,7 +71,7 @@ namespace FImonBot.Game
 
             if (mapping.ContainsKey(newIDToAllocate))
             {
-                throw new ArgumentException("given ID already exists");
+                throw new ArgumentException("given fimon ID already exists");
             }
 
             var newFImon = new FImon(newIDToAllocate, name, desc, primaryType, secondaryType, strength, stamina, inteligence, luck, agility, perception, abilityPower);
@@ -108,7 +109,7 @@ namespace FImonBot.Game
 
             return mapping[FImonID];
         }
-    
+
         /// <summary>
         /// Method used for when FImon updates its values so that the updates are propagated into remote MongoDB
         /// </summary>
@@ -134,10 +135,10 @@ namespace FImonBot.Game
             {
                 throw new MongoException("database collection not connected");
             }
-            
+
             if (!mapping.ContainsKey(fImonID))
             {
-                throw new ArgumentException("given ID doesnt exist");
+                throw new ArgumentException("given fimon ID doesnt exist");
             }
 
             FImon result;

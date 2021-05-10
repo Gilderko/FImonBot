@@ -1,6 +1,6 @@
-﻿using FImonBot.Handlers.Dialogue.Steps;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.Entities;
+using FImonBot.Handlers.Dialogue.Steps;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

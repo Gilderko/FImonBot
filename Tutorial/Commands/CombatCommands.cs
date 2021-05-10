@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using FImonBot.CommandAttributes;
 using FImonBot.Game;
 using FImonBot.Game.Abilities;
 using FImonBot.Game.Combat;
@@ -9,15 +10,12 @@ using FImonBot.Handlers.Dialogue;
 using FImonBot.Handlers.Dialogue.Steps;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using FImonBot.CommandAttributes;
 
 namespace FImonBot.Commands
 {
     public class CombatCommands : SharedBaseForCommands
-    {        
+    {
         /// <summary>
         /// Tag a DiscordUser to challenge him to a fight
         /// </summary>
@@ -42,7 +40,7 @@ namespace FImonBot.Commands
             }
             var enemyUser = mentioned[0];
             var challenger = ctx.Member;
-            
+
             if (ActionsManager.IsInAction(enemyUser.Id))
             {
                 await SendErrorMessage("Enemy user is already in action", ctx.Channel);
@@ -69,7 +67,7 @@ namespace FImonBot.Commands
                 ChannelAllocator.FreeRoom(ctx.Channel.Id);
                 return;
             }
-            
+
             var enemyFImon = await SelectYourFImon(enemyUser, ctx.Channel, ctx.Client);
             if (enemyFImon == null)
             {
@@ -104,10 +102,10 @@ namespace FImonBot.Commands
             var options = new List<Tuple<DiscordUser, FImon>> { new Tuple<DiscordUser, FImon>(challenger, myFImon), new Tuple<DiscordUser, FImon>(enemyUser, enemyFImon) };
 
             var first = options[indexChoice].Item1;
-            var second = options[1-indexChoice].Item1;
+            var second = options[1 - indexChoice].Item1;
 
             var firstFImon = options[indexChoice].Item2;
-            var secondFImon = options[1-indexChoice].Item2;
+            var secondFImon = options[1 - indexChoice].Item2;
 
             var firstAttacker = new InCombatFImon(firstFImon);
             var secondAttacker = new InCombatFImon(secondFImon);
@@ -215,7 +213,7 @@ namespace FImonBot.Commands
 
             var loosingTrainer = TrainerManager.GetTrainer(loosingUser.Id);
             loosingTrainer.AddExperience(winnerExp / 3);
-            loosingTrainer.LostBattle();            
+            loosingTrainer.LostBattle();
 
             var winningEmbed = new DiscordEmbedBuilder()
             {

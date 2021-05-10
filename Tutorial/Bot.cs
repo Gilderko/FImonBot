@@ -1,20 +1,18 @@
-﻿using FImonBot.Commands;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
+using FImonBot.Commands;
+using FImonBot.Game;
+using FImonBot.Game.Stats;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FImonBot.Game;
-using FImonBot.Game.Stats;
 
 namespace FImonBot
 {
@@ -91,18 +89,20 @@ namespace FImonBot
             var database = client.GetDatabase(databaseName);
 
             AbilityManager.SetCollection(database);
-            AbilityManager.LoadAbilities();
-
             FImonManager.SetCollection(database);
-            FImonManager.LoadFimons();
-            
             TrainerManager.SetCollection(database);
-            TrainerManager.LoadTrainers();
-
             QuizManager.SetCollection(database);
-            QuizManager.LoadQuestions();
-            
-            await BanManager.LoadFile();
+
+            // load quizes, abilities
+            var quizesLoad = QuizManager.LoadQuestions();
+            var abilityLoad = AbilityManager.LoadAbilities();
+            var bansLoad = BanManager.LoadFile();
+
+            Task.WaitAll(quizesLoad, abilityLoad, bansLoad);
+            // load fimons
+            await FImonManager.LoadFimons();
+            // load trainers
+            await TrainerManager.LoadTrainers();
 
             await Client.ConnectAsync();
 

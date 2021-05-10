@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FImonBot.Commands
 {
-    class QuizCommands : SharedBaseForCommands
+    internal class QuizCommands : SharedBaseForCommands
     {
         [Command("answerQuiz")]
         [RequireNotBanned]

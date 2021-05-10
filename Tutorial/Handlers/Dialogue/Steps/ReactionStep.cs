@@ -47,7 +47,7 @@ namespace FImonBot.Handlers.Dialogue.Steps
             else
             {
                 embedBuidler = optionalEmbed;
-            }            
+            }
 
             foreach (var emoji in _options.Keys)
             {
@@ -56,7 +56,7 @@ namespace FImonBot.Handlers.Dialogue.Steps
 
             embedBuidler.AddField("To stop the dialogue", "React with the :x: emoji");
 
-            var interactivity = client.GetInteractivity();            
+            var interactivity = client.GetInteractivity();
 
             while (true)
             {

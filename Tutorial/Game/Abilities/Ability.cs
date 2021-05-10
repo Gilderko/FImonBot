@@ -1,7 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using System;
-using FImonBot.Game.FImons;
+﻿using FImonBot.Game.FImons;
 using FImonBot.Game.Stats;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace FImonBot.Game.Abilities
 {

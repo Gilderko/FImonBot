@@ -6,9 +6,7 @@ using FImonBot.Game;
 using FImonBot.Handlers.Dialogue;
 using FImonBot.Handlers.Dialogue.Steps;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FImonBot.Commands
@@ -62,7 +60,7 @@ namespace FImonBot.Commands
 
         [RequireNotBanned]
         [RequireChannelNameIncludes("afk")]
-        [Command("getTrainer")]        
+        [Command("getTrainer")]
         public async Task GetTrainer(CommandContext ctx)
         {
             var trainer = TrainerManager.GetTrainer(ctx.Member.Id);
@@ -80,7 +78,7 @@ namespace FImonBot.Commands
             };
             trainerEmbed.AddField("Battle history", $"{trainer.BattlesWon} wins vs {trainer.BattlesLost} loses");
             trainerEmbed.AddField("Experience", $"{trainer.Experience}exp");
-            if (trainer.FImon1ID != null) { trainerEmbed.AddField($"{trainer.FImon1.Name} -> Lvl {trainer.FImon1.GetLevel()}",$"{trainer.FImon1.PrimaryType} {trainer.FImon1.SecondaryType} "); }
+            if (trainer.FImon1ID != null) { trainerEmbed.AddField($"{trainer.FImon1.Name} -> Lvl {trainer.FImon1.GetLevel()}", $"{trainer.FImon1.PrimaryType} {trainer.FImon1.SecondaryType} "); }
             if (trainer.FImon2ID != null) { trainerEmbed.AddField($"{trainer.FImon2.Name} -> Lvl {trainer.FImon2.GetLevel()}", $"{trainer.FImon2.PrimaryType} {trainer.FImon2.SecondaryType} "); }
             if (trainer.FImon3ID != null) { trainerEmbed.AddField($"{trainer.FImon3.Name} -> Lvl {trainer.FImon3.GetLevel()}", $"{trainer.FImon3.PrimaryType} {trainer.FImon3.SecondaryType} "); }
             if (trainer.FImon4ID != null) { trainerEmbed.AddField($"{trainer.FImon4.Name} -> Lvl {trainer.FImon4.GetLevel()}", $"{trainer.FImon4.PrimaryType} {trainer.FImon4.SecondaryType} "); }
@@ -119,8 +117,8 @@ namespace FImonBot.Commands
             else
             {
                 userTrainerToDelete = caller;
-            } 
-            
+            }
+
             if (TrainerManager.GetTrainer(userTrainerToDelete.Id) == null)
             {
                 await SendErrorMessage("Given user does not have a trainer", ctx.Channel);
@@ -129,7 +127,7 @@ namespace FImonBot.Commands
             }
 
 
-            var confirmation = await ConfirmPreviousStep(ctx,caller);
+            var confirmation = await ConfirmPreviousStep(ctx, caller);
             if (confirmation)
             {
                 TrainerManager.DeleteTrainer(userTrainerToDelete.Id);
@@ -152,7 +150,7 @@ namespace FImonBot.Commands
 
             if (trainer == null)
             {
-                await SendErrorMessage("You dont have a trainer yet",ctx.Channel);
+                await SendErrorMessage("You dont have a trainer yet", ctx.Channel);
                 return;
             }
             if (trainer.Experience == 0)
@@ -195,7 +193,7 @@ namespace FImonBot.Commands
 
             selectedFImon.AwardExperience(expToConvert);
             trainer.RemoveExperience(expToConvert);
-            await SendCorrectMessage($"Successfully converted {expToConvert} amount of experience to {selectedFImon.Name}",ctx.Channel);
+            await SendCorrectMessage($"Successfully converted {expToConvert} amount of experience to {selectedFImon.Name}", ctx.Channel);
             ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }
     }

@@ -1,9 +1,4 @@
-﻿using DSharpPlus;
-using DSharpPlus.Entities;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace FImonBot.Game
 {
@@ -11,6 +6,7 @@ namespace FImonBot.Game
     {
         private static HashSet<ulong> inActionUsers = new HashSet<ulong>();
         private static readonly object guildLock = new object();
+
         public static bool SetUserInAction(ulong userID)
         {
             lock (guildLock)
@@ -56,6 +52,6 @@ namespace FImonBot.Game
         public static IEnumerable<ulong> GetInActionUsers()
         {
             return inActionUsers;
-        }  
+        }
     }
 }

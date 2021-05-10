@@ -2,9 +2,6 @@
 using DSharpPlus.CommandsNext.Attributes;
 using FImonBot.Game;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FImonBot.CommandAttributes
@@ -26,7 +23,7 @@ namespace FImonBot.CommandAttributes
                 return Task.FromResult(false);
             }
 
-            return Task.FromResult(ctx.Channel.Name.Contains(stringName,StringComparison.OrdinalIgnoreCase) &&
+            return Task.FromResult(ctx.Channel.Name.Contains(stringName, StringComparison.OrdinalIgnoreCase) &&
                 !ChannelAllocator.IsOccupiedChannel(ctx.Channel.Id));
         }
     }
