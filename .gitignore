@@ -33,7 +33,7 @@ bld/
 [Ll]ogs/
 
 # Personal config
-Tutorial/config.json
+**config.json
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
