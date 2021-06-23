@@ -59,7 +59,7 @@ namespace FImonBot.Commands
             attackSetStep.SetNextStep(null);
 
             var userChannel = await ctx.Member.CreateDmChannelAsync();
-            var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, ctx.User, attackSetStep, false, false);
+            var inputDialogueHandler = new DialogueHandler(ctx.Client, userChannel, ctx.User, attackSetStep, false, true);
 
             bool succeeded = await inputDialogueHandler.ProcessDialogue().ConfigureAwait(false);
             Console.WriteLine(abilityID);

@@ -23,7 +23,7 @@ namespace FImonBot.Game
         /// <summary>
         /// Method used for downloading all the abilities from remote MongoDB into cache
         /// </summary>
-        public static async Task LoadAbilities()
+        public static async Task InitAndLoad()
         {
             if (attackCollection == null || defensiveCollection == null)
             {

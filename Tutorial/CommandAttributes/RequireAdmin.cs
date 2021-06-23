@@ -1,6 +1,7 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FImonBot.CommandAttributes
@@ -8,7 +9,7 @@ namespace FImonBot.CommandAttributes
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class RequireAdmin : CheckBaseAttribute
     {
-        public const ulong authorID = 317634903959142401;
+        public static ulong[] authorID;
 
         public RequireAdmin()
         {
@@ -22,7 +23,12 @@ namespace FImonBot.CommandAttributes
                 return Task.FromResult(false);
             }
 
-            return Task.FromResult(ctx.Member.Id == authorID);
+            return Task.FromResult(authorID.Contains(ctx.Member.Id));
+        }
+
+        public static void SetAdmins(ulong[] adminIDs)
+        {
+            authorID = adminIDs;
         }
     }
 }

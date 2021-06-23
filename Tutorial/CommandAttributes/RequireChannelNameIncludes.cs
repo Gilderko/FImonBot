@@ -8,9 +8,9 @@ namespace FImonBot.CommandAttributes
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class RequireChannelNameIncludes : CheckBaseAttribute
     {
-        public string stringName;
+        private string[] stringName;
 
-        public RequireChannelNameIncludes(string name)
+        public RequireChannelNameIncludes(params string[] name)
         {
             stringName = name;
         }
@@ -22,7 +22,15 @@ namespace FImonBot.CommandAttributes
                 return Task.FromResult(false);
             }
 
-            return Task.FromResult(ctx.Channel.Name.Contains(stringName, StringComparison.OrdinalIgnoreCase));
+            foreach (var possible_name in stringName)
+            {
+                if (ctx.Channel.Name.Contains(possible_name, StringComparison.OrdinalIgnoreCase))
+                {
+                    return Task.FromResult(true);
+                }
+            }
+
+            return Task.FromResult(false);
         }
     }
 }

@@ -6,7 +6,14 @@ namespace FImonBot
     {
         [JsonProperty("token")]
         public string Token { get; private set; }
+
         [JsonProperty("prefix")]
         public string Prefix { get; private set; }
+
+        [JsonProperty("database_link")]
+        public string DatabaseLink { get; private set; }
+
+        [JsonProperty("admin_ids")]
+        public ulong[] AdminIds { get; private set; }
     }
 }

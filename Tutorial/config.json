@@ -1,0 +1,6 @@
+{
+  "token": "",
+  "prefix": "?",
+  "database_link": "mongodb+srv://adminPokus:mypassword123@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+  "admin_ids": [ 317634903959142401 ]
+}

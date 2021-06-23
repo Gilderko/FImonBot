@@ -89,7 +89,7 @@ namespace FImonBot.Commands
         }
 
         [Command("deleteTrainer")]
-        [RequireChannelNameIncludes("afk")]
+        [RequireChannelNameIncludes("afk", "admin")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task DeleteTrainer(CommandContext ctx)

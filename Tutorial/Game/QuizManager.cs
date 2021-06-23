@@ -13,7 +13,7 @@ namespace FImonBot.Game
         private static IMongoCollection<Question> collection = null;
         private const string collectionName = "Questions";
 
-        public static async Task LoadQuestions()
+        public static async Task InitAndLoad()
         {
             if (collection == null) { return; }
 

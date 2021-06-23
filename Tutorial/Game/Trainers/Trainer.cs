@@ -1,6 +1,7 @@
 ﻿using FImonBot.Game.FImons;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using System;
 
 namespace FImonBot.Game.Trainers
 {
@@ -9,6 +10,13 @@ namespace FImonBot.Game.Trainers
     {
         public delegate void OnTrainerUpdate(Trainer thisTrainer);
         public event OnTrainerUpdate UpdateTrainerDatabase;
+
+        public delegate void OnTrainerFImonID(ulong FImonID);
+        public event OnTrainerFImonID DeleteTrainersFImon;
+
+        public delegate FImon CreatingFImonDelegate(string name, string desc, ElementalTypes primaryType, ElementalTypes secondaryType, int strength, int stamina,
+            int inteligence, int luck, int agility, int perception, int abilityPower);
+        public event CreatingFImonDelegate CreateFImonEvent;
 
         public Trainer(ulong ID, string name, string backstory, string imageUrl)
         {
@@ -70,8 +78,13 @@ namespace FImonBot.Game.Trainers
         [BsonIgnore]
         public FImon FImon4 { get; set; }
 
-        public void AddFImon(FImon fImonToAdd)
+        public void AddFImon(string name, string desc, ElementalTypes primaryType, ElementalTypes secondaryType, int strength, int stamina,
+            int inteligence, int luck, int agility, int perception, int abilityPower)
         {
+            Console.WriteLine("New FIMON creation in TRAINER");
+            var fImonToAdd = CreateFImonEvent(name, desc, primaryType, secondaryType, strength, stamina,
+             inteligence, luck, agility, perception, abilityPower);
+
             if (FImon1 == null)
             {
                 FImon1 = fImonToAdd;
@@ -106,26 +119,36 @@ namespace FImonBot.Game.Trainers
 
         public void RemoveFImon(ulong fimonID)
         {
+            Console.WriteLine("FIMON DELETE IN TRAINER");
             if (FImon1ID == fimonID)
             {
+                Console.WriteLine("DEL 1");
+                DeleteTrainersFImon(FImon1ID.Value);
                 FImon1ID = null;
                 FImon1 = null;
             }
             if (FImon2ID == fimonID)
             {
+                Console.WriteLine("DEL 2");
+                DeleteTrainersFImon(FImon2ID.Value);
                 FImon2ID = null;
                 FImon2 = null;
             }
             if (FImon3ID == fimonID)
             {
+                Console.WriteLine("DEL 3");
+                DeleteTrainersFImon(FImon3ID.Value);
                 FImon3ID = null;
                 FImon3 = null;
             }
             if (FImon4ID == fimonID)
             {
+                Console.WriteLine("DEL 4");
+                DeleteTrainersFImon(FImon4ID.Value);
                 FImon4ID = null;
                 FImon4 = null;
             }
+            Console.WriteLine("UPDATE DATABASE");
             UpdateTrainerDatabase(this);
         }
 
@@ -137,7 +160,7 @@ namespace FImonBot.Game.Trainers
 
         public void RemoveExperience(int ammountToRemove)
         {
-            Experience += ammountToRemove;
+            Experience -= ammountToRemove;
             UpdateTrainerDatabase(this);
         }
 

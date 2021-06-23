@@ -183,7 +183,7 @@ namespace FImonBot.Commands
                 return;
             }
 
-            FImonManager.AddFimon(trainer.TrainerID, FImonName, description, primaryType, secondaryType, strengthValue, staminaValue, inteligenceValue, luckValue,
+            trainer.AddFImon(FImonName, description, primaryType, secondaryType, strengthValue, staminaValue, inteligenceValue, luckValue,
                 agilityValue, perceptionValue, abilityPowerValue);
 
             await SendCorrectMessage("FIMON added successfully", userChannel);
@@ -209,7 +209,7 @@ namespace FImonBot.Commands
         }
 
         [Command("deletefimon")]
-        [RequireChannelNameIncludes("afk")]
+        [RequireChannelNameIncludes("afk", "admin")]
         [RequireNotBanned]
         [RequireNotInAction]
         public async Task DeleteFImon(CommandContext ctx)
@@ -245,7 +245,9 @@ namespace FImonBot.Commands
                 }
             }
 
-            if (!TrainerManager.GetTrainer(userFImonToDelete.Id).HasFImon())
+            var trainer = TrainerManager.GetTrainer(userFImonToDelete.Id);
+
+            if (!trainer.HasFImon())
             {
                 await SendErrorMessage("Person whos FImon you want to delete does not have any", ctx.Channel);
                 ActionsManager.RemoveUserFromAction(ctx.Member.Id);
@@ -261,7 +263,7 @@ namespace FImonBot.Commands
                 return;
             }
 
-            TrainerManager.DeleteTrainersFImon(userFImonToDelete.Id, FImonToDelete.FImonID);
+            trainer.RemoveFImon(FImonToDelete.FImonID);
             await SendCorrectMessage("FImon has been deleted", ctx.Channel);
             ActionsManager.RemoveUserFromAction(ctx.Member.Id);
         }

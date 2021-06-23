@@ -20,7 +20,7 @@ namespace FImonBot.Game
         /// <summary>
         /// Method used for downloading all the FImons from remote MongoDB into cache and setting their Abilities
         /// </summary>
-        public static async Task LoadFimons()
+        public static async Task InitAndLoad()
         {
             if (collection == null)
             {
@@ -43,6 +43,8 @@ namespace FImonBot.Game
                 currentFImon.InitialiseAbility(AbilityManager.GetAbility(currentFImon.DefensiveAbilityID));
                 currentFImon.UpdateFImonDatabase += UpdateFImon;
             });
+            TrainerManager.TrainersFImonDeleted += DeleteFImon;
+            TrainerManager.CreateFImon += AddFimon;
             newIDToAllocate += 1;
         }
 
@@ -61,9 +63,10 @@ namespace FImonBot.Game
         /// <param name="agility"></param>
         /// <param name="perception"></param>
         /// <param name="abilityPower"></param>
-        public static void AddFimon(ulong trainerID, string name, string desc, ElementalTypes primaryType, ElementalTypes secondaryType, int strength, int stamina,
+        private static FImon AddFimon(string name, string desc, ElementalTypes primaryType, ElementalTypes secondaryType, int strength, int stamina,
             int inteligence, int luck, int agility, int perception, int abilityPower)
         {
+            Console.WriteLine("New FIMON creation in FIMONMANAGER");
             if (collection == null)
             {
                 throw new MongoException("database collection not connected");
@@ -75,14 +78,14 @@ namespace FImonBot.Game
             }
 
             var newFImon = new FImon(newIDToAllocate, name, desc, primaryType, secondaryType, strength, stamina, inteligence, luck, agility, perception, abilityPower);
-            var trainer = TrainerManager.GetTrainer(trainerID);
-            trainer.AddFImon(newFImon);
+
             newIDToAllocate += 1;
 
             mapping.AddOrUpdate(newFImon.FImonID, newFImon, (ID, fimon) => fimon);
             newFImon.UpdateFImonDatabase += UpdateFImon;
 
             collection.InsertOne(newFImon);
+            return newFImon;
         }
 
         internal static void SetCollection(IMongoDatabase database)
@@ -126,11 +129,12 @@ namespace FImonBot.Game
 
         /// <summary>
         /// Method used for deleting FImon from cache and MongoDB but not from Trainer! To delete FImon of a Trainer
-        /// use TrainerManager
+        /// use Trainer
         /// </summary>
         /// <param name="fImonID"></param>
-        public static void DeleteFImon(ulong fImonID)
+        private static void DeleteFImon(ulong fImonID)
         {
+            Console.WriteLine("FIMON DELETE IN FIMON MANAGER");
             if (collection == null)
             {
                 throw new MongoException("database collection not connected");

@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
+using FImonBot.CommandAttributes;
 using FImonBot.Commands;
 using FImonBot.Game;
 using FImonBot.Game.Stats;
@@ -22,7 +23,7 @@ namespace FImonBot
         public InteractivityExtension Interactivity { get; private set; }
         public CommandsNextExtension Commands { get; private set; }
 
-        public const string databaseName = "FImonDB";
+        private const string databaseName = "FImonDB";
 
         public async Task RunAsync()
         {
@@ -73,8 +74,7 @@ namespace FImonBot
 
             Commands = Client.UseCommandsNext(commandsConfig);
 
-            Commands.RegisterCommands<FImonCommands>(); // Register new Commands
-            // Commands.RegisterCommands<TeamCommands>();
+            Commands.RegisterCommands<FImonCommands>();
             Commands.RegisterCommands<CombatCommands>();
             Commands.RegisterCommands<TrainerCommands>();
             Commands.RegisterCommands<AbilityCommands>();
@@ -82,7 +82,9 @@ namespace FImonBot
             Commands.RegisterCommands<AdminCommands>();
             Commands.RegisterCommands<QuizCommands>();
 
-            var client = new MongoClient("mongodb+srv://adminPokus:mypassword123@cluster0.shomo.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+            RequireAdmin.SetAdmins(configJson.AdminIds);
+
+            var client = new MongoClient(configJson.DatabaseLink);
 
             Console.WriteLine(client.GetDatabase(databaseName));
 
@@ -94,15 +96,15 @@ namespace FImonBot
             QuizManager.SetCollection(database);
 
             // load quizes, abilities
-            var quizesLoad = QuizManager.LoadQuestions();
-            var abilityLoad = AbilityManager.LoadAbilities();
+            var quizesLoad = QuizManager.InitAndLoad();
+            var abilityLoad = AbilityManager.InitAndLoad();
             var bansLoad = BanManager.LoadFile();
 
             Task.WaitAll(quizesLoad, abilityLoad, bansLoad);
             // load fimons
-            await FImonManager.LoadFimons();
+            await FImonManager.InitAndLoad();
             // load trainers
-            await TrainerManager.LoadTrainers();
+            await TrainerManager.InitAndLoad();
 
             await Client.ConnectAsync();
 
